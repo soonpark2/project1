@@ -251,31 +251,65 @@
     </div>
 
     <script>
-        // 샘플 데이터 (실제 CSV 데이터로 교체하세요)
-        let csvData = [
-            {region: '전국', year: '2023', cropGroup: '과수', crop: '사과', category: '총수입', value: 8852139},
-            {region: '전국', year: '2023', cropGroup: '과수', crop: '배', category: '총수입', value: 7265401},
-            {region: '전국', year: '2023', cropGroup: '과수', crop: '복숭아', category: '총수입', value: 4910890},
-            {region: '전국', year: '2023', cropGroup: '과수', crop: '노지포도', category: '총수입', value: 10642010},
-            {region: '전국', year: '2023', cropGroup: '과수', crop: '사과', category: '생산량', value: 4521200},
-            {region: '전국', year: '2023', cropGroup: '과수', crop: '배', category: '생산량', value: 3832150},
-            {region: '전국', year: '2023', cropGroup: '과수', crop: '복숭아', category: '생산량', value: 2455445},
-            {region: '전국', year: '2023', cropGroup: '과수', crop: '노지포도', category: '생산량', value: 5321005},
-            {region: '강원', year: '2023', cropGroup: '과수', crop: '사과', category: '총수입', value: 1254300},
-            {region: '강원', year: '2023', cropGroup: '과수', crop: '배', category: '총수입', value: 892150},
-            {region: '강원', year: '2023', cropGroup: '과수', crop: '복숭아', category: '총수입', value: 651200},
-            {region: '강원', year: '2023', cropGroup: '과수', crop: '노지포도', category: '총수입', value: 1432800},
-            {region: '강원', year: '2023', cropGroup: '과수', crop: '사과', category: '생산량', value: 627150},
-            {region: '강원', year: '2023', cropGroup: '과수', crop: '배', category: '생산량', value: 446075},
-            {region: '강원', year: '2023', cropGroup: '과수', crop: '복숭아', category: '생산량', value: 325600},
-            {region: '강원', year: '2023', cropGroup: '과수', crop: '노지포도', category: '생산량', value: 716400}
-        ];
-        
+        let csvData = [];
         let filteredData = [];
         let currentRegion = '전국';
         let currentCropGroup = '';
         let currentCrop = '';
         let chart = null;
+
+        // GitHub에서 CSV 파일 불러오기
+        async function loadCSVFromGitHub() {
+            try {
+                // GitHub raw 파일 URL (실제 GitHub 저장소 URL로 변경해주세요)
+                const csvUrl = 'https://raw.githubusercontent.com/[username]/[repository-name]/main/DB.csv';
+                
+                const response = await fetch(csvUrl);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const csvText = await response.text();
+                parseCSV(csvText);
+            } catch (error) {
+                console.error('CSV 파일 로드 오류:', error);
+                showError('GitHub에서 CSV 파일을 불러올 수 없습니다. URL을 확인해주세요.');
+            }
+        }
+
+        function parseCSV(csvText) {
+            Papa.parse(csvText, {
+                header: true,
+                skipEmptyLines: true,
+                complete: function(results) {
+                    csvData = results.data.map(row => ({
+                        region: (row['지역구분'] || '').trim(),
+                        year: (row['년'] || '').trim(),
+                        cropGroup: (row['작목군'] || '').trim(),
+                        crop: (row['작목'] || '').trim(),
+                        category: (row['구분'] || '').trim(),
+                        value: parseInt((row['값'] || '0').replace(/,/g, '')) || 0
+                    })).filter(row => row.region && row.cropGroup);
+                    
+                    console.log('CSV 데이터 로드 완료:', csvData.length, '개 항목');
+                    
+                    if (csvData.length > 0) {
+                        initializeFilters();
+                        updateDisplay();
+                        document.getElementById('tableContent').innerHTML = '<div class="loading">데이터 로드 완료!</div>';
+                        setTimeout(() => {
+                            updateDisplay();
+                        }, 500);
+                    } else {
+                        showError('CSV 파일에 유효한 데이터가 없습니다.');
+                    }
+                },
+                error: function(error) {
+                    console.error('CSV 파싱 오류:', error);
+                    showError('CSV 파일을 파싱하는 중 오류가 발생했습니다.');
+                }
+            });
+        }
 
         function showError(message) {
             document.getElementById('tableContent').innerHTML = `<div class="no-data">${message}</div>`;
@@ -448,9 +482,8 @@
 
         // 이벤트 리스너
         document.addEventListener('DOMContentLoaded', function() {
-            // 초기 데이터 로드
-            initializeFilters();
-            updateDisplay();
+            // GitHub에서 CSV 파일 로드
+            loadCSVFromGitHub();
             
             // 지역 버튼 이벤트
             document.querySelectorAll('.region-btn').forEach(btn => {

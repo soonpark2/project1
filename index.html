@@ -327,22 +327,22 @@
                 option.textContent = group;
                 cropGroupSelect.appendChild(option);
             });
+            
+            // 초기 작목 목록 업데이트
+            updateCrops();
         }
 
-        // 작목 업데이트
+        // 작목 업데이트 (선택된 지역과 작목군에 따라)
         function updateCrops() {
             const cropSelect = document.getElementById('cropSelect');
-            let crops = [];
+            let filteredForCrops = csvData.filter(item => item.region === currentRegion);
             
+            // 작목군이 선택되었으면 해당 작목군으로 필터링
             if (currentCropGroup) {
-                crops = [...new Set(csvData.filter(item => 
-                    item.region === currentRegion && item.cropGroup === currentCropGroup
-                ).map(item => item.crop))].filter(Boolean).sort();
-            } else {
-                crops = [...new Set(csvData.filter(item => 
-                    item.region === currentRegion
-                ).map(item => item.crop))].filter(Boolean).sort();
+                filteredForCrops = filteredForCrops.filter(item => item.cropGroup === currentCropGroup);
             }
+            
+            const crops = [...new Set(filteredForCrops.map(item => item.crop))].filter(Boolean).sort();
             
             cropSelect.innerHTML = '<option value="">전체 작목</option>';
             crops.forEach(crop => {
@@ -352,7 +352,11 @@
                 cropSelect.appendChild(option);
             });
             
-            currentCrop = '';
+            // 작목 선택 초기화 (이전 선택이 새로운 필터에 없을 수 있음)
+            if (currentCrop && !crops.includes(currentCrop)) {
+                currentCrop = '';
+                cropSelect.value = '';
+            }
         }
 
         // 데이터 필터링
@@ -499,6 +503,7 @@
             // 작목군 선택 이벤트
             document.getElementById('cropGroupSelect').addEventListener('change', function() {
                 currentCropGroup = this.value;
+                currentCrop = ''; // 작목군이 바뀌면 작목 선택 초기화
                 updateCrops();
                 updateDisplay();
             });

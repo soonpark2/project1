@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>농업 데이터 시각화 대시보드</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(45deg, #2c3e50, #34495e);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .controls {
+            padding: 30px;
+            background: rgba(247, 249, 252, 0.8);
+            border-bottom: 1px solid #e0e6ed;
+        }
+        
+        .filter-section {
+            margin-bottom: 25px;
+        }
+        
+        .filter-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2c3e50;
+            font-size: 1.1em;
+        }
+        
+        .region-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .region-btn {
+            padding: 12px 24px;
+            border: 2px solid #3498db;
+            background: white;
+            color: #3498db;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .region-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .region-btn.active {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+        
+        .dropdown {
+            width: 100%;
+            max-width: 300px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1em;
+            background: white;
+            transition: all 0.3s ease;
+        }
+        
+        .dropdown:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.3);
+        }
+        
+        .content {
+            padding: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .data-table, .chart-container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(52, 152, 219, 0.1);
+        }
+        
+        .section-title {
+            font-size: 1.5em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            border-radius: 2px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            font-weight: 600;
+            color: #2c3e50;
+            text-transform: uppercase;
+            font-size: 0.9em;
+            letter-spacing: 0.5px;
+        }
+        
+        td {
+            font-size: 1em;
+            color: #34495e;
+        }
+        
+        tr:hover {
+            background: rgba(52, 152, 219, 0.05);
+            transform: scale(1.01);
+            transition: all 0.2s ease;
+        }
+        
+        .chart-container canvas {
+            max-height: 400px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+            font-size: 1.2em;
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #e74c3c;
+            font-size: 1.1em;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+            
+            .region-buttons {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌾 농업 데이터 시각화 대시보드</h1>
+            <p>지역별 작목 수입 현황을 한눈에 확인하세요</p>
+        </div>
+        
+        <div class="controls">
+            <div class="filter-section">
+                <label class="filter-label">📍 지역 선택</label>
+                <div class="region-buttons">
+                    <button class="region-btn active" data-region="전국">전국</button>
+                    <button class="region-btn" data-region="강원">강원</button>
+                </div>
+            </div>
+            
+            <div class="filter-section">
+                <label class="filter-label">🌱 작목군 선택</label>
+                <select class="dropdown" id="cropGroupSelect">
+                    <option value="">전체 작목군</option>
+                </select>
+            </div>
+            
+            <div class="filter-section">
+                <label class="filter-label">🍎 작목 선택</label>
+                <select class="dropdown" id="cropSelect">
+                    <option value="">전체 작목</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="data-table">
+                <h2 class="section-title">📊 데이터 테이블</h2>
+                <div id="tableContent">
+                    <div class="loading">데이터를 불러오는 중...</div>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <h2 class="section-title">📈 시각화 차트</h2>
+                <canvas id="dataChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 샘플 데이터 (실제 CSV 데이터로 교체하세요)
+        let csvData = [
+            {region: '전국', year: '2023', cropGroup: '과수', crop: '사과', category: '총수입', value: 8852139},
+            {region: '전국', year: '2023', cropGroup: '과수', crop: '배', category: '총수입', value: 7265401},
+            {region: '전국', year: '2023', cropGroup: '과수', crop: '복숭아', category: '총수입', value: 4910890},
+            {region: '전국', year: '2023', cropGroup: '과수', crop: '노지포도', category: '총수입', value: 10642010},
+            {region: '전국', year: '2023', cropGroup: '과수', crop: '사과', category: '생산량', value: 4521200},
+            {region: '전국', year: '2023', cropGroup: '과수', crop: '배', category: '생산량', value: 3832150},
+            {region: '전국', year: '2023', cropGroup: '과수', crop: '복숭아', category: '생산량', value: 2455445},
+            {region: '전국', year: '2023', cropGroup: '과수', crop: '노지포도', category: '생산량', value: 5321005},
+            {region: '강원', year: '2023', cropGroup: '과수', crop: '사과', category: '총수입', value: 1254300},
+            {region: '강원', year: '2023', cropGroup: '과수', crop: '배', category: '총수입', value: 892150},
+            {region: '강원', year: '2023', cropGroup: '과수', crop: '복숭아', category: '총수입', value: 651200},
+            {region: '강원', year: '2023', cropGroup: '과수', crop: '노지포도', category: '총수입', value: 1432800},
+            {region: '강원', year: '2023', cropGroup: '과수', crop: '사과', category: '생산량', value: 627150},
+            {region: '강원', year: '2023', cropGroup: '과수', crop: '배', category: '생산량', value: 446075},
+            {region: '강원', year: '2023', cropGroup: '과수', crop: '복숭아', category: '생산량', value: 325600},
+            {region: '강원', year: '2023', cropGroup: '과수', crop: '노지포도', category: '생산량', value: 716400}
+        ];
+        
+        let filteredData = [];
+        let currentRegion = '전국';
+        let currentCropGroup = '';
+        let currentCrop = '';
+        let chart = null;
+
+        function showError(message) {
+            document.getElementById('tableContent').innerHTML = `<div class="no-data">${message}</div>`;
+        }
+
+        // 필터 초기화
+        function initializeFilters() {
+            const cropGroups = [...new Set(csvData.map(item => item.cropGroup))].filter(Boolean).sort();
+            const cropGroupSelect = document.getElementById('cropGroupSelect');
+            
+            cropGroupSelect.innerHTML = '<option value="">전체 작목군</option>';
+            cropGroups.forEach(group => {
+                const option = document.createElement('option');
+                option.value = group;
+                option.textContent = group;
+                cropGroupSelect.appendChild(option);
+            });
+        }
+
+        // 작목 업데이트
+        function updateCrops() {
+            const cropSelect = document.getElementById('cropSelect');
+            let crops = [];
+            
+            if (currentCropGroup) {
+                crops = [...new Set(csvData.filter(item => 
+                    item.region === currentRegion && item.cropGroup === currentCropGroup
+                ).map(item => item.crop))].filter(Boolean).sort();
+            } else {
+                crops = [...new Set(csvData.filter(item => 
+                    item.region === currentRegion
+                ).map(item => item.crop))].filter(Boolean).sort();
+            }
+            
+            cropSelect.innerHTML = '<option value="">전체 작목</option>';
+            crops.forEach(crop => {
+                const option = document.createElement('option');
+                option.value = crop;
+                option.textContent = crop;
+                cropSelect.appendChild(option);
+            });
+            
+            currentCrop = '';
+        }
+
+        // 데이터 필터링
+        function filterData() {
+            filteredData = csvData.filter(item => {
+                return item.region === currentRegion &&
+                       (!currentCropGroup || item.cropGroup === currentCropGroup) &&
+                       (!currentCrop || item.crop === currentCrop);
+            });
+        }
+
+        // 테이블 업데이트
+        function updateTable() {
+            const tableContent = document.getElementById('tableContent');
+            
+            if (filteredData.length === 0) {
+                tableContent.innerHTML = '<div class="no-data">선택한 조건에 해당하는 데이터가 없습니다.</div>';
+                return;
+            }
+
+            const categories = {};
+            filteredData.forEach(item => {
+                if (!categories[item.category]) {
+                    categories[item.category] = 0;
+                }
+                categories[item.category] += item.value;
+            });
+
+            let tableHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>구분</th>
+                            <th>값</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            Object.entries(categories).forEach(([category, value]) => {
+                tableHTML += `
+                    <tr>
+                        <td>${category}</td>
+                        <td>${value.toLocaleString()}</td>
+                    </tr>
+                `;
+            });
+
+            tableHTML += '</tbody></table>';
+            tableContent.innerHTML = tableHTML;
+        }
+
+        // 차트 업데이트
+        function updateChart() {
+            const ctx = document.getElementById('dataChart').getContext('2d');
+            
+            if (chart) {
+                chart.destroy();
+            }
+
+            if (filteredData.length === 0) {
+                return;
+            }
+
+            const categories = {};
+            filteredData.forEach(item => {
+                if (!categories[item.category]) {
+                    categories[item.category] = 0;
+                }
+                categories[item.category] += item.value;
+            });
+
+            const labels = Object.keys(categories);
+            const data = Object.values(categories);
+            const colors = [
+                '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', 
+                '#9966FF', '#FF9F40', '#FF6384', '#C9CBCF'
+            ];
+
+            chart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: colors.slice(0, labels.length),
+                        borderWidth: 3,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true,
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label + ': ' + context.parsed.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    animation: {
+                        animateRotate: true,
+                        duration: 1000
+                    }
+                }
+            });
+        }
+
+        // 화면 업데이트
+        function updateDisplay() {
+            filterData();
+            updateTable();
+            updateChart();
+        }
+
+        // 이벤트 리스너
+        document.addEventListener('DOMContentLoaded', function() {
+            // 초기 데이터 로드
+            initializeFilters();
+            updateDisplay();
+            
+            // 지역 버튼 이벤트
+            document.querySelectorAll('.region-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.region-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentRegion = this.dataset.region;
+                    updateCrops();
+                    updateDisplay();
+                });
+            });
+
+            // 작목군 선택 이벤트
+            document.getElementById('cropGroupSelect').addEventListener('change', function() {
+                currentCropGroup = this.value;
+                updateCrops();
+                updateDisplay();
+            });
+
+            // 작목 선택 이벤트
+            document.getElementById('cropSelect').addEventListener('change', function() {
+                currentCrop = this.value;
+                updateDisplay();
+            });
+        });
+    </script>
+</body>
+</html>

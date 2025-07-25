@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2024 소득조사 대시보드</title>
+    <title>2024 소득조사 AMIS 업적현황</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <style>
@@ -271,9 +271,15 @@
 </head>
 <body>
     <div class="header">
-        <div class="header-left">2024 소득조사 대시보드</div>
+        <div class="header-left">2024 소득조사 AMIS 업적현황 &nbsp;&nbsp; 2025-07-25일 기준</div>
         <div class="header-right">
-            <span>비교</span>
+            <span>업적현황</span>
+            <span>작목군별</span>
+            <span>시군별</span>
+            <span>종합분석</span>
+            <span>소득조사</span>
+            <span>업브로드</span>
+            <span>관리지표분석</span>
         </div>
     </div>
 
@@ -388,7 +394,26 @@
         };
         let charts = {};
 
-        // 테스트 데이터 로드
+        // GitHub에서 CSV 파일 불러오기
+        async function loadCSVFromGitHub() {
+            try {
+                const csvUrl = 'https://raw.githubusercontent.com/soonpark2/project1/main/DB.csv';
+                const response = await fetch(csvUrl);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const csvText = await response.text();
+                parseCSV(csvText);
+            } catch (error) {
+                console.error('CSV 파일 로드 오류:', error);
+                showError(`GitHub에서 CSV 파일을 불러올 수 없습니다: ${error.message}`);
+                loadTestData();
+            }
+        }
+
+        // 테스트 데이터 (백업용)
         function loadTestData() {
             const testData = `지역구분,년,작목군,작목,구분,값
 전국,2021,과일,사과,소득,4000000
@@ -429,6 +454,11 @@
 강원,2023,채소,감자,소득률,19.8`;
             
             parseCSV(testData);
+        }
+
+        function showError(message) {
+            const tableBody = document.getElementById('detailTableBody');
+            tableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #ef4444;">${message}</td></tr>`;
         }
 
         function parseCSV(csvText) {
@@ -671,11 +701,8 @@
 
         // 페이지 로드 시 초기화
         document.addEventListener('DOMContentLoaded', function() {
-            loadTestData();
+            loadCSVFromGitHub();
         });
-    </script>
-</body>
-</html>
     </script>
 </body>
 </html>

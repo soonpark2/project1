@@ -193,6 +193,18 @@
             font-size: 1.1em;
         }
         
+        .debug-info {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            font-family: monospace;
+            font-size: 0.9em;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
         @media (max-width: 768px) {
             .content {
                 grid-template-columns: 1fr;
@@ -241,6 +253,7 @@
                 <div id="tableContent">
                     <div class="loading">데이터를 불러오는 중...</div>
                 </div>
+                <div id="debugInfo" class="debug-info" style="display: none;"></div>
             </div>
             
             <div class="chart-container">
@@ -258,11 +271,23 @@
         let currentCrop = '';
         let chart = null;
 
+        // 디버그 정보 표시
+        function showDebugInfo(message) {
+            const debugDiv = document.getElementById('debugInfo');
+            debugDiv.style.display = 'block';
+            debugDiv.innerHTML += `<div>${new Date().toLocaleTimeString()}: ${message}</div>`;
+            console.log(message);
+        }
+
         // GitHub에서 CSV 파일 불러오기
         async function loadCSVFromGitHub() {
             try {
+                showDebugInfo('GitHub에서 CSV 파일 로드 시작...');
+                
                 // GitHub raw 파일 URL
                 const csvUrl = 'https://raw.githubusercontent.com/soonpark2/project1/main/DB.csv';
+                
+                showDebugInfo(`URL 접근: ${csvUrl}`);
                 
                 const response = await fetch(csvUrl);
                 if (!response.ok) {
@@ -270,32 +295,86 @@
                 }
                 
                 const csvText = await response.text();
+                showDebugInfo(`CSV 텍스트 길이: ${csvText.length} characters`);
+                showDebugInfo(`CSV 첫 200자: ${csvText.substring(0, 200)}...`);
+                
                 parseCSV(csvText);
             } catch (error) {
                 console.error('CSV 파일 로드 오류:', error);
-                showError('GitHub에서 CSV 파일을 불러올 수 없습니다. URL을 확인해주세요.');
+                showDebugInfo(`CSV 로드 오류: ${error.message}`);
+                showError(`GitHub에서 CSV 파일을 불러올 수 없습니다: ${error.message}`);
+                
+                // 테스트 데이터로 대체
+                loadTestData();
             }
         }
 
+        // 테스트 데이터 생성
+        function loadTestData() {
+            showDebugInfo('테스트 데이터 생성 중...');
+            
+            const testData = `지역구분,년,작목군,작목,구분,값
+전국,2023,과일,사과,생산량,1000000
+전국,2023,과일,사과,수입액,5000000
+전국,2023,과일,배,생산량,800000
+전국,2023,과일,배,수입액,4000000
+전국,2023,채소,배추,생산량,2000000
+전국,2023,채소,배추,수입액,3000000
+강원,2023,과일,사과,생산량,200000
+강원,2023,과일,사과,수입액,1000000
+강원,2023,채소,감자,생산량,1500000
+강원,2023,채소,감자,수입액,2500000`;
+            
+            showDebugInfo('테스트 데이터로 파싱 시작...');
+            parseCSV(testData);
+        }
+
         function parseCSV(csvText) {
+            showDebugInfo('CSV 파싱 시작...');
+            
             Papa.parse(csvText, {
                 header: true,
                 skipEmptyLines: true,
+                encoding: 'UTF-8',
                 complete: function(results) {
-                    csvData = results.data.map(row => ({
-                        region: (row['지역구분'] || '').trim(),
-                        year: (row['년'] || '').trim(),
-                        cropGroup: (row['작목군'] || '').trim(),
-                        crop: (row['작목'] || '').trim(),
-                        category: (row['구분'] || '').trim(),
-                        value: parseInt((row['값'] || '0').replace(/,/g, '')) || 0
-                    })).filter(row => row.region && row.cropGroup);
+                    showDebugInfo(`파싱 결과: ${results.data.length}개 행`);
+                    showDebugInfo(`첫 번째 행: ${JSON.stringify(results.data[0])}`);
                     
-                    console.log('CSV 데이터 로드 완료:', csvData.length, '개 항목');
+                    if (results.errors && results.errors.length > 0) {
+                        showDebugInfo(`파싱 에러: ${JSON.stringify(results.errors)}`);
+                    }
+                    
+                    csvData = results.data.map((row, index) => {
+                        const mapped = {
+                            region: (row['지역구분'] || row['지역'] || '').trim(),
+                            year: (row['년'] || row['year'] || '').trim(),
+                            cropGroup: (row['작목군'] || row['cropGroup'] || '').trim(),
+                            crop: (row['작목'] || row['crop'] || '').trim(),
+                            category: (row['구분'] || row['category'] || '').trim(),
+                            value: parseInt((row['값'] || row['value'] || '0').toString().replace(/,/g, '')) || 0
+                        };
+                        
+                        if (index < 5) {
+                            showDebugInfo(`매핑된 ${index}번째 행: ${JSON.stringify(mapped)}`);
+                        }
+                        
+                        return mapped;
+                    }).filter(row => row.region && row.cropGroup);
+                    
+                    showDebugInfo(`필터링 후 데이터 개수: ${csvData.length}`);
                     
                     if (csvData.length > 0) {
+                        const regions = [...new Set(csvData.map(item => item.region))];
+                        const cropGroups = [...new Set(csvData.map(item => item.cropGroup))];
+                        const crops = [...new Set(csvData.map(item => item.crop))];
+                        
+                        showDebugInfo(`고유 지역: ${regions.join(', ')}`);
+                        showDebugInfo(`고유 작목군: ${cropGroups.join(', ')}`);
+                        showDebugInfo(`고유 작목: ${crops.join(', ')}`);
+                        
                         initializeFilters();
                         updateDisplay();
+                        
                         document.getElementById('tableContent').innerHTML = '<div class="loading">데이터 로드 완료!</div>';
                         setTimeout(() => {
                             updateDisplay();
@@ -306,6 +385,7 @@
                 },
                 error: function(error) {
                     console.error('CSV 파싱 오류:', error);
+                    showDebugInfo(`CSV 파싱 오류: ${JSON.stringify(error)}`);
                     showError('CSV 파일을 파싱하는 중 오류가 발생했습니다.');
                 }
             });
@@ -317,8 +397,12 @@
 
         // 필터 초기화
         function initializeFilters() {
+            showDebugInfo('필터 초기화 시작...');
+            
             const cropGroups = [...new Set(csvData.map(item => item.cropGroup))].filter(Boolean).sort();
             const cropGroupSelect = document.getElementById('cropGroupSelect');
+            
+            showDebugInfo(`작목군 목록: ${cropGroups.join(', ')}`);
             
             cropGroupSelect.innerHTML = '<option value="">전체 작목군</option>';
             cropGroups.forEach(group => {
@@ -328,21 +412,29 @@
                 cropGroupSelect.appendChild(option);
             });
             
+            showDebugInfo(`작목군 드롭다운에 ${cropGroups.length}개 항목 추가됨`);
+            
             // 초기 작목 목록 업데이트
             updateCrops();
         }
 
         // 작목 업데이트 (선택된 지역과 작목군에 따라)
         function updateCrops() {
+            showDebugInfo(`작목 업데이트: 지역=${currentRegion}, 작목군=${currentCropGroup}`);
+            
             const cropSelect = document.getElementById('cropSelect');
             let filteredForCrops = csvData.filter(item => item.region === currentRegion);
+            
+            showDebugInfo(`지역 필터링 후: ${filteredForCrops.length}개 항목`);
             
             // 작목군이 선택되었으면 해당 작목군으로 필터링
             if (currentCropGroup) {
                 filteredForCrops = filteredForCrops.filter(item => item.cropGroup === currentCropGroup);
+                showDebugInfo(`작목군 필터링 후: ${filteredForCrops.length}개 항목`);
             }
             
             const crops = [...new Set(filteredForCrops.map(item => item.crop))].filter(Boolean).sort();
+            showDebugInfo(`작목 목록: ${crops.join(', ')}`);
             
             cropSelect.innerHTML = '<option value="">전체 작목</option>';
             crops.forEach(crop => {
@@ -351,6 +443,8 @@
                 option.textContent = crop;
                 cropSelect.appendChild(option);
             });
+            
+            showDebugInfo(`작목 드롭다운에 ${crops.length}개 항목 추가됨`);
             
             // 작목 선택 초기화 (이전 선택이 새로운 필터에 없을 수 있음)
             if (currentCrop && !crops.includes(currentCrop)) {
@@ -366,6 +460,8 @@
                        (!currentCropGroup || item.cropGroup === currentCropGroup) &&
                        (!currentCrop || item.crop === currentCrop);
             });
+            
+            showDebugInfo(`필터링된 데이터: ${filteredData.length}개 항목`);
         }
 
         // 테이블 업데이트
@@ -486,6 +582,8 @@
 
         // 이벤트 리스너
         document.addEventListener('DOMContentLoaded', function() {
+            showDebugInfo('페이지 로드 완료, CSV 파일 로드 시작...');
+            
             // GitHub에서 CSV 파일 로드
             loadCSVFromGitHub();
             
@@ -495,6 +593,7 @@
                     document.querySelectorAll('.region-btn').forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
                     currentRegion = this.dataset.region;
+                    showDebugInfo(`지역 변경: ${currentRegion}`);
                     updateCrops();
                     updateDisplay();
                 });
@@ -504,6 +603,7 @@
             document.getElementById('cropGroupSelect').addEventListener('change', function() {
                 currentCropGroup = this.value;
                 currentCrop = ''; // 작목군이 바뀌면 작목 선택 초기화
+                showDebugInfo(`작목군 변경: ${currentCropGroup}`);
                 updateCrops();
                 updateDisplay();
             });
@@ -511,6 +611,7 @@
             // 작목 선택 이벤트
             document.getElementById('cropSelect').addEventListener('change', function() {
                 currentCrop = this.value;
+                showDebugInfo(`작목 변경: ${currentCrop}`);
                 updateDisplay();
             });
         });

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2024 소득조사 대시보드드</title>
+    <title>2024 소득조사 AMIS 업적현황</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <style>
@@ -99,22 +99,21 @@
         }
         
         .year-buttons {
-            display: flex;
-            gap: 5px;
-            padding: 10px;
             background: white;
             border: 1px solid #e5e7eb;
             border-top: none;
         }
         
         .year-btn {
-            padding: 6px 12px;
-            border: 1px solid #d1d5db;
+            padding: 8px 12px;
+            border: none;
+            border-bottom: 1px solid #f3f4f6;
             background: white;
             cursor: pointer;
-            font-size: 11px;
-            border-radius: 3px;
-            transition: all 0.2s;
+            font-size: 12px;
+            transition: background 0.2s;
+            width: 100%;
+            text-align: left;
         }
         
         .year-btn:hover {
@@ -122,15 +121,15 @@
         }
         
         .year-btn.active {
-            background: #3b82f6;
-            color: white;
-            border-color: #3b82f6;
+            background: #dbeafe;
+            color: #1e40af;
+            font-weight: bold;
         }
         
         .charts-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            grid-template-rows: auto auto auto;
+            grid-template-rows: auto;
             gap: 15px;
             height: 100%;
         }
@@ -151,10 +150,22 @@
             text-align: center;
         }
         
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+        
+        .combined-section {
+            grid-column: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
         .income-summary {
-            grid-column: 1 / 3;
             display: flex;
             gap: 15px;
+            margin-bottom: 20px;
         }
         
         .summary-box {
@@ -186,20 +197,12 @@
             color: #6b7280;
         }
         
-        .chart-container {
-            position: relative;
-            height: 300px;
-        }
-        
-        .detailed-table {
-            grid-column: 1 / 3;
-        }
-        
         .table-wrapper {
             max-height: 400px;
             overflow-y: auto;
             border: 1px solid #e5e7eb;
             border-radius: 4px;
+            flex: 1;
         }
         
         table {
@@ -242,11 +245,7 @@
                 grid-template-columns: 1fr;
             }
             
-            .income-summary {
-                grid-column: 1;
-            }
-            
-            .detailed-table {
+            .combined-section {
                 grid-column: 1;
             }
         }
@@ -271,7 +270,7 @@
 </head>
 <body>
     <div class="header">
-        <div class="header-left">2024 소득조사 대시보드</div>
+        <div class="header-left">2024 소득조사 AMIS 업적현황 &nbsp;&nbsp; 2025-07-25일 기준</div>
         <div class="header-right">
             <span>현황</span>
         </div>
@@ -304,16 +303,15 @@
             <div class="filter-section">
                 <div class="filter-title">년</div>
                 <div class="year-buttons" id="yearFilter">
-                    <div class="year-btn active" data-year="">전체</div>
                 </div>
             </div>
         </div>
 
         <div class="main-content">
             <div class="charts-grid">
-                <div class="chart-card income-summary">
-                    <div class="chart-title">2023년</div>
-                    <div style="display: flex; gap: 20px;">
+                <div class="chart-card combined-section">
+                    <div class="chart-title" id="summaryTitle">2023년 전국 농사소득지배수</div>
+                    <div class="income-summary">
                         <div class="summary-box income">
                             <div class="summary-label">소득</div>
                             <div class="summary-value" id="totalIncome">₩0</div>
@@ -324,53 +322,25 @@
                             <div class="summary-value" id="totalRate">0%</div>
                         </div>
                     </div>
-                </div>
-
-                <div class="chart-card">
-                    <div class="chart-title">총수입</div>
-                    <div class="chart-container">
-                        <canvas id="incomeChart"></canvas>
-                    </div>
-                </div>
-
-                <div class="chart-card">
-                    <div class="chart-title">경영비</div>
-                    <div class="chart-container">
-                        <canvas id="costChart"></canvas>
-                    </div>
-                </div>
-
-                <div class="chart-card">
-                    <div class="chart-title">경영비</div>
-                    <div class="chart-container">
-                        <canvas id="managementChart"></canvas>
-                    </div>
-                </div>
-
-                <div class="chart-card">
-                    <div class="chart-title">생산량</div>
-                    <div class="chart-container">
-                        <canvas id="productionChart"></canvas>
-                    </div>
-                </div>
-
-                <div class="chart-card detailed-table">
-                    <div class="chart-title">2023년 전국 농사제소 작목별 소득</div>
                     <div class="table-wrapper">
                         <table>
                             <thead>
                                 <tr>
-                                    <th>작목군</th>
-                                    <th>작목</th>
-                                    <th>연도</th>
-                                    <th>소득</th>
-                                    <th>소득률(%)</th>
+                                    <th>비목</th>
+                                    <th>값</th>
                                 </tr>
                             </thead>
                             <tbody id="detailTableBody">
-                                <tr><td colspan="5" class="loading">데이터를 불러오는 중...</td></tr>
+                                <tr><td colspan="2" class="loading">데이터를 불러오는 중...</td></tr>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-title">홍수입</div>
+                    <div class="chart-container">
+                        <canvas id="incomeChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -384,7 +354,7 @@
             region: '전국',
             cropGroup: '',
             crop: '',
-            year: ''
+            year: '2023'
         };
         let charts = {};
 
@@ -410,49 +380,56 @@
         // 테스트 데이터 (백업용)
         function loadTestData() {
             const testData = `지역구분,년,작목군,작목,구분,값
-전국,2021,과일,사과,소득,4000000
-전국,2021,과일,사과,소득률,15.5
-전국,2022,과일,사과,소득,4500000
-전국,2022,과일,사과,소득률,17.2
-전국,2023,과일,사과,소득,5000000
-전국,2023,과일,사과,소득률,18.8
-전국,2021,과일,배,소득,3200000
-전국,2021,과일,배,소득률,12.8
-전국,2022,과일,배,소득,3600000
-전국,2022,과일,배,소득률,14.1
+전국,2023,쌀,쌀,소득,5000000
+전국,2023,쌀,쌀,소득률,18.8
+전국,2023,쌀,쌀,비목,주산물가액
+전국,2023,쌀,쌀,비목,주산물수량
+전국,2023,쌀,쌀,비목,부산물가액
+전국,2023,쌀,쌀,비목,수취가격
+전국,2023,쌀,쌀,비목,종자·종묘비
+전국,2023,쌀,쌀,비목,비료비
+전국,2023,쌀,쌀,비목,농약비
+전국,2023,쌀,쌀,비목,광열동력비
+전국,2023,과일,사과,소득,4500000
+전국,2023,과일,사과,소득률,17.2
+전국,2023,과일,사과,비목,주산물가액
+전국,2023,과일,사과,비목,종자·종묘비
+전국,2023,과일,사과,비목,비료비
+전국,2023,과일,사과,비목,농약비
 전국,2023,과일,배,소득,4000000
 전국,2023,과일,배,소득률,15.3
-전국,2021,채소,배추,소득,2800000
-전국,2021,채소,배추,소득률,11.2
-전국,2022,채소,배추,소득,2900000
-전국,2022,채소,배추,소득률,11.8
+전국,2023,과일,배,비목,주산물가액
+전국,2023,과일,배,비목,주산물수량
+전국,2023,과일,배,비목,종자·종묘비
+전국,2023,과일,배,비목,비료비
 전국,2023,채소,배추,소득,3000000
 전국,2023,채소,배추,소득률,12.5
-전국,2021,채소,감자,소득,2200000
-전국,2021,채소,감자,소득률,18.3
-전국,2022,채소,감자,소득,2350000
-전국,2022,채소,감자,소득률,19.1
+전국,2023,채소,배추,비목,주산물가액
+전국,2023,채소,배추,비목,주산물수량
+전국,2023,채소,배추,비목,종자·종묘비
+전국,2023,채소,배추,비목,비료비
 전국,2023,채소,감자,소득,2500000
 전국,2023,채소,감자,소득률,19.8
-강원,2021,과일,사과,소득,800000
-강원,2021,과일,사과,소득률,14.2
-강원,2022,과일,사과,소득,900000
-강원,2022,과일,사과,소득률,15.8
+전국,2023,채소,감자,비목,주산물가액
+전국,2023,채소,감자,비목,수취가격
+전국,2023,채소,감자,비목,종자·종묘비
+전국,2023,채소,감자,비목,농약비
 강원,2023,과일,사과,소득,1000000
 강원,2023,과일,사과,소득률,16.5
-강원,2021,채소,감자,소득,2200000
-강원,2021,채소,감자,소득률,18.3
-강원,2022,채소,감자,소득,2350000
-강원,2022,채소,감자,소득률,19.1
+강원,2023,과일,사과,비목,주산물가액
+강원,2023,과일,사과,비목,종자·종묘비
 강원,2023,채소,감자,소득,2500000
-강원,2023,채소,감자,소득률,19.8`;
+강원,2023,채소,감자,소득률,19.8
+강원,2023,채소,감자,비목,주산물가액
+강원,2023,채소,감자,비목,종자·종묘비
+강원,2023,채소,감자,비목,비료비`;
             
             parseCSV(testData);
         }
 
         function showError(message) {
             const tableBody = document.getElementById('detailTableBody');
-            tableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #ef4444;">${message}</td></tr>`;
+            tableBody.innerHTML = `<tr><td colspan="2" style="text-align: center; color: #ef4444;">${message}</td></tr>`;
         }
 
         function parseCSV(csvText) {
@@ -486,12 +463,16 @@
                 cropGroupFilter.innerHTML += `<div class="filter-item" data-crop-group="${group}">${group}</div>`;
             });
 
-            // 연도 필터 초기화
+            // 연도 필터 초기화 (전체 옵션 제거, 첫 번째 년도를 기본값으로 설정)
             const years = [...new Set(csvData.map(item => item.year))].sort();
             const yearFilter = document.getElementById('yearFilter');
-            yearFilter.innerHTML = '<div class="year-btn active" data-year="">전체</div>';
-            years.forEach(year => {
-                yearFilter.innerHTML += `<div class="year-btn" data-year="${year}">${year}</div>`;
+            yearFilter.innerHTML = '';
+            years.forEach((year, index) => {
+                const isActive = index === years.length - 1; // 마지막 년도(최신)를 기본 선택
+                yearFilter.innerHTML += `<div class="year-btn ${isActive ? 'active' : ''}" data-year="${year}">${year}</div>`;
+                if (isActive) {
+                    currentFilters.year = year;
+                }
             });
 
             updateCrops();
@@ -557,6 +538,14 @@
             });
         }
 
+        function updateDisplay() {
+            filterData();
+            updateSummary();
+            updateSummaryTitle(); // 요약 제목 업데이트 추가
+            updateTable();
+            updateCharts();
+        }
+
         function filterData() {
             filteredData = csvData.filter(item => {
                 return item.region === currentFilters.region &&
@@ -567,130 +556,118 @@
         }
 
         function updateSummary() {
-            const totalIncome = filteredData.filter(item => item.category === '소득')
-                                          .reduce((sum, item) => sum + item.value, 0);
-            const avgRate = filteredData.filter(item => item.category === '소득률')
-                                      .reduce((sum, item, _, arr) => sum + item.value / arr.length, 0);
-
-            document.getElementById('totalIncome').textContent = `₩${totalIncome.toLocaleString()}`;
+            const income = filteredData.filter(i => i.category === '소득').reduce((a, b) => a + b.value, 0);
+            const rateArr = filteredData.filter(i => i.category === '소득률');
+            const avgRate = rateArr.reduce((a, b) => a + b.value, 0) / (rateArr.length || 1);
+            document.getElementById('totalIncome').textContent = `₩${income.toLocaleString()}`;
             document.getElementById('totalRate').textContent = `${avgRate.toFixed(1)}%`;
+        }
+
+        function updateSummaryTitle() {
+            const selectedYear = currentFilters.year || '2023';
+            const selectedRegion = currentFilters.region || '전국';
+            const selectedCrop = currentFilters.crop || '';
+            
+            let titleParts = [selectedYear + '년', selectedRegion];
+            
+            if (selectedCrop) {
+                titleParts.push(selectedCrop);
+            }
+            
+            titleParts.push('농사소득지배수');
+            
+            const summaryTitle = document.getElementById('summaryTitle');
+            summaryTitle.textContent = titleParts.join(' ');
         }
 
         function updateTable() {
             const tableBody = document.getElementById('detailTableBody');
             
-            if (filteredData.length === 0) {
-                tableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #6b7280;">데이터가 없습니다.</td></tr>';
-                return;
-            }
-
-            // 데이터 그룹화
-            const grouped = {};
-            filteredData.forEach(item => {
-                const key = `${item.cropGroup}-${item.crop}-${item.year}`;
-                if (!grouped[key]) {
-                    grouped[key] = {
-                        cropGroup: item.cropGroup,
-                        crop: item.crop,
-                        year: item.year,
-                        income: 0,
-                        rate: 0
-                    };
-                }
-                if (item.category === '소득') grouped[key].income = item.value;
-                if (item.category === '소득률') grouped[key].rate = item.value;
-            });
-
-            let html = '';
-            Object.values(grouped).forEach(item => {
-                html += `
-                    <tr>
-                        <td>${item.cropGroup}</td>
-                        <td>${item.crop}</td>
-                        <td>${item.year}년</td>
-                        <td>${item.income.toLocaleString()}</td>
-                        <td>${item.rate.toFixed(1)}%</td>
-                    </tr>
-                `;
-            });
-
-            tableBody.innerHTML = html;
-        }
-
-        function createChart(canvasId, data, label, color) {
-            const ctx = document.getElementById(canvasId).getContext('2d');
+            // 작목별 비목 순서 정의
+            const itemOrder = {
+                '쌀': ['주산물가액', '주산물수량', '부산물가액', '수취가격', '종자·종묘비', '비료비', '농약비', '광열동력비', '기타재료비', '노동비', '임차료', '자본용역비', '기타비용'],
+                '과일': ['주산물가액', '주산물수량', '부산물가액', '수취가격', '종자·종묘비', '비료비', '농약비', '기타재료비', '노동비', '기계비', '임차료'],
+                '채소': ['주산물가액', '주산물수량', '수취가격', '종자·종묘비', '비료비', '농약비', '광열동력비', '기타재료비', '노동비', '기계비'],
+                '기본': ['주산물가액', '주산물수량', '부산물가액', '수취가격', '종자·종묘비', '비료비', '농약비', '광열동력비', '기타재료비', '노동비', '임차료', '자본용역비', '기타비용']
+            };
             
-            if (charts[canvasId]) {
-                charts[canvasId].destroy();
+            // 현재 선택된 작목군에 따른 순서 결정
+            let currentOrder = itemOrder['기본']; // 기본값
+            if (currentFilters.cropGroup && itemOrder[currentFilters.cropGroup]) {
+                currentOrder = itemOrder[currentFilters.cropGroup];
             }
-
-            charts[canvasId] = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: data.labels,
-                    datasets: [{
-                        label: label,
-                        data: data.values,
-                        borderColor: color,
-                        backgroundColor: color + '20',
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false }
-                    },
-                    scales: {
-                        x: {
-                            grid: { display: false },
-                            ticks: { font: { size: 10 } }
-                        },
-                        y: {
-                            grid: { color: '#f3f4f6' },
-                            ticks: { 
-                                font: { size: 10 },
-                                callback: function(value) {
-                                    return value.toLocaleString();
-                                }
-                            }
-                        }
-                    }
+            
+            // 구분이 '비목'인 데이터만 필터링
+            const tableFiltered = filteredData.filter(item => item.category === '비목');
+            
+            // 비목 데이터를 value 기준으로 그룹화
+            const itemMap = {};
+            tableFiltered.forEach(item => {
+                itemMap[item.value] = item;
+            });
+            
+            let html = '';
+            
+            // 정의된 순서대로 표시
+            currentOrder.forEach(itemName => {
+                if (itemMap[itemName]) {
+                    // 실제 값이 있는 경우 해당 값을 표시 (향후 확장 가능)
+                    const actualValue = itemMap[itemName].actualValue || '-';
+                    html += `<tr><td>${itemName}</td><td>${actualValue}</td></tr>`;
+                } else {
+                    // 데이터가 없는 경우에도 순서에 따라 표시
+                    html += `<tr><td>${itemName}</td><td>-</td></tr>`;
                 }
             });
+            
+            // 정의되지 않은 추가 비목이 있는 경우 맨 아래에 표시
+            Object.keys(itemMap).forEach(itemName => {
+                if (!currentOrder.includes(itemName)) {
+                    const actualValue = itemMap[itemName].actualValue || '-';
+                    html += `<tr><td>${itemName}</td><td>${actualValue}</td></tr>`;
+                }
+            });
+            
+            tableBody.innerHTML = html || '<tr><td colspan="2">데이터가 없습니다.</td></tr>';
         }
 
         function updateCharts() {
-            // 연도별 소득 데이터 준비
-            const yearlyIncome = {};
-            filteredData.filter(item => item.category === '소득').forEach(item => {
-                if (!yearlyIncome[item.year]) yearlyIncome[item.year] = 0;
-                yearlyIncome[item.year] += item.value;
+            const fixedYears = ['2019', '2020', '2021', '2022', '2023'];
+            const chartData = { labels: fixedYears.map(y => y + '년'), datasets: [] };
+            const categories = [
+                { name: '총수입', color: '#3b82f6' },
+                { name: '경영비', color: '#ef4444' },
+                { name: '소득', color: '#10b981' }
+            ];
+            categories.forEach(cat => {
+                const values = fixedYears.map(y => {
+                    const found = filteredData.find(row => row.category === cat.name && row.year === y);
+                    return found ? found.value : 0;
+                });
+                chartData.datasets.push({
+                    label: cat.name,
+                    data: values,
+                    borderColor: cat.color,
+                    backgroundColor: cat.color + '30',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                });
             });
-
-            const years = Object.keys(yearlyIncome).sort();
-            const incomeValues = years.map(year => yearlyIncome[year]);
-
-            const chartData = {
-                labels: years.map(year => year + '년'),
-                values: incomeValues
-            };
-
-            // 각 차트 업데이트 (임시로 같은 데이터 사용)
-            createChart('incomeChart', chartData, '소득', '#3b82f6');
-            createChart('costChart', chartData, '경작비', '#ef4444');
-            createChart('managementChart', chartData, '경영비', '#f59e0b');
-            createChart('productionChart', chartData, '생산량', '#10b981');
-        }
-
-        function updateDisplay() {
-            filterData();
-            updateSummary();
-            updateTable();
-            updateCharts();
+            const ctx = document.getElementById('incomeChart').getContext('2d');
+            if (charts['incomeChart']) charts['incomeChart'].destroy();
+            charts['incomeChart'] = new Chart(ctx, {
+                type: 'line',
+                data: chartData,
+                options: {
+                    responsive: true,
+                    plugins: { legend: { position: 'top' } },
+                    scales: {
+                        x: { grid: { display: false } },
+                        y: { ticks: { callback: val => val.toLocaleString() } }
+                    }
+                }
+            });
         }
 
         // 페이지 로드 시 초기화

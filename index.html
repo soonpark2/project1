@@ -614,7 +614,7 @@
             currentOrder.forEach(itemName => {
                 if (itemMap[itemName]) {
                     // 실제 값이 있는 경우 해당 값을 표시 (향후 확장 가능)
-                    const actualValue = itemMap[itemName].actualValue || '-';
+                    const actualValue = itemMap[itemName].value !== undefined ? itemMap[itemName].value.toLocaleString() : '-';
                     html += `<tr><td>${itemName}</td><td>${actualValue}</td></tr>`;
                 } else {
                     // 데이터가 없는 경우에도 순서에 따라 표시
@@ -625,10 +625,10 @@
             // 정의되지 않은 추가 비목이 있는 경우 맨 아래에 표시
             Object.keys(itemMap).forEach(itemName => {
                 if (!currentOrder.includes(itemName)) {
-                    const actualValue = itemMap[itemName].actualValue || '-';
+                    const actualValue = itemMap[itemName].value !== undefined ? itemMap[itemName].value.toLocaleString() : '-';
                     html += `<tr><td>${itemName}</td><td>${actualValue}</td></tr>`;
                 }
-            });
+            })
             
             tableBody.innerHTML = html || '<tr><td colspan="2">데이터가 없습니다.</td></tr>';
         }
@@ -636,16 +636,25 @@
         function updateCharts() {
             const fixedYears = ['2019', '2020', '2021', '2022', '2023'];
             const chartData = { labels: fixedYears.map(y => y + '년'), datasets: [] };
+        
             const categories = [
                 { name: '총수입', color: '#3b82f6' },
                 { name: '경영비', color: '#ef4444' },
                 { name: '소득', color: '#10b981' }
             ];
+        
             categories.forEach(cat => {
                 const values = fixedYears.map(y => {
-                    const found = filteredData.find(row => row.category === cat.name && row.year === y);
-                    return found ? found.value : 0;
+                    const match = csvData.find(row =>
+                        row.category === cat.name &&
+                        row.year === y &&
+                        row.region === currentFilters.region &&
+                        (!currentFilters.cropGroup || row.cropGroup === currentFilters.cropGroup) &&
+                        (!currentFilters.crop || row.crop === currentFilters.crop)
+                    );
+                    return match ? match.value : 0;
                 });
+        
                 chartData.datasets.push({
                     label: cat.name,
                     data: values,
@@ -656,8 +665,10 @@
                     tension: 0.4
                 });
             });
+        
             const ctx = document.getElementById('incomeChart').getContext('2d');
             if (charts['incomeChart']) charts['incomeChart'].destroy();
+        
             charts['incomeChart'] = new Chart(ctx, {
                 type: 'line',
                 data: chartData,
@@ -666,11 +677,16 @@
                     plugins: { legend: { position: 'top' } },
                     scales: {
                         x: { grid: { display: false } },
-                        y: { ticks: { callback: val => val.toLocaleString() } }
+                        y: {
+                            ticks: {
+                                callback: val => val.toLocaleString()
+                            }
+                        }
                     }
                 }
             });
         }
+
 
         // 페이지 로드 시 초기화
         document.addEventListener('DOMContentLoaded', function() {

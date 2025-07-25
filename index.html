@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> 강원 소득조사 대시보드</title>
+    <title>강원 소득조사 대시보드</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <style>
@@ -21,7 +21,7 @@
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             background: rgba(255, 255, 255, 0.98);
             border-radius: 20px;
@@ -76,38 +76,51 @@
             border-bottom: 1px solid #cbd5e1;
         }
         
+        .filters-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            align-items: end;
+        }
+        
+        @media (min-width: 768px) {
+            .filters-row {
+                grid-template-columns: auto 1fr 1fr 1fr;
+                gap: 25px;
+            }
+        }
+        
         .filter-section {
-            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
         }
         
         .filter-label {
-            display: block;
             font-weight: 700;
             margin-bottom: 12px;
             color: #1e40af;
-            font-size: clamp(1em, 2.5vw, 1.1em);
+            font-size: clamp(0.9em, 2.2vw, 1em);
         }
         
         .region-buttons {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
-            justify-content: center;
         }
         
         .region-btn {
-            padding: 12px 20px;
+            padding: 12px 18px;
             border: 2px solid #3b82f6;
             background: white;
             color: #3b82f6;
-            border-radius: 30px;
+            border-radius: 25px;
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: 600;
-            font-size: clamp(0.85em, 2vw, 1em);
+            font-size: clamp(0.8em, 1.8vw, 0.95em);
             position: relative;
             overflow: hidden;
-            min-width: 80px;
+            min-width: 70px;
             text-align: center;
         }
         
@@ -140,11 +153,10 @@
         
         .dropdown {
             width: 100%;
-            max-width: 100%;
-            padding: 15px;
+            padding: 12px 15px;
             border: 2px solid #cbd5e1;
-            border-radius: 12px;
-            font-size: clamp(0.9em, 2vw, 1em);
+            border-radius: 10px;
+            font-size: clamp(0.85em, 1.8vw, 0.95em);
             background: white;
             transition: all 0.3s ease;
             color: #1e40af;
@@ -165,7 +177,7 @@
         
         @media (min-width: 768px) {
             .content {
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns: 1fr 1.5fr;
                 padding: 30px 25px;
             }
         }
@@ -244,12 +256,12 @@
         }
         
         .chart-container canvas {
-            max-height: 350px;
+            max-height: 400px;
         }
         
         @media (min-width: 768px) {
             .chart-container canvas {
-                max-height: 400px;
+                max-height: 450px;
             }
         }
         
@@ -267,26 +279,18 @@
             font-size: clamp(0.95em, 2.5vw, 1.1em);
         }
         
-        @media (max-width: 480px) {
-            body {
-                padding: 5px;
-            }
-            
-            .header {
-                padding: 20px 15px;
-            }
-            
-            .controls {
-                padding: 20px 15px;
+        @media (max-width: 767px) {
+            .filters-row {
+                gap: 15px;
             }
             
             .region-buttons {
-                gap: 8px;
+                justify-content: center;
             }
             
             .region-btn {
-                padding: 10px 16px;
-                min-width: 70px;
+                padding: 10px 14px;
+                min-width: 60px;
             }
             
             .content {
@@ -308,32 +312,41 @@
         </div>
         
         <div class="controls">
-            <div class="filter-section">
-                <label class="filter-label">📍 지역 선택</label>
-                <div class="region-buttons">
-                    <button class="region-btn active" data-region="전국">전국</button>
-                    <button class="region-btn" data-region="강원">강원</button>
+            <div class="filters-row">
+                <div class="filter-section">
+                    <label class="filter-label">📍 지역선택</label>
+                    <div class="region-buttons">
+                        <button class="region-btn active" data-region="전국">전국</button>
+                        <button class="region-btn" data-region="강원">강원</button>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="filter-section">
-                <label class="filter-label">🌱 작목군 선택</label>
-                <select class="dropdown" id="cropGroupSelect">
-                    <option value="">전체 작목군</option>
-                </select>
-            </div>
-            
-            <div class="filter-section">
-                <label class="filter-label">🍎 작목 선택</label>
-                <select class="dropdown" id="cropSelect">
-                    <option value="">전체 작목</option>
-                </select>
+                
+                <div class="filter-section">
+                    <label class="filter-label">🌱 작목군 선택</label>
+                    <select class="dropdown" id="cropGroupSelect">
+                        <option value="">전체 작목군</option>
+                    </select>
+                </div>
+                
+                <div class="filter-section">
+                    <label class="filter-label">🍎 작목 선택</label>
+                    <select class="dropdown" id="cropSelect">
+                        <option value="">전체 작목</option>
+                    </select>
+                </div>
+                
+                <div class="filter-section">
+                    <label class="filter-label">📅 연도 선택</label>
+                    <select class="dropdown" id="yearSelect">
+                        <option value="">전체 연도</option>
+                    </select>
+                </div>
             </div>
         </div>
         
         <div class="content">
             <div class="data-table">
-                <h2 class="section-title">📊 데이터 테이블</h2>
+                <h2 class="section-title">📊 소득분석표</h2>
                 <div id="tableContent">
                     <div class="loading">데이터를 불러오는 중...</div>
                 </div>
@@ -352,6 +365,7 @@
         let currentRegion = '전국';
         let currentCropGroup = '';
         let currentCrop = '';
+        let currentYear = '';
         let chart = null;
 
         // GitHub에서 CSV 파일 불러오기
@@ -373,19 +387,39 @@
             }
         }
 
-        // 테스트 데이터 생성
+        // 테스트 데이터 생성 (연도별, 소득률 포함)
         function loadTestData() {
             const testData = `지역구분,년,작목군,작목,구분,값
-전국,2023,과일,사과,생산량,1000000
-전국,2023,과일,사과,수입액,5000000
-전국,2023,과일,배,생산량,800000
-전국,2023,과일,배,수입액,4000000
-전국,2023,채소,배추,생산량,2000000
-전국,2023,채소,배추,수입액,3000000
-강원,2023,과일,사과,생산량,200000
-강원,2023,과일,사과,수입액,1000000
-강원,2023,채소,감자,생산량,1500000
-강원,2023,채소,감자,수입액,2500000`;
+전국,2021,과일,사과,소득,4000000
+전국,2021,과일,사과,소득률,15.5
+전국,2022,과일,사과,소득,4500000
+전국,2022,과일,사과,소득률,17.2
+전국,2023,과일,사과,소득,5000000
+전국,2023,과일,사과,소득률,18.8
+전국,2021,과일,배,소득,3200000
+전국,2021,과일,배,소득률,12.8
+전국,2022,과일,배,소득,3600000
+전국,2022,과일,배,소득률,14.1
+전국,2023,과일,배,소득,4000000
+전국,2023,과일,배,소득률,15.3
+전국,2021,채소,배추,소득,2800000
+전국,2021,채소,배추,소득률,11.2
+전국,2022,채소,배추,소득,2900000
+전국,2022,채소,배추,소득률,11.8
+전국,2023,채소,배추,소득,3000000
+전국,2023,채소,배추,소득률,12.5
+강원,2021,과일,사과,소득,800000
+강원,2021,과일,사과,소득률,14.2
+강원,2022,과일,사과,소득,900000
+강원,2022,과일,사과,소득률,15.8
+강원,2023,과일,사과,소득,1000000
+강원,2023,과일,사과,소득률,16.5
+강원,2021,채소,감자,소득,2200000
+강원,2021,채소,감자,소득률,18.3
+강원,2022,채소,감자,소득,2350000
+강원,2022,채소,감자,소득률,19.1
+강원,2023,채소,감자,소득,2500000
+강원,2023,채소,감자,소득률,19.8`;
             
             parseCSV(testData);
         }
@@ -403,7 +437,7 @@
                             cropGroup: (row['작목군'] || row['cropGroup'] || '').trim(),
                             crop: (row['작목'] || row['crop'] || '').trim(),
                             category: (row['구분'] || row['category'] || '').trim(),
-                            value: parseInt((row['값'] || row['value'] || '0').toString().replace(/,/g, '')) || 0
+                            value: parseFloat((row['값'] || row['value'] || '0').toString().replace(/,/g, '')) || 0
                         };
                     }).filter(row => row.region && row.cropGroup);
                     
@@ -443,6 +477,18 @@
                 cropGroupSelect.appendChild(option);
             });
             
+            // 연도 필터 초기화
+            const years = [...new Set(csvData.map(item => item.year))].filter(Boolean).sort();
+            const yearSelect = document.getElementById('yearSelect');
+            
+            yearSelect.innerHTML = '<option value="">전체 연도</option>';
+            years.forEach(year => {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year + '년';
+                yearSelect.appendChild(option);
+            });
+            
             updateCrops();
         }
 
@@ -476,7 +522,8 @@
             filteredData = csvData.filter(item => {
                 return item.region === currentRegion &&
                        (!currentCropGroup || item.cropGroup === currentCropGroup) &&
-                       (!currentCrop || item.crop === currentCrop);
+                       (!currentCrop || item.crop === currentCrop) &&
+                       (!currentYear || item.year === currentYear);
             });
         }
 
@@ -489,30 +536,39 @@
                 return;
             }
 
-            const categories = {};
+            // 연도별로 데이터 그룹화
+            const yearlyData = {};
             filteredData.forEach(item => {
-                if (!categories[item.category]) {
-                    categories[item.category] = 0;
+                if (!yearlyData[item.year]) {
+                    yearlyData[item.year] = {};
                 }
-                categories[item.category] += item.value;
+                if (!yearlyData[item.year][item.category]) {
+                    yearlyData[item.year][item.category] = 0;
+                }
+                yearlyData[item.year][item.category] += item.value;
             });
 
             let tableHTML = `
                 <table>
                     <thead>
                         <tr>
-                            <th>구분</th>
-                            <th>값</th>
+                            <th>연도</th>
+                            <th>소득</th>
+                            <th>소득률(%)</th>
                         </tr>
                     </thead>
                     <tbody>
             `;
 
-            Object.entries(categories).forEach(([category, value]) => {
+            Object.entries(yearlyData).sort().forEach(([year, data]) => {
+                const income = data['소득'] || 0;
+                const incomeRate = data['소득률'] || 0;
+                
                 tableHTML += `
                     <tr>
-                        <td>${category}</td>
-                        <td>${value.toLocaleString()}</td>
+                        <td>${year}년</td>
+                        <td>${income.toLocaleString()}</td>
+                        <td>${incomeRate.toFixed(1)}%</td>
                     </tr>
                 `;
             });
@@ -521,7 +577,7 @@
             tableContent.innerHTML = tableHTML;
         }
 
-        // 차트 업데이트
+        // 혼합 차트 업데이트 (막대 + 꺾은선)
         function updateChart() {
             const ctx = document.getElementById('dataChart').getContext('2d');
             
@@ -533,43 +589,67 @@
                 return;
             }
 
-            const categories = {};
+            // 연도별로 데이터 그룹화
+            const yearlyData = {};
             filteredData.forEach(item => {
-                if (!categories[item.category]) {
-                    categories[item.category] = 0;
+                if (!yearlyData[item.year]) {
+                    yearlyData[item.year] = { income: 0, incomeRate: 0 };
                 }
-                categories[item.category] += item.value;
+                if (item.category === '소득') {
+                    yearlyData[item.year].income += item.value;
+                } else if (item.category === '소득률') {
+                    yearlyData[item.year].incomeRate += item.value;
+                }
             });
 
-            const labels = Object.keys(categories);
-            const data = Object.values(categories);
-            const colors = [
-                '#3b82f6', '#1d4ed8', '#2563eb', '#1e40af', 
-                '#60a5fa', '#93c5fd', '#dbeafe', '#bfdbfe'
-            ];
+            const years = Object.keys(yearlyData).sort();
+            const incomeData = years.map(year => yearlyData[year].income);
+            const incomeRateData = years.map(year => yearlyData[year].incomeRate);
 
             chart = new Chart(ctx, {
-                type: 'doughnut',
+                type: 'bar',
                 data: {
-                    labels: labels,
+                    labels: years.map(year => year + '년'),
                     datasets: [{
-                        data: data,
-                        backgroundColor: colors.slice(0, labels.length),
+                        type: 'bar',
+                        label: '소득',
+                        data: incomeData,
+                        backgroundColor: 'rgba(59, 130, 246, 0.8)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 2,
+                        yAxisID: 'y'
+                    }, {
+                        type: 'line',
+                        label: '소득률(%)',
+                        data: incomeRateData,
+                        borderColor: 'rgba(239, 68, 68, 1)',
+                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
                         borderWidth: 3,
-                        borderColor: '#fff'
+                        fill: false,
+                        tension: 0.4,
+                        pointBackgroundColor: 'rgba(239, 68, 68, 1)',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 6,
+                        yAxisID: 'y1'
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
                     plugins: {
                         legend: {
-                            position: 'bottom',
+                            position: 'top',
                             labels: {
-                                padding: 15,
                                 usePointStyle: true,
+                                padding: 20,
                                 font: {
-                                    size: window.innerWidth < 480 ? 10 : 12
+                                    size: 12,
+                                    weight: 'bold'
                                 },
                                 color: '#1e40af'
                             }
@@ -577,14 +657,75 @@
                         tooltip: {
                             callbacks: {
                                 label: function(context) {
-                                    return context.label + ': ' + context.parsed.toLocaleString();
+                                    if (context.datasetIndex === 0) {
+                                        return context.dataset.label + ': ' + context.parsed.y.toLocaleString();
+                                    } else {
+                                        return context.dataset.label + ': ' + context.parsed.y.toFixed(1) + '%';
+                                    }
                                 }
                             }
                         }
                     },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: '#1e40af',
+                                font: {
+                                    weight: 'bold'
+                                }
+                            }
+                        },
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: '소득',
+                                color: '#1e40af',
+                                font: {
+                                    weight: 'bold'
+                                }
+                            },
+                            ticks: {
+                                color: '#1e40af',
+                                callback: function(value) {
+                                    return value.toLocaleString();
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(59, 130, 246, 0.1)'
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: '소득률(%)',
+                                color: '#ef4444',
+                                font: {
+                                    weight: 'bold'
+                                }
+                            },
+                            ticks: {
+                                color: '#ef4444',
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            },
+                            grid: {
+                                drawOnChartArea: false,
+                            },
+                        }
+                    },
                     animation: {
-                        animateRotate: true,
-                        duration: 1000
+                        duration: 1000,
+                        easing: 'easeInOutQuart'
                     }
                 }
             });
@@ -616,6 +757,7 @@
             document.getElementById('cropGroupSelect').addEventListener('change', function() {
                 currentCropGroup = this.value;
                 currentCrop = '';
+                document.getElementById('cropSelect').value = '';
                 updateCrops();
                 updateDisplay();
             });
@@ -623,6 +765,12 @@
             // 작목 선택 이벤트
             document.getElementById('cropSelect').addEventListener('change', function() {
                 currentCrop = this.value;
+                updateDisplay();
+            });
+
+            // 연도 선택 이벤트
+            document.getElementById('yearSelect').addEventListener('change', function() {
+                currentYear = this.value;
                 updateDisplay();
             });
         });

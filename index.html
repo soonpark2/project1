@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>강원 소득조사 대시보드</title>
+    <title>2024 소득조사 대시보드</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <style>
@@ -14,347 +14,365 @@
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #3b82f6 100%);
-            min-height: 100vh;
-            padding: 10px;
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.98);
-            border-radius: 20px;
-            box-shadow: 0 25px 50px rgba(30, 58, 138, 0.2);
-            backdrop-filter: blur(10px);
-            overflow: hidden;
+            font-family: 'Malgun Gothic', 'Segoe UI', sans-serif;
+            background: #f8f9fa;
+            font-size: 12px;
         }
         
         .header {
-            background: linear-gradient(135deg, #1e40af, #3b82f6, #60a5fa);
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
             color: white;
-            padding: 25px 20px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
+            padding: 8px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            border-bottom: 2px solid #1e40af;
         }
         
-        .header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            animation: shimmer 3s ease-in-out infinite alternate;
+        .header-left {
+            font-weight: bold;
         }
         
-        @keyframes shimmer {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(180deg); }
-        }
-        
-        .header h1 {
-            font-size: clamp(1.8em, 4vw, 2.5em);
-            margin-bottom: 8px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            position: relative;
-            z-index: 1;
-        }
-        
-        .header p {
-            font-size: clamp(0.9em, 2.5vw, 1.1em);
-            opacity: 0.9;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .controls {
-            padding: 25px 20px;
-            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
-            border-bottom: 1px solid #cbd5e1;
-        }
-        
-        .filters-row {
-            display: grid;
-            grid-template-columns: 1fr;
+        .header-right {
+            display: flex;
             gap: 20px;
-            align-items: end;
         }
         
-        @media (min-width: 768px) {
-            .filters-row {
-                grid-template-columns: auto 1fr 1fr 1fr;
-                gap: 25px;
-            }
+        .container {
+            display: flex;
+            height: calc(100vh - 50px);
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: #ffffff;
+            border-right: 1px solid #e5e7eb;
+            padding: 15px;
+            overflow-y: auto;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background: #f8f9fa;
         }
         
         .filter-section {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .filter-label {
-            font-weight: 700;
-            margin-bottom: 12px;
-            color: #1e40af;
-            font-size: clamp(0.9em, 2.2vw, 1em);
-        }
-        
-        .region-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        
-        .region-btn {
-            padding: 12px 18px;
-            border: 2px solid #3b82f6;
-            background: white;
-            color: #3b82f6;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-            font-size: clamp(0.8em, 1.8vw, 0.95em);
-            position: relative;
-            overflow: hidden;
-            min-width: 70px;
-            text-align: center;
-        }
-        
-        .region-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            transition: left 0.5s;
-        }
-        
-        .region-btn:hover::before {
-            left: 100%;
-        }
-        
-        .region-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
-        }
-        
-        .region-btn.active {
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-            color: white;
-            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
-            transform: translateY(-1px);
-        }
-        
-        .dropdown {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #cbd5e1;
-            border-radius: 10px;
-            font-size: clamp(0.85em, 1.8vw, 0.95em);
-            background: white;
-            transition: all 0.3s ease;
-            color: #1e40af;
-        }
-        
-        .dropdown:focus {
-            outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-        
-        .content {
-            padding: 25px 15px;
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 25px;
-        }
-        
-        @media (min-width: 768px) {
-            .content {
-                grid-template-columns: 1fr 1.5fr;
-                padding: 30px 25px;
-            }
-        }
-        
-        .data-table, .chart-container {
-            background: white;
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 15px 35px rgba(30, 58, 138, 0.1);
-            border: 1px solid rgba(59, 130, 246, 0.1);
-            transition: transform 0.3s ease;
-        }
-        
-        .data-table:hover, .chart-container:hover {
-            transform: translateY(-5px);
-        }
-        
-        .section-title {
-            font-size: clamp(1.2em, 3vw, 1.5em);
-            color: #1e40af;
             margin-bottom: 20px;
-            text-align: center;
-            position: relative;
-            font-weight: 700;
         }
         
-        .section-title:after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 4px;
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-            border-radius: 2px;
+        .filter-title {
+            background: #3b82f6;
+            color: white;
+            padding: 8px 12px;
+            font-weight: bold;
+            font-size: 13px;
+            border-radius: 4px 4px 0 0;
+        }
+        
+        .filter-content {
+            border: 1px solid #e5e7eb;
+            border-top: none;
+            background: white;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        
+        .filter-item {
+            padding: 8px 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #f3f4f6;
+            font-size: 12px;
+            transition: background 0.2s;
+        }
+        
+        .filter-item:hover {
+            background: #f3f4f6;
+        }
+        
+        .filter-item.active {
+            background: #dbeafe;
+            color: #1e40af;
+            font-weight: bold;
+        }
+        
+        .year-buttons {
+            display: flex;
+            gap: 5px;
+            padding: 10px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-top: none;
+        }
+        
+        .year-btn {
+            padding: 6px 12px;
+            border: 1px solid #d1d5db;
+            background: white;
+            cursor: pointer;
+            font-size: 11px;
+            border-radius: 3px;
+            transition: all 0.2s;
+        }
+        
+        .year-btn:hover {
+            background: #f3f4f6;
+        }
+        
+        .year-btn.active {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+        
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto auto;
+            gap: 15px;
+            height: 100%;
+        }
+        
+        .chart-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .chart-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .income-summary {
+            grid-column: 1 / 3;
+            display: flex;
+            gap: 15px;
+        }
+        
+        .summary-box {
+            flex: 1;
+            text-align: center;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .summary-box.income {
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+            border: 2px solid #3b82f6;
+        }
+        
+        .summary-box.rate {
+            background: linear-gradient(135deg, #fef3c7, #fed7aa);
+            border: 2px solid #f59e0b;
+        }
+        
+        .summary-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 5px;
+        }
+        
+        .summary-label {
+            font-size: 14px;
+            color: #6b7280;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+        
+        .detailed-table {
+            grid-column: 1 / 3;
+        }
+        
+        .table-wrapper {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
         }
         
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
-            font-size: clamp(0.8em, 2vw, 1em);
-        }
-        
-        th, td {
-            padding: 12px 8px;
-            text-align: left;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        
-        @media (min-width: 768px) {
-            th, td {
-                padding: 15px 12px;
-            }
+            font-size: 12px;
         }
         
         th {
-            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
-            font-weight: 700;
-            color: #1e40af;
-            text-transform: uppercase;
-            font-size: 0.85em;
-            letter-spacing: 0.5px;
+            background: #f9fafb;
+            border-bottom: 2px solid #e5e7eb;
+            padding: 10px 8px;
+            text-align: left;
+            font-weight: bold;
+            color: #374151;
+            position: sticky;
+            top: 0;
         }
         
         td {
-            color: #1e40af;
-            font-weight: 500;
+            padding: 8px;
+            border-bottom: 1px solid #f3f4f6;
+            color: #1f2937;
         }
         
         tr:hover {
-            background: rgba(59, 130, 246, 0.05);
-            transform: scale(1.01);
-            transition: all 0.2s ease;
-        }
-        
-        .chart-container canvas {
-            max-height: 400px;
-        }
-        
-        @media (min-width: 768px) {
-            .chart-container canvas {
-                max-height: 450px;
-            }
+            background: #f9fafb;
         }
         
         .loading {
-            text-align: center;
-            padding: 40px 20px;
-            color: #64748b;
-            font-size: clamp(1em, 2.5vw, 1.2em);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            color: #6b7280;
         }
         
-        .no-data {
-            text-align: center;
-            padding: 40px 20px;
-            color: #dc2626;
-            font-size: clamp(0.95em, 2.5vw, 1.1em);
+        @media (max-width: 1200px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .income-summary {
+                grid-column: 1;
+            }
+            
+            .detailed-table {
+                grid-column: 1;
+            }
         }
         
-        @media (max-width: 767px) {
-            .filters-row {
-                gap: 15px;
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
             }
             
-            .region-buttons {
-                justify-content: center;
+            .sidebar {
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid #e5e7eb;
             }
             
-            .region-btn {
-                padding: 10px 14px;
-                min-width: 60px;
-            }
-            
-            .content {
-                padding: 20px 10px;
-                gap: 20px;
-            }
-            
-            .data-table, .chart-container {
-                padding: 15px;
+            .income-summary {
+                flex-direction: column;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🌾 농업 데이터 시각화 대시보드</h1>
-            <p>지역별 작목 수입 현황을 한눈에 확인하세요</p>
+    <div class="header">
+        <div class="header-left">2024 소득조사 대시보드</div>
+        <div class="header-right">
+            <span>비교</span>
         </div>
-        
-        <div class="controls">
-            <div class="filters-row">
-                <div class="filter-section">
-                    <label class="filter-label">📍 지역선택</label>
-                    <div class="region-buttons">
-                        <button class="region-btn active" data-region="전국">전국</button>
-                        <button class="region-btn" data-region="강원">강원</button>
+    </div>
+
+    <div class="container">
+        <div class="sidebar">
+            <div class="filter-section">
+                <div class="filter-title">지역구분</div>
+                <div class="filter-content" id="regionFilter">
+                    <div class="filter-item active" data-region="전국">전국</div>
+                    <div class="filter-item" data-region="강원">강원</div>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <div class="filter-title">작목</div>
+                <div class="filter-content" id="cropGroupFilter">
+                    <div class="filter-item active" data-crop-group="">전체</div>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <div class="filter-title">작목상세</div>
+                <div class="filter-content" id="cropFilter">
+                    <div class="filter-item active" data-crop="">전체</div>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <div class="filter-title">년</div>
+                <div class="year-buttons" id="yearFilter">
+                    <div class="year-btn active" data-year="">전체</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="charts-grid">
+                <div class="chart-card income-summary">
+                    <div class="chart-title">2023년 전국 농사소득지배수</div>
+                    <div style="display: flex; gap: 20px;">
+                        <div class="summary-box income">
+                            <div class="summary-label">소득</div>
+                            <div class="summary-value" id="totalIncome">₩0</div>
+                            <div class="summary-label">총수량</div>
+                        </div>
+                        <div class="summary-box rate">
+                            <div class="summary-label">소득률</div>
+                            <div class="summary-value" id="totalRate">0%</div>
+                        </div>
                     </div>
                 </div>
-                
-                <div class="filter-section">
-                    <label class="filter-label">🌱 작목군 선택</label>
-                    <select class="dropdown" id="cropGroupSelect">
-                        <option value="">전체 작목군</option>
-                    </select>
+
+                <div class="chart-card">
+                    <div class="chart-title">홍수입</div>
+                    <div class="chart-container">
+                        <canvas id="incomeChart"></canvas>
+                    </div>
                 </div>
-                
-                <div class="filter-section">
-                    <label class="filter-label">🍎 작목 선택</label>
-                    <select class="dropdown" id="cropSelect">
-                        <option value="">전체 작목</option>
-                    </select>
+
+                <div class="chart-card">
+                    <div class="chart-title">경작비</div>
+                    <div class="chart-container">
+                        <canvas id="costChart"></canvas>
+                    </div>
                 </div>
-                
-                <div class="filter-section">
-                    <label class="filter-label">📅 연도 선택</label>
-                    <select class="dropdown" id="yearSelect">
-                        <option value="">전체 연도</option>
-                    </select>
+
+                <div class="chart-card">
+                    <div class="chart-title">경영비</div>
+                    <div class="chart-container">
+                        <canvas id="managementChart"></canvas>
+                    </div>
                 </div>
-            </div>
-        </div>
-        
-        <div class="content">
-            <div class="data-table">
-                <h2 class="section-title">📊 소득분석표</h2>
-                <div id="tableContent">
-                    <div class="loading">데이터를 불러오는 중...</div>
+
+                <div class="chart-card">
+                    <div class="chart-title">생산량</div>
+                    <div class="chart-container">
+                        <canvas id="productionChart"></canvas>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="chart-container">
-                <h2 class="section-title">📈 시각화 차트</h2>
-                <canvas id="dataChart"></canvas>
+
+                <div class="chart-card detailed-table">
+                    <div class="chart-title">2023년 전국 농사제소 작목별 소득</div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>작목군</th>
+                                    <th>작목</th>
+                                    <th>연도</th>
+                                    <th>소득</th>
+                                    <th>소득률(%)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="detailTableBody">
+                                <tr><td colspan="5" class="loading">데이터를 불러오는 중...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -362,32 +380,15 @@
     <script>
         let csvData = [];
         let filteredData = [];
-        let currentRegion = '전국';
-        let currentCropGroup = '';
-        let currentCrop = '';
-        let currentYear = '';
-        let chart = null;
+        let currentFilters = {
+            region: '전국',
+            cropGroup: '',
+            crop: '',
+            year: ''
+        };
+        let charts = {};
 
-        // GitHub에서 CSV 파일 불러오기
-        async function loadCSVFromGitHub() {
-            try {
-                const csvUrl = 'https://raw.githubusercontent.com/soonpark2/project1/main/DB.csv';
-                const response = await fetch(csvUrl);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const csvText = await response.text();
-                parseCSV(csvText);
-            } catch (error) {
-                console.error('CSV 파일 로드 오류:', error);
-                showError(`GitHub에서 CSV 파일을 불러올 수 없습니다: ${error.message}`);
-                loadTestData();
-            }
-        }
-
-        // 테스트 데이터 생성 (연도별, 소득률 포함)
+        // 테스트 데이터 로드
         function loadTestData() {
             const testData = `지역구분,년,작목군,작목,구분,값
 전국,2021,과일,사과,소득,4000000
@@ -408,6 +409,12 @@
 전국,2022,채소,배추,소득률,11.8
 전국,2023,채소,배추,소득,3000000
 전국,2023,채소,배추,소득률,12.5
+전국,2021,채소,감자,소득,2200000
+전국,2021,채소,감자,소득률,18.3
+전국,2022,채소,감자,소득,2350000
+전국,2022,채소,감자,소득률,19.1
+전국,2023,채소,감자,소득,2500000
+전국,2023,채소,감자,소득률,19.8
 강원,2021,과일,사과,소득,800000
 강원,2021,과일,사과,소득률,14.2
 강원,2022,과일,사과,소득,900000
@@ -428,352 +435,247 @@
             Papa.parse(csvText, {
                 header: true,
                 skipEmptyLines: true,
-                encoding: 'UTF-8',
                 complete: function(results) {
-                    csvData = results.data.map(row => {
-                        return {
-                            region: (row['지역구분'] || row['지역'] || '').trim(),
-                            year: (row['년'] || row['year'] || '').trim(),
-                            cropGroup: (row['작목군'] || row['cropGroup'] || '').trim(),
-                            crop: (row['작목'] || row['crop'] || '').trim(),
-                            category: (row['구분'] || row['category'] || '').trim(),
-                            value: parseFloat((row['값'] || row['value'] || '0').toString().replace(/,/g, '')) || 0
-                        };
-                    }).filter(row => row.region && row.cropGroup);
+                    csvData = results.data.map(row => ({
+                        region: (row['지역구분'] || '').trim(),
+                        year: (row['년'] || '').trim(),
+                        cropGroup: (row['작목군'] || '').trim(),
+                        crop: (row['작목'] || '').trim(),
+                        category: (row['구분'] || '').trim(),
+                        value: parseFloat((row['값'] || '0').toString().replace(/,/g, '')) || 0
+                    })).filter(row => row.region && row.cropGroup);
                     
                     if (csvData.length > 0) {
                         initializeFilters();
                         updateDisplay();
-                        
-                        document.getElementById('tableContent').innerHTML = '<div class="loading">데이터 로드 완료!</div>';
-                        setTimeout(() => {
-                            updateDisplay();
-                        }, 500);
-                    } else {
-                        showError('CSV 파일에 유효한 데이터가 없습니다.');
                     }
-                },
-                error: function(error) {
-                    console.error('CSV 파싱 오류:', error);
-                    showError('CSV 파일을 파싱하는 중 오류가 발생했습니다.');
                 }
             });
         }
 
-        function showError(message) {
-            document.getElementById('tableContent').innerHTML = `<div class="no-data">${message}</div>`;
-        }
-
-        // 필터 초기화
         function initializeFilters() {
-            const cropGroups = [...new Set(csvData.map(item => item.cropGroup))].filter(Boolean).sort();
-            const cropGroupSelect = document.getElementById('cropGroupSelect');
-            
-            cropGroupSelect.innerHTML = '<option value="">전체 작목군</option>';
+            // 작목군 필터 초기화
+            const cropGroups = [...new Set(csvData.map(item => item.cropGroup))].sort();
+            const cropGroupFilter = document.getElementById('cropGroupFilter');
+            cropGroupFilter.innerHTML = '<div class="filter-item active" data-crop-group="">전체</div>';
             cropGroups.forEach(group => {
-                const option = document.createElement('option');
-                option.value = group;
-                option.textContent = group;
-                cropGroupSelect.appendChild(option);
+                cropGroupFilter.innerHTML += `<div class="filter-item" data-crop-group="${group}">${group}</div>`;
             });
-            
+
             // 연도 필터 초기화
-            const years = [...new Set(csvData.map(item => item.year))].filter(Boolean).sort();
-            const yearSelect = document.getElementById('yearSelect');
-            
-            yearSelect.innerHTML = '<option value="">전체 연도</option>';
+            const years = [...new Set(csvData.map(item => item.year))].sort();
+            const yearFilter = document.getElementById('yearFilter');
+            yearFilter.innerHTML = '<div class="year-btn active" data-year="">전체</div>';
             years.forEach(year => {
-                const option = document.createElement('option');
-                option.value = year;
-                option.textContent = year + '년';
-                yearSelect.appendChild(option);
+                yearFilter.innerHTML += `<div class="year-btn" data-year="${year}">${year}</div>`;
             });
-            
+
             updateCrops();
+            attachFilterEvents();
         }
 
-        // 작목 업데이트 (선택된 지역과 작목군에 따라)
         function updateCrops() {
-            const cropSelect = document.getElementById('cropSelect');
-            let filteredForCrops = csvData.filter(item => item.region === currentRegion);
-            
-            if (currentCropGroup) {
-                filteredForCrops = filteredForCrops.filter(item => item.cropGroup === currentCropGroup);
+            let filtered = csvData.filter(item => item.region === currentFilters.region);
+            if (currentFilters.cropGroup) {
+                filtered = filtered.filter(item => item.cropGroup === currentFilters.cropGroup);
             }
             
-            const crops = [...new Set(filteredForCrops.map(item => item.crop))].filter(Boolean).sort();
-            
-            cropSelect.innerHTML = '<option value="">전체 작목</option>';
+            const crops = [...new Set(filtered.map(item => item.crop))].sort();
+            const cropFilter = document.getElementById('cropFilter');
+            cropFilter.innerHTML = '<div class="filter-item active" data-crop="">전체</div>';
             crops.forEach(crop => {
-                const option = document.createElement('option');
-                option.value = crop;
-                option.textContent = crop;
-                cropSelect.appendChild(option);
-            });
-            
-            if (currentCrop && !crops.includes(currentCrop)) {
-                currentCrop = '';
-                cropSelect.value = '';
-            }
-        }
-
-        // 데이터 필터링
-        function filterData() {
-            filteredData = csvData.filter(item => {
-                return item.region === currentRegion &&
-                       (!currentCropGroup || item.cropGroup === currentCropGroup) &&
-                       (!currentCrop || item.crop === currentCrop) &&
-                       (!currentYear || item.year === currentYear);
+                cropFilter.innerHTML += `<div class="filter-item" data-crop="${crop}">${crop}</div>`;
             });
         }
 
-        // 테이블 업데이트
-        function updateTable() {
-            const tableContent = document.getElementById('tableContent');
-            
-            if (filteredData.length === 0) {
-                tableContent.innerHTML = '<div class="no-data">선택한 조건에 해당하는 데이터가 없습니다.</div>';
-                return;
-            }
-
-            // 연도별로 데이터 그룹화
-            const yearlyData = {};
-            filteredData.forEach(item => {
-                if (!yearlyData[item.year]) {
-                    yearlyData[item.year] = {};
-                }
-                if (!yearlyData[item.year][item.category]) {
-                    yearlyData[item.year][item.category] = 0;
-                }
-                yearlyData[item.year][item.category] += item.value;
-            });
-
-            let tableHTML = `
-                <table>
-                    <thead>
-                        <tr>
-                            <th>연도</th>
-                            <th>소득</th>
-                            <th>소득률(%)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-            `;
-
-            Object.entries(yearlyData).sort().forEach(([year, data]) => {
-                const income = data['소득'] || 0;
-                const incomeRate = data['소득률'] || 0;
-                
-                tableHTML += `
-                    <tr>
-                        <td>${year}년</td>
-                        <td>${income.toLocaleString()}</td>
-                        <td>${incomeRate.toFixed(1)}%</td>
-                    </tr>
-                `;
-            });
-
-            tableHTML += '</tbody></table>';
-            tableContent.innerHTML = tableHTML;
-        }
-
-        // 혼합 차트 업데이트 (막대 + 꺾은선)
-        function updateChart() {
-            const ctx = document.getElementById('dataChart').getContext('2d');
-            
-            if (chart) {
-                chart.destroy();
-            }
-
-            if (filteredData.length === 0) {
-                return;
-            }
-
-            // 연도별로 데이터 그룹화
-            const yearlyData = {};
-            filteredData.forEach(item => {
-                if (!yearlyData[item.year]) {
-                    yearlyData[item.year] = { income: 0, incomeRate: 0 };
-                }
-                if (item.category === '소득') {
-                    yearlyData[item.year].income += item.value;
-                } else if (item.category === '소득률') {
-                    yearlyData[item.year].incomeRate += item.value;
-                }
-            });
-
-            const years = Object.keys(yearlyData).sort();
-            const incomeData = years.map(year => yearlyData[year].income);
-            const incomeRateData = years.map(year => yearlyData[year].incomeRate);
-
-            chart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: years.map(year => year + '년'),
-                    datasets: [{
-                        type: 'bar',
-                        label: '소득',
-                        data: incomeData,
-                        backgroundColor: 'rgba(59, 130, 246, 0.8)',
-                        borderColor: 'rgba(59, 130, 246, 1)',
-                        borderWidth: 2,
-                        yAxisID: 'y'
-                    }, {
-                        type: 'line',
-                        label: '소득률(%)',
-                        data: incomeRateData,
-                        borderColor: 'rgba(239, 68, 68, 1)',
-                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                        borderWidth: 3,
-                        fill: false,
-                        tension: 0.4,
-                        pointBackgroundColor: 'rgba(239, 68, 68, 1)',
-                        pointBorderColor: '#fff',
-                        pointBorderWidth: 2,
-                        pointRadius: 6,
-                        yAxisID: 'y1'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false,
-                    },
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            labels: {
-                                usePointStyle: true,
-                                padding: 20,
-                                font: {
-                                    size: 12,
-                                    weight: 'bold'
-                                },
-                                color: '#1e40af'
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    if (context.datasetIndex === 0) {
-                                        return context.dataset.label + ': ' + context.parsed.y.toLocaleString();
-                                    } else {
-                                        return context.dataset.label + ': ' + context.parsed.y.toFixed(1) + '%';
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            grid: {
-                                display: false
-                            },
-                            ticks: {
-                                color: '#1e40af',
-                                font: {
-                                    weight: 'bold'
-                                }
-                            }
-                        },
-                        y: {
-                            type: 'linear',
-                            display: true,
-                            position: 'left',
-                            title: {
-                                display: true,
-                                text: '소득',
-                                color: '#1e40af',
-                                font: {
-                                    weight: 'bold'
-                                }
-                            },
-                            ticks: {
-                                color: '#1e40af',
-                                callback: function(value) {
-                                    return value.toLocaleString();
-                                }
-                            },
-                            grid: {
-                                color: 'rgba(59, 130, 246, 0.1)'
-                            }
-                        },
-                        y1: {
-                            type: 'linear',
-                            display: true,
-                            position: 'right',
-                            title: {
-                                display: true,
-                                text: '소득률(%)',
-                                color: '#ef4444',
-                                font: {
-                                    weight: 'bold'
-                                }
-                            },
-                            ticks: {
-                                color: '#ef4444',
-                                callback: function(value) {
-                                    return value + '%';
-                                }
-                            },
-                            grid: {
-                                drawOnChartArea: false,
-                            },
-                        }
-                    },
-                    animation: {
-                        duration: 1000,
-                        easing: 'easeInOutQuart'
-                    }
-                }
-            });
-        }
-
-        // 화면 업데이트
-        function updateDisplay() {
-            filterData();
-            updateTable();
-            updateChart();
-        }
-
-        // 이벤트 리스너
-        document.addEventListener('DOMContentLoaded', function() {
-            loadCSVFromGitHub();
-            
-            // 지역 버튼 이벤트
-            document.querySelectorAll('.region-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelectorAll('.region-btn').forEach(b => b.classList.remove('active'));
+        function attachFilterEvents() {
+            // 지역 필터
+            document.querySelectorAll('#regionFilter .filter-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    document.querySelectorAll('#regionFilter .filter-item').forEach(i => i.classList.remove('active'));
                     this.classList.add('active');
-                    currentRegion = this.dataset.region;
+                    currentFilters.region = this.dataset.region;
                     updateCrops();
                     updateDisplay();
                 });
             });
 
-            // 작목군 선택 이벤트
-            document.getElementById('cropGroupSelect').addEventListener('change', function() {
-                currentCropGroup = this.value;
-                currentCrop = '';
-                document.getElementById('cropSelect').value = '';
-                updateCrops();
-                updateDisplay();
+            // 작목군 필터
+            document.addEventListener('click', function(e) {
+                if (e.target.matches('#cropGroupFilter .filter-item')) {
+                    document.querySelectorAll('#cropGroupFilter .filter-item').forEach(i => i.classList.remove('active'));
+                    e.target.classList.add('active');
+                    currentFilters.cropGroup = e.target.dataset.cropGroup;
+                    currentFilters.crop = '';
+                    updateCrops();
+                    updateDisplay();
+                }
             });
 
-            // 작목 선택 이벤트
-            document.getElementById('cropSelect').addEventListener('change', function() {
-                currentCrop = this.value;
-                updateDisplay();
+            // 작목 필터
+            document.addEventListener('click', function(e) {
+                if (e.target.matches('#cropFilter .filter-item')) {
+                    document.querySelectorAll('#cropFilter .filter-item').forEach(i => i.classList.remove('active'));
+                    e.target.classList.add('active');
+                    currentFilters.crop = e.target.dataset.crop;
+                    updateDisplay();
+                }
             });
 
-            // 연도 선택 이벤트
-            document.getElementById('yearSelect').addEventListener('change', function() {
-                currentYear = this.value;
-                updateDisplay();
+            // 연도 필터
+            document.addEventListener('click', function(e) {
+                if (e.target.matches('#yearFilter .year-btn')) {
+                    document.querySelectorAll('#yearFilter .year-btn').forEach(i => i.classList.remove('active'));
+                    e.target.classList.add('active');
+                    currentFilters.year = e.target.dataset.year;
+                    updateDisplay();
+                }
             });
+        }
+
+        function filterData() {
+            filteredData = csvData.filter(item => {
+                return item.region === currentFilters.region &&
+                       (!currentFilters.cropGroup || item.cropGroup === currentFilters.cropGroup) &&
+                       (!currentFilters.crop || item.crop === currentFilters.crop) &&
+                       (!currentFilters.year || item.year === currentFilters.year);
+            });
+        }
+
+        function updateSummary() {
+            const totalIncome = filteredData.filter(item => item.category === '소득')
+                                          .reduce((sum, item) => sum + item.value, 0);
+            const avgRate = filteredData.filter(item => item.category === '소득률')
+                                      .reduce((sum, item, _, arr) => sum + item.value / arr.length, 0);
+
+            document.getElementById('totalIncome').textContent = `₩${totalIncome.toLocaleString()}`;
+            document.getElementById('totalRate').textContent = `${avgRate.toFixed(1)}%`;
+        }
+
+        function updateTable() {
+            const tableBody = document.getElementById('detailTableBody');
+            
+            if (filteredData.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #6b7280;">데이터가 없습니다.</td></tr>';
+                return;
+            }
+
+            // 데이터 그룹화
+            const grouped = {};
+            filteredData.forEach(item => {
+                const key = `${item.cropGroup}-${item.crop}-${item.year}`;
+                if (!grouped[key]) {
+                    grouped[key] = {
+                        cropGroup: item.cropGroup,
+                        crop: item.crop,
+                        year: item.year,
+                        income: 0,
+                        rate: 0
+                    };
+                }
+                if (item.category === '소득') grouped[key].income = item.value;
+                if (item.category === '소득률') grouped[key].rate = item.value;
+            });
+
+            let html = '';
+            Object.values(grouped).forEach(item => {
+                html += `
+                    <tr>
+                        <td>${item.cropGroup}</td>
+                        <td>${item.crop}</td>
+                        <td>${item.year}년</td>
+                        <td>${item.income.toLocaleString()}</td>
+                        <td>${item.rate.toFixed(1)}%</td>
+                    </tr>
+                `;
+            });
+
+            tableBody.innerHTML = html;
+        }
+
+        function createChart(canvasId, data, label, color) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            
+            if (charts[canvasId]) {
+                charts[canvasId].destroy();
+            }
+
+            charts[canvasId] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: label,
+                        data: data.values,
+                        borderColor: color,
+                        backgroundColor: color + '20',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: { font: { size: 10 } }
+                        },
+                        y: {
+                            grid: { color: '#f3f4f6' },
+                            ticks: { 
+                                font: { size: 10 },
+                                callback: function(value) {
+                                    return value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateCharts() {
+            // 연도별 소득 데이터 준비
+            const yearlyIncome = {};
+            filteredData.filter(item => item.category === '소득').forEach(item => {
+                if (!yearlyIncome[item.year]) yearlyIncome[item.year] = 0;
+                yearlyIncome[item.year] += item.value;
+            });
+
+            const years = Object.keys(yearlyIncome).sort();
+            const incomeValues = years.map(year => yearlyIncome[year]);
+
+            const chartData = {
+                labels: years.map(year => year + '년'),
+                values: incomeValues
+            };
+
+            // 각 차트 업데이트 (임시로 같은 데이터 사용)
+            createChart('incomeChart', chartData, '소득', '#3b82f6');
+            createChart('costChart', chartData, '경작비', '#ef4444');
+            createChart('managementChart', chartData, '경영비', '#f59e0b');
+            createChart('productionChart', chartData, '생산량', '#10b981');
+        }
+
+        function updateDisplay() {
+            filterData();
+            updateSummary();
+            updateTable();
+            updateCharts();
+        }
+
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTestData();
         });
+    </script>
+</body>
+</html>
     </script>
 </body>
 </html>

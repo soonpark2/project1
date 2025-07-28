@@ -168,6 +168,72 @@
             margin-bottom: 20px;
         }
         
+        .income-analysis-layout {
+            display: flex;
+            gap: 20px;
+            height: 100%;
+        }
+        
+        .left-summary {
+            width: 280px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .main-summary-box {
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+            border: 2px solid #3b82f6;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .main-summary-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1f2937;
+            margin: 8px 0;
+        }
+        
+        .summary-sublabel {
+            font-size: 14px;
+            color: #6b7280;
+            font-weight: 600;
+        }
+        
+        .summary-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .summary-item {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .summary-item-label {
+            font-size: 13px;
+            color: #374151;
+            font-weight: 600;
+        }
+        
+        .summary-item-value {
+            font-size: 16px;
+            font-weight: bold;
+            color: #1f2937;
+        }
+        
+        .right-detail {
+            flex: 1;
+        }
+        
         .summary-box {
             flex: 1;
             text-align: center;
@@ -198,11 +264,11 @@
         }
         
         .table-wrapper {
-            max-height: 400px;
+            max-height: 500px;
             overflow-y: auto;
             border: 1px solid #e5e7eb;
             border-radius: 4px;
-            flex: 1;
+            height: 100%;
         }
         
         table {
@@ -262,8 +328,12 @@
                 border-bottom: 1px solid #e5e7eb;
             }
             
-            .income-summary {
+            .income-analysis-layout {
                 flex-direction: column;
+            }
+            
+            .left-summary {
+                width: 100%;
             }
         }
     </style>
@@ -309,29 +379,43 @@
             <div class="charts-grid">
                 <div class="chart-card combined-section">
                     <div class="chart-title" id="summaryTitle">2023년 전국 소득분석표</div>
-                    <div class="income-summary">
-                        <div class="summary-box income">
-                            <div class="summary-label">소득</div>
-                            <div class="summary-value" id="totalIncome">₩0</div>
-                            <div class="summary-label">총수량</div>
+                    <div class="income-analysis-layout">
+                        <div class="left-summary">
+                            <div class="main-summary-box">
+                                <div class="summary-label">소득</div>
+                                <div class="main-summary-value" id="totalIncome">₩0</div>
+                                <div class="summary-sublabel">소득률 <span id="totalRate">0%</span></div>
+                            </div>
+                            <div class="summary-grid">
+                                <div class="summary-item">
+                                    <div class="summary-item-label">총수입</div>
+                                    <div class="summary-item-value" id="totalRevenue">₩0</div>
+                                </div>
+                                <div class="summary-item">
+                                    <div class="summary-item-label">경영비</div>
+                                    <div class="summary-item-value" id="totalCost">₩0</div>
+                                </div>
+                                <div class="summary-item">
+                                    <div class="summary-item-label">생산비</div>
+                                    <div class="summary-item-value" id="totalProductionCost">₩0</div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="summary-box rate">
-                            <div class="summary-label">소득률</div>
-                            <div class="summary-value" id="totalRate">0%</div>
+                        <div class="right-detail">
+                            <div class="table-wrapper">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>항목</th>
+                                            <th>값</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="detailTableBody">
+                                        <tr><td colspan="2" class="loading">데이터를 불러오는 중...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                    </div>
-                    <div class="table-wrapper">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>비목</th>
-                                    <th>값</th>
-                                </tr>
-                            </thead>
-                            <tbody id="detailTableBody">
-                                <tr><td colspan="2" class="loading">데이터를 불러오는 중...</td></tr>
-                            </tbody>
-                        </table>
                     </div>
                 </div>
 
@@ -555,10 +639,17 @@
 
         function updateSummary() {
             const income = filteredData.filter(i => i.category === '소득').reduce((a, b) => a + b.value, 0);
+            const revenue = filteredData.filter(i => i.category === '총수입').reduce((a, b) => a + b.value, 0);
+            const cost = filteredData.filter(i => i.category === '경영비').reduce((a, b) => a + b.value, 0);
+            const productionCost = filteredData.filter(i => i.category === '생산비').reduce((a, b) => a + b.value, 0);
             const rateArr = filteredData.filter(i => i.category === '소득률');
             const avgRate = rateArr.reduce((a, b) => a + b.value, 0) / (rateArr.length || 1);
+            
             document.getElementById('totalIncome').textContent = `₩${income.toLocaleString()}`;
             document.getElementById('totalRate').textContent = `${avgRate.toFixed(1)}%`;
+            document.getElementById('totalRevenue').textContent = `₩${revenue.toLocaleString()}`;
+            document.getElementById('totalCost').textContent = `₩${cost.toLocaleString()}`;
+            document.getElementById('totalProductionCost').textContent = `₩${productionCost.toLocaleString()}`;
         }
 
         function updateSummaryTitle() {
@@ -684,7 +775,6 @@
                 }
             });
         }
-
 
         // 페이지 로드 시 초기화
         document.addEventListener('DOMContentLoaded', function() {

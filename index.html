@@ -133,9 +133,9 @@
         
         .charts-grid {
             display: grid;
-            grid-template-columns: 1fr;
-            grid-template-rows: auto;
-            gap: 15px;
+            grid-template-columns: 1fr 1.5fr 1.5fr;
+            grid-template-rows: repeat(3, auto);
+            gap: 10px;
         }
         
         .chart-card {
@@ -204,6 +204,11 @@
             flex-direction: column;
             gap: 10px;
             height: 100%;
+        }
+
+        .chart-card combined-section {
+            grid-column: 1 / 2; /* 1열에서 시작해 2열 직전까지 */
+            grid-row:    1 / 4; /* 3행에서 시작해 4행 직전까지 */
         }
         
         .left-summary {

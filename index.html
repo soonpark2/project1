@@ -741,20 +741,29 @@
             });
             html += '<tr><td colspan="2" style="border-bottom: 2px solid #d1d5db; padding: 0;"></td></tr>';
             
-            // 중간재비 박스 - 동적으로 중간재비 항목들 찾기
-            const allMaterialCostItems = [
-                '과수원조성비', '종자·종묘비', '보통(무기질)비료비', '부산물(유기질)비료비', 
-                '농약비', '수도광열비', '기타재료비','대농구상각비', '영농시설상각비', '자동차비'
-            ];
+            // 중간재비 박스 - 작목군/작목 조건에 따라 항목 설정
+            let allMaterialCostItems = [];
             
-            // 현재 데이터에서 존재하는 중간재비 항목들 (값이 0이어도 표시)
-            const existingMaterialItems = allMaterialCostItems.filter(itemName => 
-                itemValueMap[itemName] !== undefined
-            );
-            
-            const totalMaterialCost = existingMaterialItems.reduce((sum, itemName) => {
-                return sum + (itemValueMap[itemName] || 0);
-            }, 0);
+            if (currentFilters.cropGroup === '과일') {
+                allMaterialCostItems = [
+                    '과수원조성비', '보통(무기질)비료비', '부산물(유기질)비료비',
+                    '농약비', '수도광열비', '기타재료비', '소농구비',
+                    '대농구상각비', '영농시설상각비', '수리·유지비', '기타비용'
+                ];
+            } else if (['쌀', '콩', '고추', '양파', '마늘'].includes(currentFilters.crop)) {
+                allMaterialCostItems = [
+                    '종자·종묘비', '보통(무기질)비료비', '부산물(유기질)비료비',
+                    '농약비', '수도광열비', '기타재료비', '소농구비',
+                    '대농구상각비', '영농시설상각비', '자동차비', '기타비용'
+                ];
+            } else {
+                // 기본값 또는 기타 작목일 때
+                allMaterialCostItems = [
+                    '종자·종묘비', '보통(무기질)비료비', '부산물(유기질)비료비',
+                    '농약비', '수도광열비', '기타재료비', '소농구비',
+                    '대농구상각비', '영농시설상각비', '수리·유지비', '기타비용'
+                ];
+            }
             
             html += `<tr style="background: #f3f4f6;"><td colspan="2" style="text-align: center; font-weight: bold; padding: 10px;">중간재비 ₩${totalMaterialCost.toLocaleString()}</td></tr>`;
             

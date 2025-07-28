@@ -765,6 +765,14 @@
                 ];
             }
             
+            // ✅ 바로 여기! 중간재비 총합 계산
+            let totalMaterialCost = 0;
+            allMaterialCostItems.forEach(itemName => {
+                const value = itemValueMap[itemName];
+                if (typeof value === 'number') {
+                    totalMaterialCost += value;
+                }
+            });
             html += `<tr style="background: #f3f4f6;"><td colspan="2" style="text-align: center; font-weight: bold; padding: 10px;">중간재비 ₩${totalMaterialCost.toLocaleString()}</td></tr>`;
             
             // 존재하는 중간재비 항목들 표시 (값이 0이어도 표시)

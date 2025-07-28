@@ -728,13 +728,6 @@
             
             let html = '';
             
-            // 소득과 소득률을 굵게 표시
-            const income = itemValueMap['소득'] || 0;
-            const incomeRate = itemValueMap['소득률'] || 0;
-            html += `<tr><td style="font-weight: bold; font-size: 14px;">소득</td><td style="font-weight: bold; font-size: 14px;">₩${income.toLocaleString()}</td></tr>`;
-            html += `<tr><td style="font-weight: bold; font-size: 14px;">소득률</td><td style="font-weight: bold; font-size: 14px;">${incomeRate}%</td></tr>`;
-            html += '<tr><td colspan="2" style="border-bottom: 2px solid #d1d5db; padding: 0;"></td></tr>';
-            
             // 총수입 박스
             const totalRevenue = itemValueMap['총수입'] || 0;
             html += `<tr style="background: #f3f4f6;"><td colspan="2" style="text-align: center; font-weight: bold; padding: 10px;">총수입 ₩${totalRevenue.toLocaleString()}</td></tr>`;
@@ -748,26 +741,36 @@
             });
             html += '<tr><td colspan="2" style="border-bottom: 2px solid #d1d5db; padding: 0;"></td></tr>';
             
-            // 중간재비 박스
-            const materialCostItems = ['종자·종묘비', '보통(무기질)비료비', '부산물(유기질)비료비', '농약비', '수도광열비', '기타재료비'];
-            const totalMaterialCost = materialCostItems.reduce((sum, itemName) => {
-                const item = itemValueMap[itemName];
-                return sum + (item ? item : 0);
+            // 중간재비 박스 - 동적으로 중간재비 항목들 찾기
+            const allMaterialCostItems = [
+                '과수원조성비', '종자·종묘비', '보통(무기질)비료비', '부산물(유기질)비료비', 
+                '농약비', '수도광열비', '기타재료비','대농구상각비', '영농시설상각비', '자동차비'
+            ];
+            
+            // 현재 데이터에서 존재하는 중간재비 항목들 (값이 0이어도 표시)
+            const existingMaterialItems = allMaterialCostItems.filter(itemName => 
+                itemValueMap[itemName] !== undefined
+            );
+            
+            const totalMaterialCost = existingMaterialItems.reduce((sum, itemName) => {
+                return sum + (itemValueMap[itemName] || 0);
             }, 0);
+            
             html += `<tr style="background: #f3f4f6;"><td colspan="2" style="text-align: center; font-weight: bold; padding: 10px;">중간재비 ₩${totalMaterialCost.toLocaleString()}</td></tr>`;
             
-            // 과수원조성비 추가
-            if (itemValueMap['과수원조성비']) {
-                html += `<tr><td>과수원조성비</td><td>${itemValueMap['과수원조성비'].toLocaleString()}</td></tr>`;
-            }
-            materialCostItems.forEach(itemName => {
+            // 존재하는 중간재비 항목들 표시 (값이 0이어도 표시)
+            existingMaterialItems.forEach(itemName => {
                 const value = itemValueMap[itemName];
                 const displayValue = value !== undefined ? 
                     (typeof value === 'number' ? value.toLocaleString() : value) : '-';
                 html += `<tr><td>${itemName}</td><td>${displayValue}</td></tr>`;
             });
-            if (itemValueMap['기타비용']) {
-                html += `<tr><td>기타비용</td><td>${itemValueMap['기타비용'].toLocaleString()}</td></tr>`;
+            
+            // 기타비용이 있으면 추가
+            if (itemValueMap['기타비용'] !== undefined) {
+                const value = itemValueMap['기타비용'];
+                const displayValue = typeof value === 'number' ? value.toLocaleString() : '-';
+                html += `<tr><td>기타비용</td><td>${displayValue}</td></tr>`;
             }
             html += '<tr><td colspan="2" style="border-bottom: 2px solid #d1d5db; padding: 0;"></td></tr>';
             
@@ -775,7 +778,7 @@
             const totalCost = itemValueMap['경영비'] || 0;
             html += `<tr style="background: #f3f4f6;"><td colspan="2" style="text-align: center; font-weight: bold; padding: 10px;">경영비 ₩${totalCost.toLocaleString()}</td></tr>`;
             
-            const costItems = ['대농구상각비', '영농시설상각비', '자동차비', '농기계·시설임차료', '토지임차료', '위탁영농비', '고용노동비'];
+            const costItems = ['농기계·시설임차료', '토지임차료', '위탁영농비', '고용노동비'];
             costItems.forEach(itemName => {
                 const value = itemValueMap[itemName];
                 const displayValue = value !== undefined ? 

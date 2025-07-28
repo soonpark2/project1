@@ -170,6 +170,7 @@
         
         .income-analysis-layout {
             display: flex;
+            flex-direction: column;
             gap: 20px;
             height: 100%;
         }
@@ -444,10 +445,8 @@
                     <div class="chart-title" id="summaryTitle">2023년 전국 소득분석표</div>
                     <div class="income-analysis-layout">
                         <div class="left-summary">
-                            <div class="main-summary-box">
-                                <div class="summary-label" style="color: #1f2937; font-weight: bold; font-size: 16px;">소득</div>
-                                <div class="main-summary-value" id="totalIncome" style="color: #1f2937; font-weight: bold; font-size: 16px;">₩0</div>
-                                <div class="summary-sublabel" style="color: #1f2937; font-weight: bold; font-size: 16px;">소득률 <span id="totalRate" style="color: #1f2937; font-weight: bold;">0%</span></div>
+                            <div class="main-summary-box" style="font-weight: bold; font-size: 16px; color: #6B1E6D;">
+                                소득 <span id="totalIncome">₩0</span> / 소득률 <span id="totalRate">0%</span>
                             </div>
                         </div>
                         <div class="right-detail">

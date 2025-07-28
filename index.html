@@ -129,7 +129,7 @@
         .charts-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            grid-template-rows: auto;
+            grid-template-rows: auto auto auto;
             gap: 15px;
             height: 100%;
         }
@@ -160,6 +160,38 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
+        }
+        
+        .labor-section {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .labor-section .chart-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .labor-section .chart-container {
+            position: relative;
+            height: 200px;
+        }
+        
+        .annual-labor-chart {
+            grid-column: 1 / -1;
+        }
+        
+        .annual-labor-chart .chart-container {
+            height: 300px;
+        }
+        
+        .income-by-crop-section {
+            grid-column: 1 / -1;
         }
         
         .income-summary {
@@ -346,7 +378,16 @@
                 grid-template-columns: 1fr;
             }
             
-            .combined-section {
+            .labor-section {
+                grid-column: 1;
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .annual-labor-chart {
+                grid-column: 1 / -1;
+            }
+            
+            .income-by-crop-section {
                 grid-column: 1;
             }
         }
@@ -397,6 +438,14 @@
             
             .filter-content {
                 max-height: 120px;
+            }
+            
+            .labor-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .annual-labor-chart {
+                grid-column: 1;
             }
         }
     </style>
@@ -467,6 +516,36 @@
                         <canvas id="incomeChart"></canvas>
                     </div>
                 </div>
+
+                <div class="labor-section">
+                    <div class="chart-card">
+                        <div class="chart-title">자가 노동시간</div>
+                        <div class="chart-container">
+                            <canvas id="selfLaborChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-card">
+                        <div class="chart-title">고용 노동시간</div>
+                        <div class="chart-container">
+                            <canvas id="hiredLaborChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-card annual-labor-chart">
+                        <div class="chart-title">년도별 노동시간</div>
+                        <div class="chart-container">
+                            <canvas id="annualLaborChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-card income-by-crop-section">
+                    <div class="chart-title">작목별 소득</div>
+                    <div class="chart-container">
+                        <canvas id="cropIncomeChart"></canvas>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -513,6 +592,20 @@
 전국,2023,쌀,쌀,주산물수량,755
 전국,2023,쌀,쌀,부산물가액,500000
 전국,2023,쌀,쌀,수취가격,5299
+전국,2023,쌀,쌀,자가노동시간,100.1
+전국,2023,쌀,쌀,자가노동시간(남),70.6
+전국,2023,쌀,쌀,자가노동시간(여),29.5
+전국,2023,쌀,쌀,고용노동시간,18.0
+전국,2023,쌀,쌀,고용노동시간(남),3.3
+전국,2023,쌀,쌀,고용노동시간(여),14.7
+전국,2022,쌀,쌀,자가노동시간,102.0
+전국,2022,쌀,쌀,고용노동시간,15.8
+전국,2021,쌀,쌀,자가노동시간,109.3
+전국,2021,쌀,쌀,고용노동시간,7.3
+전국,2020,쌀,쌀,자가노동시간,113.7
+전국,2020,쌀,쌀,고용노동시간,10.8
+전국,2019,쌀,쌀,자가노동시간,118.0
+전국,2019,쌀,쌀,고용노동시간,11.8
 전국,2023,쌀,쌀,종자·종묘비,79547
 전국,2023,쌀,쌀,보통(무기질)비료비,103292
 전국,2023,쌀,쌀,부산물(유기질)비료비,50000
@@ -536,21 +629,51 @@
 전국,2023,과일,사과,경영비,2000000
 전국,2023,과일,사과,생산비,2500000
 전국,2023,과일,사과,주산물가액,6800000
+전국,2023,과일,사과,자가노동시간,95.5
+전국,2023,과일,사과,자가노동시간(남),65.2
+전국,2023,과일,사과,자가노동시간(여),30.3
+전국,2023,과일,사과,고용노동시간,25.2
+전국,2023,과일,사과,고용노동시간(남),12.1
+전국,2023,과일,사과,고용노동시간(여),13.1
 전국,2023,과일,사과,종자·종묘비,150000
 전국,2023,과일,사과,보통(무기질)비료비,200000
 전국,2023,과일,사과,농약비,300000
+전국,2023,채소,감자,소득,3200000
+전국,2023,채소,감자,소득률,19.8
+전국,2023,채소,감자,총수입,4000000
+전국,2023,채소,감자,경영비,1200000
+전국,2023,채소,감자,생산비,1500000
+전국,2023,채소,감자,주산물가액,3800000
+전국,2023,채소,감자,자가노동시간,85.2
+전국,2023,채소,감자,자가노동시간(남),55.1
+전국,2023,채소,감자,자가노동시간(여),30.1
+전국,2023,채소,감자,고용노동시간,12.5
+전국,2023,채소,감자,고용노동시간(남),8.2
+전국,2023,채소,감자,고용노동시간(여),4.3
 강원,2023,과일,사과,소득,1000000
 강원,2023,과일,사과,소득률,16.5
 강원,2023,과일,사과,총수입,2000000
 강원,2023,과일,사과,경영비,800000
 강원,2023,과일,사과,생산비,1000000
 강원,2023,과일,사과,주산물가액,1900000
+강원,2023,과일,사과,자가노동시간,90.1
+강원,2023,과일,사과,자가노동시간(남),60.5
+강원,2023,과일,사과,자가노동시간(여),29.6
+강원,2023,과일,사과,고용노동시간,20.1
+강원,2023,과일,사과,고용노동시간(남),10.2
+강원,2023,과일,사과,고용노동시간(여),9.9
 강원,2023,채소,감자,소득,2500000
 강원,2023,채소,감자,소득률,19.8
 강원,2023,채소,감자,총수입,4000000
 강원,2023,채소,감자,경영비,1200000
 강원,2023,채소,감자,생산비,1500000
-강원,2023,채소,감자,주산물가액,3800000`;
+강원,2023,채소,감자,주산물가액,3800000
+강원,2023,채소,감자,자가노동시간,80.3
+강원,2023,채소,감자,자가노동시간(남),50.2
+강원,2023,채소,감자,자가노동시간(여),30.1
+강원,2023,채소,감자,고용노동시간,15.2
+강원,2023,채소,감자,고용노동시간(남),10.1
+강원,2023,채소,감자,고용노동시간(여),5.1`;
             
             parseCSV(testData);
         }
@@ -850,6 +973,225 @@
                         y: {
                             ticks: {
                                 callback: val => val.toLocaleString()
+                            }
+                        }
+                    }
+                }
+            });
+
+            // 자가 노동시간 도넛 차트
+            updateSelfLaborChart();
+            
+            // 고용 노동시간 도넛 차트
+            updateHiredLaborChart();
+            
+            // 년도별 노동시간 누적 차트
+            updateAnnualLaborChart();
+            
+            // 작목별 소득 차트
+            updateCropIncomeChart();
+        }
+
+        function updateSelfLaborChart() {
+            const selfLaborTotal = filteredData.find(item => item.category === '자가노동시간')?.value || 0;
+            const selfLaborMale = filteredData.find(item => item.category === '자가노동시간(남)')?.value || 0;
+            const selfLaborFemale = filteredData.find(item => item.category === '자가노동시간(여)')?.value || 0;
+            
+            const ctx = document.getElementById('selfLaborChart').getContext('2d');
+            if (charts['selfLaborChart']) charts['selfLaborChart'].destroy();
+            
+            charts['selfLaborChart'] = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['남성', '여성'],
+                    datasets: [{
+                        data: [selfLaborMale, selfLaborFemale],
+                        backgroundColor: ['#3b82f6', '#06b6d4'],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label + ': ' + context.parsed + '시간';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateHiredLaborChart() {
+            const hiredLaborTotal = filteredData.find(item => item.category === '고용노동시간')?.value || 0;
+            const hiredLaborMale = filteredData.find(item => item.category === '고용노동시간(남)')?.value || 0;
+            const hiredLaborFemale = filteredData.find(item => item.category === '고용노동시간(여)')?.value || 0;
+            
+            const ctx = document.getElementById('hiredLaborChart').getContext('2d');
+            if (charts['hiredLaborChart']) charts['hiredLaborChart'].destroy();
+            
+            charts['hiredLaborChart'] = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['남성', '여성'],
+                    datasets: [{
+                        data: [hiredLaborMale, hiredLaborFemale],
+                        backgroundColor: ['#8b5cf6', '#ec4899'],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label + ': ' + context.parsed + '시간';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateAnnualLaborChart() {
+            const fixedYears = ['2019', '2020', '2021', '2022', '2023'];
+            
+            const selfLaborData = fixedYears.map(y => {
+                const match = csvData.find(row =>
+                    row.category === '자가노동시간' &&
+                    row.year === y &&
+                    row.region === currentFilters.region &&
+                    (!currentFilters.cropGroup || row.cropGroup === currentFilters.cropGroup) &&
+                    (!currentFilters.crop || row.crop === currentFilters.crop)
+                );
+                return match ? match.value : 0;
+            });
+            
+            const hiredLaborData = fixedYears.map(y => {
+                const match = csvData.find(row =>
+                    row.category === '고용노동시간' &&
+                    row.year === y &&
+                    row.region === currentFilters.region &&
+                    (!currentFilters.cropGroup || row.cropGroup === currentFilters.cropGroup) &&
+                    (!currentFilters.crop || row.crop === currentFilters.crop)
+                );
+                return match ? match.value : 0;
+            });
+            
+            const ctx = document.getElementById('annualLaborChart').getContext('2d');
+            if (charts['annualLaborChart']) charts['annualLaborChart'].destroy();
+            
+            charts['annualLaborChart'] = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: fixedYears.map(y => y + '년'),
+                    datasets: [
+                        {
+                            label: '자가노동',
+                            data: selfLaborData,
+                            backgroundColor: '#3b82f6',
+                            borderColor: '#1e40af',
+                            borderWidth: 1
+                        },
+                        {
+                            label: '고용노동',
+                            data: hiredLaborData,
+                            backgroundColor: '#8b5cf6',
+                            borderColor: '#7c3aed',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            stacked: true,
+                            grid: { display: false }
+                        },
+                        y: {
+                            stacked: true,
+                            ticks: {
+                                callback: val => val + '시간'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'top' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.parsed.y + '시간';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateCropIncomeChart() {
+            // 현재 지역과 년도로 필터링된 작목별 소득 데이터
+            let cropIncomeData = csvData.filter(item => {
+                return item.category === '소득' &&
+                       item.region === currentFilters.region &&
+                       item.year === currentFilters.year &&
+                       (!currentFilters.cropGroup || item.cropGroup === currentFilters.cropGroup);
+            });
+            
+            // 작목별로 그룹핑하고 정렬
+            const cropIncomes = cropIncomeData
+                .map(item => ({
+                    crop: item.crop,
+                    income: item.value
+                }))
+                .sort((a, b) => b.income - a.income);
+            
+            const ctx = document.getElementById('cropIncomeChart').getContext('2d');
+            if (charts['cropIncomeChart']) charts['cropIncomeChart'].destroy();
+            
+            charts['cropIncomeChart'] = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: cropIncomes.map(item => item.crop),
+                    datasets: [{
+                        label: '소득',
+                        data: cropIncomes.map(item => item.income),
+                        backgroundColor: ['#10b981', '#06b6d4', '#8b5cf6', '#f59e0b', '#ef4444', '#84cc16'],
+                        borderColor: ['#059669', '#0891b2', '#7c3aed', '#d97706', '#dc2626', '#65a30d'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y', // 가로 막대로 설정
+                    scales: {
+                        x: {
+                            ticks: {
+                                callback: val => '₩' + val.toLocaleString()
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return '소득: ₩' + context.parsed.x.toLocaleString();
+                                }
                             }
                         }
                     }

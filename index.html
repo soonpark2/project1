@@ -43,46 +43,62 @@
 
         .container {
             display: grid;
-            grid-template-columns: 220px 1.5fr 1.5fr;
-            grid-template-rows: auto auto;
+            grid-template-columns: 220px 1fr 1fr 2fr;
+            grid-template-rows: 1fr 1fr 1fr;
             height: calc(100vh - 35px);
             gap: 10px;
             padding: 10px;
         }
 
+        /* 사이드바 - 세로로 3행 차지 */
         .sidebar {
             grid-column: 1 / 2;
-            grid-row: 1 / 3;
+            grid-row: 1 / 4;
             background: #ffffff;
             border-right: 1px solid #e5e7eb;
             padding: 10px;
             overflow-y: auto;
         }
 
-        .main-content {
-            grid-column: 2 / 4;
-            grid-row: 1 / 3;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: auto auto auto;
-            gap: 10px;
-            overflow-y: auto;
+        /* 소득분석표 - 세로로 3행 차지 */
+        .income-analysis-section {
+            grid-column: 2 / 3;
+            grid-row: 1 / 4;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 10px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
 
-        .income-analysis-layout {
-            grid-column: 1 / 2;
+        /* 총수입 그래프 */
+        .total-income-chart {
+            grid-column: 3 / 4;
             grid-row: 1 / 2;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
         }
 
-        .labor-section {
-            grid-column: 1 / 2;
+        /* 자가노동 그래프 */
+        .self-labor-chart {
+            grid-column: 4 / 5;
+            grid-row: 1 / 2;
+        }
+
+        /* 고용노동 그래프 */
+        .hired-labor-chart {
+            grid-column: 4 / 5;
             grid-row: 2 / 3;
-            display: grid;
-            grid-template-columns: 1fr 1fr 2fr;
-            gap: 10px;
+        }
+
+        /* 년도별 노동 그래프 */
+        .annual-labor-chart {
+            grid-column: 3 / 4;
+            grid-row: 2 / 3;
+        }
+
+        /* 소득 그래프 */
+        .income-chart {
+            grid-column: 3 / 5;
+            grid-row: 3 / 4;
         }
 
         .chart-card {
@@ -106,20 +122,7 @@
             height: 220px;
         }
 
-        .annual-labor-chart {
-            grid-column: 3;
-        }
-
-        .annual-labor-chart .chart-container {
-            height: 160px;
-        }
-
-        .income-by-crop-section {
-            grid-column: 2 / 3;
-            grid-row: 2 / 3;
-        }
-
-        .income-by-crop-section .chart-container {
+        .income-chart .chart-container {
             height: 180px;
         }
 
@@ -190,11 +193,11 @@
             font-weight: bold;
         }
 
-        .left-summary {
-            width: 100%;
+        .income-analysis-layout {
             display: flex;
             flex-direction: column;
             gap: 10px;
+            height: 100%;
         }
 
         .main-summary-box {
@@ -218,16 +221,11 @@
             font-weight: 600;
         }
 
-        .right-detail {
-            flex: 1;
-        }
-
         .table-wrapper {
-            max-height: 380px;
+            flex: 1;
             overflow-y: auto;
             border: 1px solid #e5e7eb;
             border-radius: 4px;
-            height: 100%;
         }
 
         .section-header {
@@ -299,28 +297,41 @@
             display: none;
         }
 
+        /* 반응형 디자인 */
         @media (max-width: 1400px) {
             .container {
-                grid-template-columns: 1fr;
-                grid-template-rows: auto;
+                grid-template-columns: 220px 1fr 1fr;
+                grid-template-rows: auto auto auto auto;
             }
-
-            .main-content {
-                grid-column: 1;
-                grid-row: 2;
-                grid-template-columns: 1fr;
+            
+            .income-analysis-section {
+                grid-column: 2 / 4;
+                grid-row: 1 / 2;
             }
-
-            .income-by-crop-section {
-                grid-column: 1;
+            
+            .total-income-chart {
+                grid-column: 2 / 3;
+                grid-row: 2 / 3;
             }
-
-            .labor-section {
-                grid-template-columns: 1fr 1fr;
+            
+            .self-labor-chart {
+                grid-column: 3 / 4;
+                grid-row: 2 / 3;
             }
-
+            
+            .hired-labor-chart {
+                grid-column: 2 / 3;
+                grid-row: 3 / 4;
+            }
+            
             .annual-labor-chart {
-                grid-column: 1 / -1;
+                grid-column: 3 / 4;
+                grid-row: 3 / 4;
+            }
+            
+            .income-chart {
+                grid-column: 2 / 4;
+                grid-row: 4 / 5;
             }
         }
 
@@ -353,26 +364,13 @@
                 display: none;
             }
 
-            .main-content {
-                padding: 8px;
-                display: flex;
-                flex-direction: column;
-            }
-
             .chart-card {
                 padding: 8px;
+                margin-bottom: 10px;
             }
 
             .filter-content {
                 max-height: 100px;
-            }
-
-            .labor-section {
-                grid-template-columns: 1fr;
-            }
-
-            .annual-labor-chart {
-                grid-column: 1;
             }
         }
     </style>
@@ -415,64 +413,54 @@
             </div>
         </div>
 
-        <div class="main-content">
-            <div class="charts-grid">
-                <div class="chart-card combined-section">
-                    <div class="chart-title" id="summaryTitle">2023년 전국 소득분석표</div>
-                    <div class="income-analysis-layout">
-                        <div class="left-summary">
-                            <div class="main-summary-box" style="font-weight: bold; font-size: 14px; color: #6B1E6D;">
-                                소득 <span id="totalIncome">₩0</span> / 소득률 <span id="totalRate">0%</span>
-                            </div>
-                        </div>
-                        <div class="right-detail">
-                            <div class="table-wrapper">
-                                <table>
-                                    <tbody id="detailTableBody">
-                                        <tr><td colspan="2" class="loading">데이터를 불러오는 중...</td></tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+        <div class="chart-card income-analysis-section">
+            <div class="chart-title" id="summaryTitle">2023년 전국 소득분석표</div>
+            <div class="income-analysis-layout">
+                <div class="main-summary-box" style="font-weight: bold; font-size: 14px; color: #6B1E6D;">
+                    소득 <span id="totalIncome">₩0</span> / 소득률 <span id="totalRate">0%</span>
                 </div>
+                <div class="table-wrapper">
+                    <table>
+                        <tbody id="detailTableBody">
+                            <tr><td colspan="2" class="loading">데이터를 불러오는 중...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
-                <div class="chart-card">
-                    <div class="chart-title">총수입</div>
-                    <div class="chart-container">
-                        <canvas id="incomeChart"></canvas>
-                    </div>
-                </div>
+        <div class="chart-card total-income-chart">
+            <div class="chart-title">총수입</div>
+            <div class="chart-container">
+                <canvas id="incomeChart"></canvas>
+            </div>
+        </div>
 
-                <div class="labor-section">
-                    <div class="chart-card">
-                        <div class="chart-title">자가 노동시간</div>
-                        <div class="chart-container">
-                            <canvas id="selfLaborChart"></canvas>
-                        </div>
-                    </div>
-                    
-                    <div class="chart-card">
-                        <div class="chart-title">고용 노동시간</div>
-                        <div class="chart-container">
-                            <canvas id="hiredLaborChart"></canvas>
-                        </div>
-                    </div>
-                    
-                    <div class="chart-card annual-labor-chart">
-                        <div class="chart-title">년도별 노동시간</div>
-                        <div class="chart-container">
-                            <canvas id="annualLaborChart"></canvas>
-                        </div>
-                    </div>
-                </div>
+        <div class="chart-card self-labor-chart">
+            <div class="chart-title">자가노동그래프</div>
+            <div class="chart-container">
+                <canvas id="selfLaborChart"></canvas>
+            </div>
+        </div>
 
-                <div class="chart-card income-by-crop-section">
-                    <div class="chart-title">작목별 소득</div>
-                    <div class="chart-container">
-                        <canvas id="cropIncomeChart"></canvas>
-                    </div>
-                </div>
+        <div class="chart-card hired-labor-chart">
+            <div class="chart-title">고용노동그래프</div>
+            <div class="chart-container">
+                <canvas id="hiredLaborChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-card annual-labor-chart">
+            <div class="chart-title">년도별 노동그래프</div>
+            <div class="chart-container">
+                <canvas id="annualLaborChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-card income-chart">
+            <div class="chart-title">소득그래프</div>
+            <div class="chart-container">
+                <canvas id="cropIncomeChart"></canvas>
             </div>
         </div>
     </div>

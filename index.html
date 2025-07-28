@@ -765,7 +765,7 @@
                 ];
             }
             
-            // ✅ 바로 여기! 중간재비 총합 계산
+            // 중간재비 총합 계산
             let totalMaterialCost = 0;
             allMaterialCostItems.forEach(itemName => {
                 const value = itemValueMap[itemName];
@@ -774,22 +774,6 @@
                 }
             });
             html += `<tr style="background: #f3f4f6;"><td colspan="2" style="text-align: center; font-weight: bold; padding: 10px;">중간재비 ₩${totalMaterialCost.toLocaleString()}</td></tr>`;
-            
-            // 존재하는 중간재비 항목들 표시 (값이 0이어도 표시)
-            existingMaterialItems.forEach(itemName => {
-                const value = itemValueMap[itemName];
-                const displayValue = value !== undefined ? 
-                    (typeof value === 'number' ? value.toLocaleString() : value) : '-';
-                html += `<tr><td>${itemName}</td><td>${displayValue}</td></tr>`;
-            });
-            
-            // 기타비용이 있으면 추가
-            if (itemValueMap['기타비용'] !== undefined) {
-                const value = itemValueMap['기타비용'];
-                const displayValue = typeof value === 'number' ? value.toLocaleString() : '-';
-                html += `<tr><td>기타비용</td><td>${displayValue}</td></tr>`;
-            }
-            html += '<tr><td colspan="2" style="border-bottom: 2px solid #d1d5db; padding: 0;"></td></tr>';
             
             // 경영비 박스
             const totalCost = itemValueMap['경영비'] || 0;

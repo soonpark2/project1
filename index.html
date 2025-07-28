@@ -175,7 +175,7 @@
         }
         
         .left-summary {
-            width: 280px;
+            width: 300px;
             display: flex;
             flex-direction: column;
             gap: 15px;
@@ -269,6 +269,18 @@
             border: 1px solid #e5e7eb;
             border-radius: 4px;
             height: 100%;
+        }
+        
+        .section-header {
+            background: #f3f4f6 !important;
+            font-weight: bold;
+            color: #374151;
+        }
+        
+        .section-header td {
+            padding: 12px 8px;
+            border-bottom: 2px solid #d1d5db;
+            text-align: center;
         }
         
         table {
@@ -392,6 +404,10 @@
                                     <div class="summary-item-value" id="totalRevenue">₩0</div>
                                 </div>
                                 <div class="summary-item">
+                                    <div class="summary-item-label">중간재비</div>
+                                    <div class="summary-item-value" id="totalMaterialCost">₩0</div>
+                                </div>
+                                <div class="summary-item">
                                     <div class="summary-item-label">경영비</div>
                                     <div class="summary-item-value" id="totalCost">₩0</div>
                                 </div>
@@ -464,47 +480,51 @@
             const testData = `지역구분,년,작목군,작목,구분,값
 전국,2023,쌀,쌀,소득,5000000
 전국,2023,쌀,쌀,소득률,18.8
-전국,2023,쌀,쌀,비목,주산물가액
-전국,2023,쌀,쌀,비목,주산물수량
-전국,2023,쌀,쌀,비목,부산물가액
-전국,2023,쌀,쌀,비목,수취가격
-전국,2023,쌀,쌀,비목,종자·종묘비
-전국,2023,쌀,쌀,비목,비료비
-전국,2023,쌀,쌀,비목,농약비
-전국,2023,쌀,쌀,비목,광열동력비
+전국,2023,쌀,쌀,총수입,8500000
+전국,2023,쌀,쌀,경영비,3000000
+전국,2023,쌀,쌀,생산비,3500000
+전국,2023,쌀,쌀,주산물가액,8000000
+전국,2023,쌀,쌀,주산물수량,755
+전국,2023,쌀,쌀,부산물가액,500000
+전국,2023,쌀,쌀,수취가격,5299
+전국,2023,쌀,쌀,종자·종묘비,79547
+전국,2023,쌀,쌀,보통(무기질)비료비,103292
+전국,2023,쌀,쌀,부산물(유기질)비료비,50000
+전국,2023,쌀,쌀,농약비,292575
+전국,2023,쌀,쌀,수도광열비,70253
+전국,2023,쌀,쌀,기타재료비,286741
+전국,2023,쌀,쌀,대농구상각비,1161
+전국,2023,쌀,쌀,영농시설상각비,290091
+전국,2023,쌀,쌀,자동차비,136810
+전국,2023,쌀,쌀,기타비용,14502
+전국,2023,쌀,쌀,농기계·시설임차료,15610
+전국,2023,쌀,쌀,토지임차료,6011
+전국,2023,쌀,쌀,위탁영농비,66597
+전국,2023,쌀,쌀,고용노동비,275979
+전국,2023,쌀,쌀,자가노동비,2248577
+전국,2023,쌀,쌀,고정자본용역비,34104
+전국,2023,쌀,쌀,토지자본용역비,59294
 전국,2023,과일,사과,소득,4500000
 전국,2023,과일,사과,소득률,17.2
-전국,2023,과일,사과,비목,주산물가액
-전국,2023,과일,사과,비목,종자·종묘비
-전국,2023,과일,사과,비목,비료비
-전국,2023,과일,사과,비목,농약비
-전국,2023,과일,배,소득,4000000
-전국,2023,과일,배,소득률,15.3
-전국,2023,과일,배,비목,주산물가액
-전국,2023,과일,배,비목,주산물수량
-전국,2023,과일,배,비목,종자·종묘비
-전국,2023,과일,배,비목,비료비
-전국,2023,채소,배추,소득,3000000
-전국,2023,채소,배추,소득률,12.5
-전국,2023,채소,배추,비목,주산물가액
-전국,2023,채소,배추,비목,주산물수량
-전국,2023,채소,배추,비목,종자·종묘비
-전국,2023,채소,배추,비목,비료비
-전국,2023,채소,감자,소득,2500000
-전국,2023,채소,감자,소득률,19.8
-전국,2023,채소,감자,비목,주산물가액
-전국,2023,채소,감자,비목,수취가격
-전국,2023,채소,감자,비목,종자·종묘비
-전국,2023,채소,감자,비목,농약비
+전국,2023,과일,사과,총수입,7000000
+전국,2023,과일,사과,경영비,2000000
+전국,2023,과일,사과,생산비,2500000
+전국,2023,과일,사과,주산물가액,6800000
+전국,2023,과일,사과,종자·종묘비,150000
+전국,2023,과일,사과,보통(무기질)비료비,200000
+전국,2023,과일,사과,농약비,300000
 강원,2023,과일,사과,소득,1000000
 강원,2023,과일,사과,소득률,16.5
-강원,2023,과일,사과,비목,주산물가액
-강원,2023,과일,사과,비목,종자·종묘비
+강원,2023,과일,사과,총수입,2000000
+강원,2023,과일,사과,경영비,800000
+강원,2023,과일,사과,생산비,1000000
+강원,2023,과일,사과,주산물가액,1900000
 강원,2023,채소,감자,소득,2500000
 강원,2023,채소,감자,소득률,19.8
-강원,2023,채소,감자,비목,주산물가액
-강원,2023,채소,감자,비목,종자·종묘비
-강원,2023,채소,감자,비목,비료비`;
+강원,2023,채소,감자,총수입,4000000
+강원,2023,채소,감자,경영비,1200000
+강원,2023,채소,감자,생산비,1500000
+강원,2023,채소,감자,주산물가액,3800000`;
             
             parseCSV(testData);
         }
@@ -642,12 +662,21 @@
             const revenue = filteredData.filter(i => i.category === '총수입').reduce((a, b) => a + b.value, 0);
             const cost = filteredData.filter(i => i.category === '경영비').reduce((a, b) => a + b.value, 0);
             const productionCost = filteredData.filter(i => i.category === '생산비').reduce((a, b) => a + b.value, 0);
+            
+            // 중간재비 계산 (중간재비 관련 항목들의 합)
+            const materialCostItems = ['종자·종묘비', '보통(무기질)비료비', '부산물(유기질)비료비', '농약비', '수도광열비', '기타재료비'];
+            const materialCost = materialCostItems.reduce((sum, itemName) => {
+                const item = filteredData.find(i => i.category === itemName);
+                return sum + (item ? item.value : 0);
+            }, 0);
+            
             const rateArr = filteredData.filter(i => i.category === '소득률');
             const avgRate = rateArr.reduce((a, b) => a + b.value, 0) / (rateArr.length || 1);
             
             document.getElementById('totalIncome').textContent = `₩${income.toLocaleString()}`;
             document.getElementById('totalRate').textContent = `${avgRate.toFixed(1)}%`;
             document.getElementById('totalRevenue').textContent = `₩${revenue.toLocaleString()}`;
+            document.getElementById('totalMaterialCost').textContent = `₩${materialCost.toLocaleString()}`;
             document.getElementById('totalCost').textContent = `₩${cost.toLocaleString()}`;
             document.getElementById('totalProductionCost').textContent = `₩${productionCost.toLocaleString()}`;
         }
@@ -669,55 +698,85 @@
             summaryTitle.textContent = titleParts.join(' ');
         }
 
-        function updateTable() {
+function updateTable() {
             const tableBody = document.getElementById('detailTableBody');
             
-            // 작목별 비목 순서 정의
-            const itemOrder = {
-                '쌀': ['주산물가액', '주산물수량', '부산물가액', '수취가격', '종자·종묘비', '보통(무기질)비료비', '부산물(유기질)비료비', '농약비', '수도광열비', '기타재료비', '대농구상각비', '영농시설상각비', '자동차비', '기타비용', '농기계·시설임차료', '토지임차료', '위탁영농비', '고용노동비', '자가노동비', '고정자본용역비', '토지자본용역비'],
-                '콩': ['주산물가액', '주산물수량', '부산물가액', '수취가격', '종자·종묘비', '보통(무기질)비료비', '부산물(유기질)비료비', '농약비', '수도광열비', '기타재료비', '대농구상각비', '영농시설상각비', '자동차비', '기타비용', '농기계·시설임차료', '토지임차료', '위탁영농비', '고용노동비', '자가노동비', '고정자본용역비', '토지자본용역비'],
-                '고추': ['주산물가액', '주산물수량', '부산물가액', '수취가격', '종자·종묘비', '보통(무기질)비료비', '부산물(유기질)비료비', '농약비', '수도광열비', '기타재료비', '대농구상각비', '영농시설상각비', '자동차비', '기타비용', '농기계·시설임차료', '토지임차료', '위탁영농비', '고용노동비', '자가노동비', '고정자본용역비', '토지자본용역비'],
-                '양파': ['주산물가액', '주산물수량', '부산물가액', '수취가격', '종자·종묘비', '보통(무기질)비료비', '부산물(유기질)비료비', '농약비', '수도광열비', '기타재료비', '대농구상각비', '영농시설상각비', '자동차비', '기타비용', '농기계·시설임차료', '토지임차료', '위탁영농비', '고용노동비', '자가노동비', '고정자본용역비', '토지자본용역비'],
-                '마늘': ['주산물가액', '주산물수량', '부산물가액', '수취가격', '종자·종묘비', '보통(무기질)비료비', '부산물(유기질)비료비', '농약비', '수도광열비', '기타재료비', '대농구상각비', '영농시설상각비', '자동차비', '기타비용', '농기계·시설임차료', '토지임차료', '위탁영농비', '고용노동비', '자가노동비', '고정자본용역비', '토지자본용역비'],
-                '기본' : ['주산물가액', '주산물수량', '부산물가액', '수취가격', '종자·종묘비', '보통(무기질)비료비', '부산물(유기질)비료비', '농약비', '수도광열비', '기타재료비', '대농구상각비', '영농시설상각비', '수리유지비', '기타비용', '농기계·시설임차료', '토지임차료', '위탁영농비', '고용노동비', '자가노동비', '고정자본용역비', '토지자본용역비']
-            };
+            // 현재 필터링된 데이터에서 실제 값을 가진 비목 데이터 매핑
+            const itemValueMap = {};
             
-            // 현재 선택된 작목군에 따른 순서 결정
-            let currentOrder = itemOrder['기본']; // 기본값
-            if (currentFilters.cropGroup && itemOrder[currentFilters.cropGroup]) {
-                currentOrder = itemOrder[currentFilters.cropGroup];
-            }
-            
-            // 구분이 '비목'인 데이터만 필터링
-            const tableFiltered = filteredData.filter(item => item.category === '비목');
-            
-            // 비목 데이터를 value 기준으로 그룹화
-            const itemMap = {};
-            tableFiltered.forEach(item => {
-                itemMap[item.value] = item;
+            filteredData.forEach(item => {
+                itemValueMap[item.category] = item.value;
             });
             
             let html = '';
             
-            // 정의된 순서대로 표시
-            currentOrder.forEach(itemName => {
-                if (itemMap[itemName]) {
-                    // 실제 값이 있는 경우 해당 값을 표시 (향후 확장 가능)
-                    const actualValue = itemMap[itemName].value !== undefined ? itemMap[itemName].value.toLocaleString() : '-';
-                    html += `<tr><td>${itemName}</td><td>${actualValue}</td></tr>`;
-                } else {
-                    // 데이터가 없는 경우에도 순서에 따라 표시
-                    html += `<tr><td>${itemName}</td><td>-</td></tr>`;
-                }
-            });
+            // 소득과 소득률을 굵게 표시
+            const income = itemValueMap['소득'] || 0;
+            const incomeRate = itemValueMap['소득률'] || 0;
+            html += `<tr><td style="font-weight: bold; font-size: 14px;">소득</td><td style="font-weight: bold; font-size: 14px;">₩${income.toLocaleString()}</td></tr>`;
+            html += `<tr><td style="font-weight: bold; font-size: 14px;">소득률</td><td style="font-weight: bold; font-size: 14px;">${incomeRate}%</td></tr>`;
+            html += '<tr><td colspan="2" style="border-bottom: 2px solid #d1d5db; padding: 0;"></td></tr>';
             
-            // 정의되지 않은 추가 비목이 있는 경우 맨 아래에 표시
-            Object.keys(itemMap).forEach(itemName => {
-                if (!currentOrder.includes(itemName)) {
-                    const actualValue = itemMap[itemName].value !== undefined ? itemMap[itemName].value.toLocaleString() : '-';
-                    html += `<tr><td>${itemName}</td><td>${actualValue}</td></tr>`;
-                }
-            })
+            // 총수입 박스
+            const totalRevenue = itemValueMap['총수입'] || 0;
+            html += `<tr style="background: #f3f4f6;"><td colspan="2" style="text-align: center; font-weight: bold; padding: 10px;">총수입 ₩${totalRevenue.toLocaleString()}</td></tr>`;
+            
+            const revenueItems = ['주산물가액', '주산물수량', '부산물가액', '수취가격'];
+            revenueItems.forEach(itemName => {
+                const value = itemValueMap[itemName];
+                const displayValue = value !== undefined ? 
+                    (itemName === '주산물수량' ? value.toLocaleString() : (typeof value === 'number' ? value.toLocaleString() : value)) : '-';
+                html += `<tr><td>${itemName}</td><td>${displayValue}</td></tr>`;
+            });
+            html += '<tr><td colspan="2" style="border-bottom: 2px solid #d1d5db; padding: 0;"></td></tr>';
+            
+            // 중간재비 박스
+            const materialCostItems = ['종자·종묘비', '보통(무기질)비료비', '부산물(유기질)비료비', '농약비', '수도광열비', '기타재료비'];
+            const totalMaterialCost = materialCostItems.reduce((sum, itemName) => {
+                const item = itemValueMap[itemName];
+                return sum + (item ? item : 0);
+            }, 0);
+            html += `<tr style="background: #f3f4f6;"><td colspan="2" style="text-align: center; font-weight: bold; padding: 10px;">중간재비 ₩${totalMaterialCost.toLocaleString()}</td></tr>`;
+            
+            // 과수원조성비 추가
+            if (itemValueMap['과수원조성비']) {
+                html += `<tr><td>과수원조성비</td><td>${itemValueMap['과수원조성비'].toLocaleString()}</td></tr>`;
+            }
+            materialCostItems.forEach(itemName => {
+                const value = itemValueMap[itemName];
+                const displayValue = value !== undefined ? 
+                    (typeof value === 'number' ? value.toLocaleString() : value) : '-';
+                html += `<tr><td>${itemName}</td><td>${displayValue}</td></tr>`;
+            });
+            if (itemValueMap['기타비용']) {
+                html += `<tr><td>기타비용</td><td>${itemValueMap['기타비용'].toLocaleString()}</td></tr>`;
+            }
+            html += '<tr><td colspan="2" style="border-bottom: 2px solid #d1d5db; padding: 0;"></td></tr>';
+            
+            // 경영비 박스
+            const totalCost = itemValueMap['경영비'] || 0;
+            html += `<tr style="background: #f3f4f6;"><td colspan="2" style="text-align: center; font-weight: bold; padding: 10px;">경영비 ₩${totalCost.toLocaleString()}</td></tr>`;
+            
+            const costItems = ['대농구상각비', '영농시설상각비', '자동차비', '농기계·시설임차료', '토지임차료', '위탁영농비', '고용노동비'];
+            costItems.forEach(itemName => {
+                const value = itemValueMap[itemName];
+                const displayValue = value !== undefined ? 
+                    (typeof value === 'number' ? value.toLocaleString() : value) : '-';
+                html += `<tr><td>${itemName}</td><td>${displayValue}</td></tr>`;
+            });
+            html += '<tr><td colspan="2" style="border-bottom: 2px solid #d1d5db; padding: 0;"></td></tr>';
+            
+            // 생산비 박스
+            const totalProductionCost = itemValueMap['생산비'] || 0;
+            html += `<tr style="background: #f3f4f6;"><td colspan="2" style="text-align: center; font-weight: bold; padding: 10px;">생산비 ₩${totalProductionCost.toLocaleString()}</td></tr>`;
+            
+            const productionItems = ['자가노동비', '유동자본용역비', '고정자본용역비', '토지자본용역비'];
+            productionItems.forEach(itemName => {
+                const value = itemValueMap[itemName];
+                const displayValue = value !== undefined ? 
+                    (typeof value === 'number' ? value.toLocaleString() : value) : '-';
+                html += `<tr><td>${itemName}</td><td>${displayValue}</td></tr>`;
+            });
             
             tableBody.innerHTML = html || '<tr><td colspan="2">데이터가 없습니다.</td></tr>';
         }

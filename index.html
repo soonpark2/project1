@@ -45,10 +45,11 @@
             display: grid;
             grid-template-columns: 220px 1fr 1fr 1fr 1fr;
             grid-template-rows: 1fr 1fr 1fr;
-            height: calc(100vh - 35px);
             gap: 10px;
             padding: 10px;
-            height: calc(100vh - 35px);
+            /* height: calc(100vh - 35px); ← 이 줄 제거 */
+            min-height: 100vh;
+            overflow: auto; /* 스크롤 허용 */;
         }
 
         /* 사이드바 - 세로로 3행 차지 */

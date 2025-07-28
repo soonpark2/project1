@@ -445,27 +445,9 @@
                     <div class="income-analysis-layout">
                         <div class="left-summary">
                             <div class="main-summary-box">
-                                <div class="summary-label">소득</div>
-                                <div class="main-summary-value" id="totalIncome">₩0</div>
-                                <div class="summary-sublabel">소득률 <span id="totalRate">0%</span></div>
-                            </div>
-                            <div class="summary-grid">
-                                <div class="summary-item">
-                                    <div class="summary-item-label">총수입</div>
-                                    <div class="summary-item-value" id="totalRevenue">₩0</div>
-                                </div>
-                                <div class="summary-item">
-                                    <div class="summary-item-label">중간재비</div>
-                                    <div class="summary-item-value" id="totalMaterialCost">₩0</div>
-                                </div>
-                                <div class="summary-item">
-                                    <div class="summary-item-label">경영비</div>
-                                    <div class="summary-item-value" id="totalCost">₩0</div>
-                                </div>
-                                <div class="summary-item">
-                                    <div class="summary-item-label">생산비</div>
-                                    <div class="summary-item-value" id="totalProductionCost">₩0</div>
-                                </div>
+                                <div class="summary-label" style="color: #1f2937; font-weight: bold; font-size: 16px;">소득</div>
+                                <div class="main-summary-value" id="totalIncome" style="color: #1f2937; font-weight: bold; font-size: 16px;">₩0</div>
+                                <div class="summary-sublabel" style="color: #1f2937; font-weight: bold; font-size: 16px;">소득률 <span id="totalRate" style="color: #1f2937; font-weight: bold;">0%</span></div>
                             </div>
                         </div>
                         <div class="right-detail">
@@ -710,26 +692,11 @@
 
         function updateSummary() {
             const income = filteredData.filter(i => i.category === '소득').reduce((a, b) => a + b.value, 0);
-            const revenue = filteredData.filter(i => i.category === '총수입').reduce((a, b) => a + b.value, 0);
-            const cost = filteredData.filter(i => i.category === '경영비').reduce((a, b) => a + b.value, 0);
-            const productionCost = filteredData.filter(i => i.category === '생산비').reduce((a, b) => a + b.value, 0);
-            
-            // 중간재비 계산 (중간재비 관련 항목들의 합)
-            const materialCostItems = ['종자·종묘비', '보통(무기질)비료비', '부산물(유기질)비료비', '농약비', '수도광열비', '기타재료비'];
-            const materialCost = materialCostItems.reduce((sum, itemName) => {
-                const item = filteredData.find(i => i.category === itemName);
-                return sum + (item ? item.value : 0);
-            }, 0);
-            
             const rateArr = filteredData.filter(i => i.category === '소득률');
             const avgRate = rateArr.reduce((a, b) => a + b.value, 0) / (rateArr.length || 1);
             
             document.getElementById('totalIncome').textContent = `₩${income.toLocaleString()}`;
             document.getElementById('totalRate').textContent = `${avgRate.toFixed(1)}%`;
-            document.getElementById('totalRevenue').textContent = `₩${revenue.toLocaleString()}`;
-            document.getElementById('totalMaterialCost').textContent = `₩${materialCost.toLocaleString()}`;
-            document.getElementById('totalCost').textContent = `₩${cost.toLocaleString()}`;
-            document.getElementById('totalProductionCost').textContent = `₩${productionCost.toLocaleString()}`;
         }
 
         function updateSummaryTitle() {

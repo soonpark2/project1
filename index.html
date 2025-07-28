@@ -16,18 +16,20 @@
         body {
             font-family: 'Malgun Gothic', 'Segoe UI', sans-serif;
             background: #f8f9fa;
-            font-size: 12px;
+            font-size: 11px;
+            overflow: hidden;
         }
         
         .header {
             background: linear-gradient(135deg, #1e3a8a, #3b82f6);
             color: white;
-            padding: 8px 20px;
+            padding: 6px 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 13px;
+            font-size: 12px;
             border-bottom: 2px solid #1e40af;
+            height: 35px;
         }
         
         .header-left {
@@ -41,50 +43,50 @@
         
         .container {
             display: flex;
-            height: calc(100vh - 50px);
+            height: calc(100vh - 35px);
         }
         
         .sidebar {
-            width: 250px;
+            width: 220px;
             background: #ffffff;
             border-right: 1px solid #e5e7eb;
-            padding: 15px;
+            padding: 10px;
             overflow-y: auto;
         }
         
         .main-content {
             flex: 1;
-            padding: 15px;
+            padding: 10px;
             overflow-y: auto;
             background: #f8f9fa;
         }
         
         .filter-section {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         
         .filter-title {
             background: #3b82f6;
             color: white;
-            padding: 8px 12px;
+            padding: 6px 10px;
             font-weight: bold;
-            font-size: 13px;
-            border-radius: 4px 4px 0 0;
+            font-size: 11px;
+            border-radius: 3px 3px 0 0;
         }
         
         .filter-content {
             border: 1px solid #e5e7eb;
             border-top: none;
             background: white;
-            max-height: 150px;
+            max-height: 120px;
             overflow-y: auto;
         }
         
         .filter-item {
-            padding: 8px 12px;
+            padding: 6px 10px;
             cursor: pointer;
             border-bottom: 1px solid #f3f4f6;
-            font-size: 12px;
+            font-size: 11px;
             transition: background 0.2s;
         }
         
@@ -105,12 +107,12 @@
         }
         
         .year-btn {
-            padding: 8px 12px;
+            padding: 6px 10px;
             border: none;
             border-bottom: 1px solid #f3f4f6;
             background: white;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 11px;
             transition: background 0.2s;
             width: 100%;
             text-align: left;
@@ -129,175 +131,116 @@
         .charts-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            grid-template-rows: auto auto auto;
-            gap: 15px;
+            grid-template-rows: 1fr auto auto;
+            gap: 10px;
             height: 100%;
         }
         
         .chart-card {
             background: white;
             border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 15px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-radius: 6px;
+            padding: 10px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
         
         .chart-title {
-            font-size: 14px;
+            font-size: 12px;
             font-weight: bold;
             color: #1f2937;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             text-align: center;
         }
         
         .chart-container {
             position: relative;
-            height: 300px;
+            height: 220px;
         }
         
         .combined-section {
             grid-column: 1;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 15px;
         }
         
         .labor-section {
             grid-column: 1 / -1;
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr;
-            gap: 15px;
+            grid-template-columns: 1fr 1fr 2fr;
+            gap: 10px;
         }
         
         .labor-section .chart-card {
             background: white;
             border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 15px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-radius: 6px;
+            padding: 10px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
         
         .labor-section .chart-container {
             position: relative;
-            height: 200px;
+            height: 160px;
         }
         
         .annual-labor-chart {
-            grid-column: 1 / -1;
+            grid-column: 3;
         }
         
         .annual-labor-chart .chart-container {
-            height: 300px;
+            height: 160px;
         }
         
         .income-by-crop-section {
             grid-column: 1 / -1;
         }
         
-        .income-summary {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
+        .income-by-crop-section .chart-container {
+            height: 180px;
         }
         
         .income-analysis-layout {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 15px;
             height: 100%;
         }
         
         .left-summary {
-            width: 300px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .main-summary-box {
-            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
-            border: 2px solid #3b82f6;
-            border-radius: 8px;
-            padding: 20px;
-            text-align: center;
-        }
-        
-        .main-summary-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: #1f2937;
-            margin: 8px 0;
-        }
-        
-        .summary-sublabel {
-            font-size: 14px;
-            color: #6b7280;
-            font-weight: 600;
-        }
-        
-        .summary-grid {
+            width: 100%;
             display: flex;
             flex-direction: column;
             gap: 10px;
         }
         
-        .summary-item {
-            background: white;
-            border: 1px solid #e5e7eb;
+        .main-summary-box {
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+            border: 2px solid #3b82f6;
             border-radius: 6px;
             padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            text-align: center;
         }
         
-        .summary-item-label {
-            font-size: 13px;
-            color: #374151;
-            font-weight: 600;
-        }
-        
-        .summary-item-value {
-            font-size: 16px;
+        .main-summary-value {
+            font-size: 18px;
             font-weight: bold;
             color: #1f2937;
+            margin: 6px 0;
+        }
+        
+        .summary-sublabel {
+            font-size: 12px;
+            color: #6b7280;
+            font-weight: 600;
         }
         
         .right-detail {
             flex: 1;
         }
         
-        .summary-box {
-            flex: 1;
-            text-align: center;
-            padding: 20px;
-            border-radius: 8px;
-        }
-        
-        .summary-box.income {
-            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
-            border: 2px solid #3b82f6;
-        }
-        
-        .summary-box.rate {
-            background: linear-gradient(135deg, #fef3c7, #fed7aa);
-            border: 2px solid #f59e0b;
-        }
-        
-        .summary-value {
-            font-size: 28px;
-            font-weight: bold;
-            color: #1f2937;
-            margin-bottom: 5px;
-        }
-        
-        .summary-label {
-            font-size: 14px;
-            color: #6b7280;
-        }
-        
         .table-wrapper {
-            max-height: 500px;
+            max-height: 380px;
             overflow-y: auto;
             border: 1px solid #e5e7eb;
             border-radius: 4px;
@@ -311,7 +254,7 @@
         }
         
         .section-header td {
-            padding: 12px 8px;
+            padding: 8px 6px;
             border-bottom: 2px solid #d1d5db;
             text-align: center;
         }
@@ -319,13 +262,13 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 12px;
+            font-size: 10px;
         }
         
         th {
             background: #f9fafb;
             border-bottom: 2px solid #e5e7eb;
-            padding: 10px 8px;
+            padding: 6px 5px;
             text-align: left;
             font-weight: bold;
             color: #374151;
@@ -334,7 +277,7 @@
         }
         
         td {
-            padding: 8px;
+            padding: 5px 6px;
             border-bottom: 1px solid #f3f4f6;
             color: #1f2937;
         }
@@ -347,7 +290,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 200px;
+            height: 100px;
             color: #6b7280;
         }
         
@@ -356,16 +299,16 @@
             background: #3b82f6;
             color: white;
             border: none;
-            padding: 8px 15px;
-            margin: 10px;
-            border-radius: 4px;
+            padding: 6px 12px;
+            margin: 8px;
+            border-radius: 3px;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 10px;
         }
         
         .sidebar.collapsed {
             height: auto;
-            max-height: 60px;
+            max-height: 50px;
             overflow: hidden;
         }
         
@@ -373,7 +316,7 @@
             display: none;
         }
         
-        @media (max-width: 1200px) {
+        @media (max-width: 1400px) {
             .charts-grid {
                 grid-template-columns: 1fr;
             }
@@ -402,13 +345,13 @@
                 height: auto;
                 border-right: none;
                 border-bottom: 1px solid #e5e7eb;
-                max-height: 60px;
+                max-height: 50px;
                 overflow: hidden;
                 transition: max-height 0.3s ease;
             }
             
             .sidebar.expanded {
-                max-height: 400px;
+                max-height: 350px;
             }
             
             .toggle-btn {
@@ -420,24 +363,16 @@
                 display: none;
             }
             
-            .income-analysis-layout {
-                flex-direction: column;
-            }
-            
-            .left-summary {
-                width: 100%;
-            }
-            
             .main-content {
-                padding: 10px;
+                padding: 8px;
             }
             
             .chart-card {
-                padding: 10px;
+                padding: 8px;
             }
             
             .filter-content {
-                max-height: 120px;
+                max-height: 100px;
             }
             
             .labor-section {
@@ -494,7 +429,7 @@
                     <div class="chart-title" id="summaryTitle">2023년 전국 소득분석표</div>
                     <div class="income-analysis-layout">
                         <div class="left-summary">
-                            <div class="main-summary-box" style="font-weight: bold; font-size: 16px; color: #6B1E6D;">
+                            <div class="main-summary-box" style="font-weight: bold; font-size: 14px; color: #6B1E6D;">
                                 소득 <span id="totalIncome">₩0</span> / 소득률 <span id="totalRate">0%</span>
                             </div>
                         </div>
@@ -846,7 +781,7 @@
             
             // 총수입 박스
             const totalRevenue = itemValueMap['총수입'] || 0;
-            html += `<tr style="background: #f3f4f6;"><td colspan="2" style="text-align: center; font-weight: bold; padding: 10px;">총수입 ₩${totalRevenue.toLocaleString()}</td></tr>`;
+            html += `<tr style="background: #f3f4f6;"><td colspan="2" style="text-align: center; font-weight: bold; padding: 8px;">총수입 ₩${totalRevenue.toLocaleString()}</td></tr>`;
             
             const revenueItems = ['주산물가액', '주산물수량', '부산물가액', '수취가격'];
             revenueItems.forEach(itemName => {
@@ -889,7 +824,7 @@
                     totalMaterialCost += value;
                 }
             });
-            html += `<tr style="background: #f3f4f6;"><td colspan="2" style="text-align: center; font-weight: bold; padding: 10px;">중간재비 ₩${totalMaterialCost.toLocaleString()}</td></tr>`;
+            html += `<tr style="background: #f3f4f6;"><td colspan="2" style="text-align: center; font-weight: bold; padding: 8px;">중간재비 ₩${totalMaterialCost.toLocaleString()}</td></tr>`;
             
             // 항목별 출력
             allMaterialCostItems.forEach(itemName => {
@@ -900,7 +835,7 @@
             
             // 경영비 박스
             const totalCost = itemValueMap['경영비'] || 0;
-            html += `<tr style="background: #f3f4f6;"><td colspan="2" style="text-align: center; font-weight: bold; padding: 10px;">경영비 ₩${totalCost.toLocaleString()}</td></tr>`;
+            html += `<tr style="background: #f3f4f6;"><td colspan="2" style="text-align: center; font-weight: bold; padding: 8px;">경영비 ₩${totalCost.toLocaleString()}</td></tr>`;
             
             const costItems = ['농기계·시설임차료', '토지임차료', '위탁영농비', '고용노동비'];
             costItems.forEach(itemName => {
@@ -913,7 +848,7 @@
             
             // 생산비 박스
             const totalProductionCost = itemValueMap['생산비'] || 0;
-            html += `<tr style="background: #f3f4f6;"><td colspan="2" style="text-align: center; font-weight: bold; padding: 10px;">생산비 ₩${totalProductionCost.toLocaleString()}</td></tr>`;
+            html += `<tr style="background: #f3f4f6;"><td colspan="2" style="text-align: center; font-weight: bold; padding: 8px;">생산비 ₩${totalProductionCost.toLocaleString()}</td></tr>`;
             
             const productionItems = ['자가노동비', '유동자본용역비', '고정자본용역비', '토지자본용역비'];
             productionItems.forEach(itemName => {
@@ -967,11 +902,21 @@
                 data: chartData,
                 options: {
                     responsive: true,
-                    plugins: { legend: { position: 'top' } },
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { 
+                            position: 'top',
+                            labels: { font: { size: 10 } }
+                        } 
+                    },
                     scales: {
-                        x: { grid: { display: false } },
+                        x: { 
+                            grid: { display: false },
+                            ticks: { font: { size: 9 } }
+                        },
                         y: {
                             ticks: {
+                                font: { size: 9 },
                                 callback: val => val.toLocaleString()
                             }
                         }
@@ -1015,7 +960,10 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { position: 'bottom' },
+                        legend: { 
+                            position: 'bottom',
+                            labels: { font: { size: 9 } }
+                        },
                         tooltip: {
                             callbacks: {
                                 label: function(context) {
@@ -1051,7 +999,10 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { position: 'bottom' },
+                        legend: { 
+                            position: 'bottom',
+                            labels: { font: { size: 9 } }
+                        },
                         tooltip: {
                             callbacks: {
                                 label: function(context) {
@@ -1119,17 +1070,22 @@
                     scales: {
                         x: {
                             stacked: true,
-                            grid: { display: false }
+                            grid: { display: false },
+                            ticks: { font: { size: 9 } }
                         },
                         y: {
                             stacked: true,
                             ticks: {
+                                font: { size: 9 },
                                 callback: val => val + '시간'
                             }
                         }
                     },
                     plugins: {
-                        legend: { position: 'top' },
+                        legend: { 
+                            position: 'top',
+                            labels: { font: { size: 9 } }
+                        },
                         tooltip: {
                             callbacks: {
                                 label: function(context) {
@@ -1181,8 +1137,12 @@
                     scales: {
                         x: {
                             ticks: {
+                                font: { size: 9 },
                                 callback: val => '₩' + val.toLocaleString()
                             }
+                        },
+                        y: {
+                            ticks: { font: { size: 9 } }
                         }
                     },
                     plugins: {

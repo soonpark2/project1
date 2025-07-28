@@ -775,6 +775,13 @@
             });
             html += `<tr style="background: #f3f4f6;"><td colspan="2" style="text-align: center; font-weight: bold; padding: 10px;">중간재비 ₩${totalMaterialCost.toLocaleString()}</td></tr>`;
             
+            // 항목별 출력
+            allMaterialCostItems.forEach(itemName => {
+                const value = itemValueMap[itemName];
+                const displayValue = value !== undefined ? value.toLocaleString() : '-';
+                html += `<tr><td>${itemName}</td><td>${displayValue}</td></tr>`;
+            });
+            
             // 경영비 박스
             const totalCost = itemValueMap['경영비'] || 0;
             html += `<tr style="background: #f3f4f6;"><td colspan="2" style="text-align: center; font-weight: bold; padding: 10px;">경영비 ₩${totalCost.toLocaleString()}</td></tr>`;

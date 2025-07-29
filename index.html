@@ -44,28 +44,27 @@
         .container {
             display: grid;
             grid-template-columns: 220px 1fr 1fr 1fr 1fr;
-            grid-template-rows: 1fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr 1fr;
             gap: 10px;
             padding: 10px;
-            /* height: calc(100vh - 35px); ← 이 줄 제거 */
             min-height: 100vh;
-            overflow: auto; /* 스크롤 허용 */;
+            overflow: auto;
         }
 
-        /* 사이드바 - 세로로 3행 차지 */
+        /* 사이드바 - 세로로 4행 차지 */
         .sidebar {
             grid-column: 1 / 2;
-            grid-row: 1 / 4;
+            grid-row: 1 / 5;
             background: #ffffff;
             border-right: 1px solid #e5e7eb;
             padding: 10px;
             overflow-y: auto;
         }
 
-        /* 소득분석표 - 세로로 3행 차지 */
+        /* 소득분석표 - 세로로 4행 차지 */
         .income-analysis-section {
             grid-column: 2 / 3;
-            grid-row: 1 / 4;
+            grid-row: 1 / 5;
             background: white;
             border: 1px solid #e5e7eb;
             border-radius: 6px;
@@ -77,6 +76,18 @@
         .total-income-chart {
             grid-column: 3 / 4;
             grid-row: 1 / 2;
+        }
+
+        /* 경영비 그래프 */
+        .management-cost-chart {
+            grid-column: 3 / 4;
+            grid-row: 2 / 3;
+        }
+
+        /* 소득 및 소득률 그래프 */
+        .income-rate-chart {
+            grid-column: 3 / 4;
+            grid-row: 3 / 4;
         }
 
         /* 자가노동 그래프 */
@@ -303,7 +314,7 @@
         @media (max-width: 1400px) {
             .container {
                 grid-template-columns: 220px 1fr 1fr;
-                grid-template-rows: auto auto auto auto;
+                grid-template-rows: auto auto auto auto auto auto;
             }
             
             .income-analysis-section {
@@ -316,24 +327,34 @@
                 grid-row: 2 / 3;
             }
             
-            .self-labor-chart {
+            .management-cost-chart {
                 grid-column: 3 / 4;
                 grid-row: 2 / 3;
             }
             
-            .hired-labor-chart {
+            .income-rate-chart {
                 grid-column: 2 / 3;
                 grid-row: 3 / 4;
             }
             
-            .annual-labor-chart {
+            .self-labor-chart {
                 grid-column: 3 / 4;
                 grid-row: 3 / 4;
             }
             
+            .hired-labor-chart {
+                grid-column: 2 / 3;
+                grid-row: 4 / 5;
+            }
+            
+            .annual-labor-chart {
+                grid-column: 3 / 4;
+                grid-row: 4 / 5;
+            }
+            
             .income-chart {
                 grid-column: 2 / 4;
-                grid-row: 4 / 5;
+                grid-row: 5 / 6;
             }
         }
 
@@ -432,9 +453,23 @@
         </div>
 
         <div class="chart-card total-income-chart">
-            <div class="chart-title">총수입</div>
+            <div class="chart-title" id="totalIncomeTitle">총수입</div>
             <div class="chart-container">
-                <canvas id="incomeChart"></canvas>
+                <canvas id="totalIncomeChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-card management-cost-chart">
+            <div class="chart-title" id="managementCostTitle">경영비</div>
+            <div class="chart-container">
+                <canvas id="managementCostChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-card income-rate-chart">
+            <div class="chart-title" id="incomeRateTitle">소득 및 소득률</div>
+            <div class="chart-container">
+                <canvas id="incomeRateChart"></canvas>
             </div>
         </div>
 
@@ -515,12 +550,28 @@
 전국,2023,쌀,쌀,고용노동시간,18.0
 전국,2023,쌀,쌀,고용노동시간(남),3.3
 전국,2023,쌀,쌀,고용노동시간(여),14.7
+전국,2022,쌀,쌀,소득,4800000
+전국,2022,쌀,쌀,소득률,17.5
+전국,2022,쌀,쌀,총수입,8200000
+전국,2022,쌀,쌀,경영비,2900000
 전국,2022,쌀,쌀,자가노동시간,102.0
 전국,2022,쌀,쌀,고용노동시간,15.8
+전국,2021,쌀,쌀,소득,4500000
+전국,2021,쌀,쌀,소득률,16.8
+전국,2021,쌀,쌀,총수입,7800000
+전국,2021,쌀,쌀,경영비,2700000
 전국,2021,쌀,쌀,자가노동시간,109.3
 전국,2021,쌀,쌀,고용노동시간,7.3
+전국,2020,쌀,쌀,소득,4200000
+전국,2020,쌀,쌀,소득률,16.2
+전국,2020,쌀,쌀,총수입,7500000
+전국,2020,쌀,쌀,경영비,2600000
 전국,2020,쌀,쌀,자가노동시간,113.7
 전국,2020,쌀,쌀,고용노동시간,10.8
+전국,2019,쌀,쌀,소득,4000000
+전국,2019,쌀,쌀,소득률,15.8
+전국,2019,쌀,쌀,총수입,7200000
+전국,2019,쌀,쌀,경영비,2500000
 전국,2019,쌀,쌀,자가노동시간,118.0
 전국,2019,쌀,쌀,고용노동시간,11.8
 전국,2023,쌀,쌀,종자·종묘비,79547
@@ -709,7 +760,7 @@
         function updateDisplay() {
             filterData();
             updateSummary();
-            updateSummaryTitle(); // 요약 제목 업데이트 추가
+            updateSummaryTitle();
             updateTable();
             updateCharts();
         }
@@ -747,6 +798,12 @@
             
             const summaryTitle = document.getElementById('summaryTitle');
             summaryTitle.textContent = titleParts.join(' ');
+
+            // 각 차트 제목 업데이트
+            const cropDetailText = selectedCrop || '전체';
+            document.getElementById('totalIncomeTitle').textContent = `${cropDetailText} 총수입`;
+            document.getElementById('managementCostTitle').textContent = `${cropDetailText} 경영비`;
+            document.getElementById('incomeRateTitle').textContent = `${cropDetailText} 소득 및 소득률`;
         }
 
         function updateTable() {
@@ -845,67 +902,16 @@
 
         function updateCharts() {
             const fixedYears = ['2019', '2020', '2021', '2022', '2023'];
-            const chartData = { labels: fixedYears.map(y => y + '년'), datasets: [] };
-        
-            const categories = [
-                { name: '총수입', color: '#3b82f6' },
-                { name: '경영비', color: '#ef4444' },
-                { name: '소득', color: '#10b981' }
-            ];
-        
-            categories.forEach(cat => {
-                const values = fixedYears.map(y => {
-                    const match = csvData.find(row =>
-                        row.category === cat.name &&
-                        row.year === y &&
-                        row.region === currentFilters.region &&
-                        (!currentFilters.cropGroup || row.cropGroup === currentFilters.cropGroup) &&
-                        (!currentFilters.crop || row.crop === currentFilters.crop)
-                    );
-                    return match ? match.value : 0;
-                });
-        
-                chartData.datasets.push({
-                    label: cat.name,
-                    data: values,
-                    borderColor: cat.color,
-                    backgroundColor: cat.color + '30',
-                    borderWidth: 2,
-                    fill: true,
-                    tension: 0.4
-                });
-            });
-        
-            const ctx = document.getElementById('incomeChart').getContext('2d');
-            if (charts['incomeChart']) charts['incomeChart'].destroy();
-        
-            charts['incomeChart'] = new Chart(ctx, {
-                type: 'line',
-                data: chartData,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { 
-                        legend: { 
-                            position: 'top',
-                            labels: { font: { size: 10 } }
-                        } 
-                    },
-                    scales: {
-                        x: { 
-                            grid: { display: false },
-                            ticks: { font: { size: 9 } }
-                        },
-                        y: {
-                            ticks: {
-                                font: { size: 9 },
-                                callback: val => val.toLocaleString()
-                            }
-                        }
-                    }
-                }
-            });
-
+            
+            // 총수입 차트
+            updateTotalIncomeChart(fixedYears);
+            
+            // 경영비 차트
+            updateManagementCostChart(fixedYears);
+            
+            // 소득 및 소득률 차트
+            updateIncomeRateChart(fixedYears);
+            
             // 자가 노동시간 도넛 차트
             updateSelfLaborChart();
             
@@ -919,90 +925,10 @@
             updateCropIncomeChart();
         }
 
-        function updateSelfLaborChart() {
-            const selfLaborTotal = filteredData.find(item => item.category === '자가노동시간')?.value || 0;
-            const selfLaborMale = filteredData.find(item => item.category === '자가노동시간(남)')?.value || 0;
-            const selfLaborFemale = filteredData.find(item => item.category === '자가노동시간(여)')?.value || 0;
-            
-            const ctx = document.getElementById('selfLaborChart').getContext('2d');
-            if (charts['selfLaborChart']) charts['selfLaborChart'].destroy();
-            
-            charts['selfLaborChart'] = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['남성', '여성'],
-                    datasets: [{
-                        data: [selfLaborMale, selfLaborFemale],
-                        backgroundColor: ['#3b82f6', '#06b6d4'],
-                        borderWidth: 2,
-                        borderColor: '#ffffff'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { 
-                            position: 'bottom',
-                            labels: { font: { size: 9 } }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return context.label + ': ' + context.parsed + '시간';
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        function updateHiredLaborChart() {
-            const hiredLaborTotal = filteredData.find(item => item.category === '고용노동시간')?.value || 0;
-            const hiredLaborMale = filteredData.find(item => item.category === '고용노동시간(남)')?.value || 0;
-            const hiredLaborFemale = filteredData.find(item => item.category === '고용노동시간(여)')?.value || 0;
-            
-            const ctx = document.getElementById('hiredLaborChart').getContext('2d');
-            if (charts['hiredLaborChart']) charts['hiredLaborChart'].destroy();
-            
-            charts['hiredLaborChart'] = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['남성', '여성'],
-                    datasets: [{
-                        data: [hiredLaborMale, hiredLaborFemale],
-                        backgroundColor: ['#8b5cf6', '#ec4899'],
-                        borderWidth: 2,
-                        borderColor: '#ffffff'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { 
-                            position: 'bottom',
-                            labels: { font: { size: 9 } }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return context.label + ': ' + context.parsed + '시간';
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        function updateAnnualLaborChart() {
-            const fixedYears = ['2019', '2020', '2021', '2022', '2023'];
-            
-            const selfLaborData = fixedYears.map(y => {
+        function updateTotalIncomeChart(fixedYears) {
+            const values = fixedYears.map(y => {
                 const match = csvData.find(row =>
-                    row.category === '자가노동시간' &&
+                    row.category === '총수입' &&
                     row.year === y &&
                     row.region === currentFilters.region &&
                     (!currentFilters.cropGroup || row.cropGroup === currentFilters.cropGroup) &&
@@ -1010,10 +936,54 @@
                 );
                 return match ? match.value : 0;
             });
-            
-            const hiredLaborData = fixedYears.map(y => {
+
+            const ctx = document.getElementById('totalIncomeChart').getContext('2d');
+            if (charts['totalIncomeChart']) charts['totalIncomeChart'].destroy();
+
+            charts['totalIncomeChart'] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: fixedYears.map(y => y + '년'),
+                    datasets: [{
+                        data: values,
+                        borderColor: '#3b82f6',
+                        backgroundColor: '#3b82f6',
+                        borderWidth: 3,
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { display: false },
+                        datalabels: {
+                            display: true,
+                            color: '#1f2937',
+                            font: { size: 10, weight: 'bold' },
+                            formatter: (value) => value.toLocaleString()
+                        }
+                    },
+                    scales: {
+                        x: { 
+                            grid: { display: false },
+                            ticks: { 
+                                font: { size: 10, weight: 'bold' },
+                                color: '#1f2937'
+                            }
+                        },
+                        y: { display: false }
+                    }
+                }
+            });
+        }
+
+        function updateManagementCostChart(fixedYears) {
+            const values = fixedYears.map(y => {
                 const match = csvData.find(row =>
-                    row.category === '고용노동시간' &&
+                    row.category === '경영비' &&
                     row.year === y &&
                     row.region === currentFilters.region &&
                     (!currentFilters.cropGroup || row.cropGroup === currentFilters.cropGroup) &&
@@ -1021,136 +991,136 @@
                 );
                 return match ? match.value : 0;
             });
-            
-            const ctx = document.getElementById('annualLaborChart').getContext('2d');
-            if (charts['annualLaborChart']) charts['annualLaborChart'].destroy();
-            
-            charts['annualLaborChart'] = new Chart(ctx, {
-                type: 'bar',
+
+            const ctx = document.getElementById('managementCostChart').getContext('2d');
+            if (charts['managementCostChart']) charts['managementCostChart'].destroy();
+
+            charts['managementCostChart'] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: fixedYears.map(y => y + '년'),
+                    datasets: [{
+                        data: values,
+                        borderColor: '#ef4444',
+                        backgroundColor: '#ef4444',
+                        borderWidth: 3,
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { display: false },
+                        datalabels: {
+                            display: true,
+                            color: '#1f2937',
+                            font: { size: 10, weight: 'bold' },
+                            formatter: (value) => value.toLocaleString()
+                        }
+                    },
+                    scales: {
+                        x: { 
+                            grid: { display: false },
+                            ticks: { 
+                                font: { size: 10, weight: 'bold' },
+                                color: '#1f2937'
+                            }
+                        },
+                        y: { display: false }
+                    }
+                }
+            });
+        }
+
+        function updateIncomeRateChart(fixedYears) {
+            const incomeValues = fixedYears.map(y => {
+                const match = csvData.find(row =>
+                    row.category === '소득' &&
+                    row.year === y &&
+                    row.region === currentFilters.region &&
+                    (!currentFilters.cropGroup || row.cropGroup === currentFilters.cropGroup) &&
+                    (!currentFilters.crop || row.crop === currentFilters.crop)
+                );
+                return match ? match.value : 0;
+            });
+
+            const rateValues = fixedYears.map(y => {
+                const match = csvData.find(row =>
+                    row.category === '소득률' &&
+                    row.year === y &&
+                    row.region === currentFilters.region &&
+                    (!currentFilters.cropGroup || row.cropGroup === currentFilters.cropGroup) &&
+                    (!currentFilters.crop || row.crop === currentFilters.crop)
+                );
+                return match ? match.value : 0;
+            });
+
+            const ctx = document.getElementById('incomeRateChart').getContext('2d');
+            if (charts['incomeRateChart']) charts['incomeRateChart'].destroy();
+
+            charts['incomeRateChart'] = new Chart(ctx, {
+                type: 'line',
                 data: {
                     labels: fixedYears.map(y => y + '년'),
                     datasets: [
                         {
-                            label: '자가노동',
-                            data: selfLaborData,
-                            backgroundColor: '#3b82f6',
-                            borderColor: '#1e40af',
-                            borderWidth: 1
+                            label: '소득',
+                            data: incomeValues,
+                            borderColor: '#10b981',
+                            backgroundColor: '#10b981',
+                            borderWidth: 3,
+                            pointRadius: 6,
+                            pointHoverRadius: 8,
+                            tension: 0.4,
+                            yAxisID: 'y'
                         },
                         {
-                            label: '고용노동',
-                            data: hiredLaborData,
-                            backgroundColor: '#8b5cf6',
-                            borderColor: '#7c3aed',
-                            borderWidth: 1
+                            label: '소득률',
+                            data: rateValues,
+                            borderColor: '#f59e0b',
+                            backgroundColor: '#f59e0b',
+                            borderWidth: 3,
+                            pointRadius: 6,
+                            pointHoverRadius: 8,
+                            tension: 0.4,
+                            yAxisID: 'y1'
                         }
                     ]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            stacked: true,
-                            grid: { display: false },
-                            ticks: { font: { size: 9 } }
-                        },
-                        y: {
-                            stacked: true,
-                            ticks: {
-                                font: { size: 9 },
-                                callback: val => val + '시간'
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: { 
-                            position: 'top',
-                            labels: { font: { size: 9 } }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return context.dataset.label + ': ' + context.parsed.y + '시간';
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        function updateCropIncomeChart() {
-            // 현재 지역과 년도로 필터링된 작목별 소득 데이터
-            let cropIncomeData = csvData.filter(item => {
-                return item.category === '소득' &&
-                       item.region === currentFilters.region &&
-                       item.year === currentFilters.year &&
-                       (!currentFilters.cropGroup || item.cropGroup === currentFilters.cropGroup);
-            });
-            
-            // 작목별로 그룹핑하고 정렬
-            const cropIncomes = cropIncomeData
-                .map(item => ({
-                    crop: item.crop,
-                    income: item.value
-                }))
-                .sort((a, b) => b.income - a.income);
-            
-            const ctx = document.getElementById('cropIncomeChart').getContext('2d');
-            if (charts['cropIncomeChart']) charts['cropIncomeChart'].destroy();
-            
-            charts['cropIncomeChart'] = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: cropIncomes.map(item => item.crop),
-                    datasets: [{
-                        label: '소득',
-                        data: cropIncomes.map(item => item.income),
-                        backgroundColor: ['#10b981', '#06b6d4', '#8b5cf6', '#f59e0b', '#ef4444', '#84cc16'],
-                        borderColor: ['#059669', '#0891b2', '#7c3aed', '#d97706', '#dc2626', '#65a30d'],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    indexAxis: 'y', // 가로 막대로 설정
-                    scales: {
-                        x: {
-                            ticks: {
-                                font: { size: 9 },
-                                callback: val => '₩' + val.toLocaleString()
-                            }
-                        },
-                        y: {
-                            ticks: { font: { size: 9 } }
-                        }
-                    },
-                    plugins: {
+                    plugins: { 
                         legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return '소득: ₩' + context.parsed.x.toLocaleString();
+                        datalabels: {
+                            display: true,
+                            color: '#1f2937',
+                            font: { size: 9, weight: 'bold' },
+                            formatter: (value, context) => {
+                                if (context.datasetIndex === 0) {
+                                    return value.toLocaleString();
+                                } else {
+                                    return value + '%';
                                 }
                             }
                         }
+                    },
+                    scales: {
+                        x: { 
+                            grid: { display: false },
+                            ticks: { 
+                                font: { size: 10, weight: 'bold' },
+                                color: '#1f2937'
+                            }
+                        },
+                        y: { display: false },
+                        y1: { display: false }
                     }
                 }
             });
         }
 
-        // 사이드바 토글 함수 (모바일용)
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('expanded');
-        }
-
-        // 페이지 로드 시 초기화
-        document.addEventListener('DOMContentLoaded', function() {
-            loadCSVFromGitHub();
-        });
-    </script>
-</body>
-</html>
+            //

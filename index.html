@@ -833,19 +833,74 @@
                 }
             });
             
+            // 중간재비 박스 - 작목군/작목 조건에 따라 항목 설정
+            let allMaterialCostItems = [];
+            
+            if (currentFilters.cropGroup === '과수') {
+                allMaterialCostItems = [
+                    '과수원조성비', '보통(무기질)비료비', '부산물(유기질)비료비',
+                    '농약비', '수도광열비', '기타재료비', '소농구비',
+                    '대농구상각비', '영농시설상각비', '수리·유지비', '기타비용'
+                ];
+            } else if (['쌀', '콩', '고추', '양파', '마늘'].includes(currentFilters.crop)) {
+                allMaterialCostItems = [
+                    '종자·종묘비', '보통(무기질)비료비', '부산물(유기질)비료비',
+                    '농약비', '수도광열비', '기타재료비', '소농구비',
+                    '대농구상각비', '영농시설상각비', '자동차비', '기타비용'
+                ];
+            } else {
+                // 기본값 또는 기타 작목일 때
+                allMaterialCostItems = [
+                    '종자·종묘비', '보통(무기질)비료비', '부산물(유기질)비료비',
+                    '농약비', '수도광열비', '기타재료비', '소농구비',
+                    '대농구상각비', '영농시설상각비', '수리·유지비', '기타비용'
+                ];
+            }
+            
+            // 중간재비 총합 계산
+            let totalMaterialCost = 0;
+            allMaterialCostItems.forEach(itemName => {
+                const value = itemValueMap[itemName];
+                if (typeof value === 'number') {
+                    totalMaterialCost += value;
+                }
+            });
+            html += `<tr style="background: #f3f4f6;"><td colspan="2" style="text-align: center; font-weight: bold; padding: 8px;">중간재비 ₩${totalMaterialCost.toLocaleString()}</td></tr>`;
+            
+            // 항목별 출력
+            allMaterialCostItems.forEach(itemName => {
+                const value = itemValueMap[itemName];
+                const displayValue = value !== undefined ? value.toLocaleString() : '-';
+                html += `<tr><td>${itemName}</td><td>${displayValue}</td></tr>`;
+            });
+            
             // 경영비 박스
             const totalCost = itemValueMap['경영비'] || 0;
-            if (totalCost > 0) {
-                html += '<tr><td colspan="2" style="border-bottom: 2px solid #d1d5db; padding: 0;"></td></tr>';
-                html += `<tr style="background: #f3f4f6;"><td colspan="2" style="text-align: center; font-weight: bold; padding: 8px;">경영비 ₩${totalCost.toLocaleString()}</td></tr>`;
-            }
+            html += `<tr style="background: #f3f4f6;"><td colspan="2" style="text-align: center; font-weight: bold; padding: 8px;">경영비 ₩${totalCost.toLocaleString()}</td></tr>`;
+            
+            const costItems = ['농기계·시설임차료', '토지임차료', '위탁영농비', '고용노동비'];
+            costItems.forEach(itemName => {
+                const value = itemValueMap[itemName];
+                const displayValue = value !== undefined ? 
+                    (typeof value === 'number' ? value.toLocaleString() : value) : '-';
+                html += `<tr><td>${itemName}</td><td>${displayValue}</td></tr>`;
+            });
+            html += '<tr><td colspan="2" style="border-bottom: 2px solid #d1d5db; padding: 0;"></td></tr>';
             
             // 생산비 박스
             const totalProductionCost = itemValueMap['생산비'] || 0;
-            if (totalProductionCost > 0) {
-                html += '<tr><td colspan="2" style="border-bottom: 2px solid #d1d5db; padding: 0;"></td></tr>';
-                html += `<tr style="background: #f3f4f6;"><td colspan="2" style="text-align: center; font-weight: bold; padding: 8px;">생산비 ₩${totalProductionCost.toLocaleString()}</td></tr>`;
-            }
+            html += `<tr style="background: #f3f4f6;"><td colspan="2" style="text-align: center; font-weight: bold; padding: 8px;">생산비 ₩${totalProductionCost.toLocaleString()}</td></tr>`;
+            
+            const productionItems = ['자가노동비', '유동자본용역비', '고정자본용역비', '토지자본용역비'];
+            productionItems.forEach(itemName => {
+                const value = itemValueMap[itemName];
+                const displayValue = value !== undefined ? 
+                    (typeof value === 'number' ? value.toLocaleString() : value) : '-';
+                html += `<tr><td>${itemName}</td><td>${displayValue}</td></tr>`;
+            });
+            
+            tableBody.innerHTML = html || '<tr><td colspan="2">데이터가 없습니다.</td></tr>';
+        }
             
             // 노동시간 정보
             const laborItems = ['자가노동시간', '자가노동시간(남)', '자가노동시간(여)', '고용노동시간', '고용노동시간(남)', '고용노동시간(여)'];

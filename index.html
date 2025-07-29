@@ -1363,6 +1363,13 @@
                         }
                     },
                     plugins: {
+                        datalabels: {
+                            anchor: 'end', //바 끝에
+                            align: 'right', // 오른쪽으로
+                            formatter: value => '₩' + value.toLocaleString(),
+                            font: { size : 10},
+                            color: '#374151'
+                        },
                         legend: { display: false },
                         tooltip: {
                             callbacks: {

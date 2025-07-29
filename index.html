@@ -1388,6 +1388,9 @@
             const sidebar = document.getElementById('sidebar');
             sidebar.classList.toggle('expanded');
         }
+
+        // 전역에서 한 번만
+        Chart.register(ChartDataLabels);
         
         // 페이지 로드 시 초기화
         document.addEventListener('DOMContentLoaded', function() {

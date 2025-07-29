@@ -1123,4 +1123,16 @@
             });
         }
 
-            //
+        // 사이드바 토글 함수 (모바일용)
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('expanded');
+        }
+
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCSVFromGitHub();
+        });
+    </script>
+</body>
+</html>           

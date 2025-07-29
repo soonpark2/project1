@@ -1102,6 +1102,18 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: { 
+                        datalabels: {
+                          anchor: 'end',
+                          align: 'top',
+                          formatter: (value, ctx) => {
+                            // 라벨: yAxisID에 따라 포맷 다르게
+                            return ctx.dataset.yAxisID === 'y'
+                              ? value.toLocaleString()
+                              : value + '%';
+                          },
+                          font: { size: 9 },
+                          color: '#374151'
+                        },
                         legend: { 
                             display: true,
                             position: 'top',

@@ -804,11 +804,6 @@
         function updateTable() {
             const tableBody = document.getElementById('detailTableBody');
             
-            if (filteredData.length === 0) {
-                tableBody.innerHTML = '<tr><td colspan="2" style="text-align: center;">선택한 조건에 해당하는 데이터가 없습니다.</td></tr>';
-                return;
-            }
-            
             // 현재 필터링된 데이터에서 실제 값을 가진 비목 데이터 매핑
             const itemValueMap = {};
             
@@ -825,13 +820,11 @@
             const revenueItems = ['주산물가액', '주산물수량', '부산물가액', '수취가격'];
             revenueItems.forEach(itemName => {
                 const value = itemValueMap[itemName];
-                if (value !== undefined) {
-                    const displayValue = itemName === '주산물수량' ? 
-                        value.toLocaleString() : 
-                        (typeof value === 'number' ? value.toLocaleString() : value);
-                    html += `<tr><td>${itemName}</td><td>${displayValue}</td></tr>`;
-                }
+                const displayValue = value !== undefined ? 
+                    (itemName === '주산물수량' ? value.toLocaleString() : (typeof value === 'number' ? value.toLocaleString() : value)) : '-';
+                html += `<tr><td>${itemName}</td><td>${displayValue}</td></tr>`;
             });
+            html += '<tr><td colspan="2" style="border-bottom: 2px solid #d1d5db; padding: 0;"></td></tr>';
             
             // 중간재비 박스 - 작목군/작목 조건에 따라 항목 설정
             let allMaterialCostItems = [];
@@ -901,25 +894,7 @@
             
             tableBody.innerHTML = html || '<tr><td colspan="2">데이터가 없습니다.</td></tr>';
         }
-            
-            // 노동시간 정보
-            const laborItems = ['자가노동시간', '자가노동시간(남)', '자가노동시간(여)', '고용노동시간', '고용노동시간(남)', '고용노동시간(여)'];
-            let hasLaborData = false;
-            laborItems.forEach(itemName => {
-                const value = itemValueMap[itemName];
-                if (value !== undefined) {
-                    if (!hasLaborData) {
-                        html += '<tr><td colspan="2" style="border-bottom: 2px solid #d1d5db; padding: 0;"></td></tr>';
-                        html += `<tr style="background: #f3f4f6;"><td colspan="2" style="text-align: center; font-weight: bold; padding: 8px;">노동시간</td></tr>`;
-                        hasLaborData = true;
-                    }
-                    html += `<tr><td>${itemName}</td><td>${value.toLocaleString()}시간</td></tr>`;
-                }
-            });
-            
-            tableBody.innerHTML = html || '<tr><td colspan="2">데이터가 없습니다.</td></tr>';
-        }
-
+        
         function updateCharts() {
             const fixedYears = ['2019', '2020', '2021', '2022', '2023'];
             

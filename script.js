@@ -427,8 +427,8 @@ function updateTotalIncomeChart(fixedYears) {
 
     // 그라데이션 생성
     const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-    gradient.addColorStop(0, 'rgba(29, 78, 216, 0.5)');
-    gradient.addColorStop(1, 'rgba(147, 197, 253, 0.15)');
+    gradient.addColorStop(0, 'rgba(29, 78, 216, 0.7)');
+    gradient.addColorStop(1, 'rgba(147, 197, 253, 0.3)');
 
     charts['totalIncomeChart'] = new Chart(ctx, {
         type: 'line',
@@ -436,7 +436,7 @@ function updateTotalIncomeChart(fixedYears) {
             labels: fixedYears.map(y => y + '년'),
             datasets: [{
                 data: values,
-                borderColor: 'rgba(29, 78, 216, 1)',
+                borderColor: 'rgba(30, 59, 139, 0.8)',
                 backgroundColor: gradient,
                 borderWidth: 3,
                 pointRadius: 3, // 표식 크기 줄임
@@ -496,8 +496,8 @@ function updateManagementCostChart(fixedYears) {
 
     // 그라데이션 생성
     const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-    gradient.addColorStop(0, 'rgba(29, 78, 216, 0.5)');
-    gradient.addColorStop(1, 'rgba(147, 197, 253, 0.7)');
+    gradient.addColorStop(0, 'rgba(29, 78, 216, 0.7)');
+    gradient.addColorStop(1, 'rgba(147, 197, 253, 0.3)');
 
     charts['managementCostChart'] = new Chart(ctx, {
         type: 'line',
@@ -505,7 +505,7 @@ function updateManagementCostChart(fixedYears) {
             labels: fixedYears.map(y => y + '년'),
             datasets: [{
                 data: values,
-                borderColor: 'rgba(30, 59, 139, 1)',
+                borderColor: 'rgba(30, 59, 139, 0.8)',
                 backgroundColor: gradient,
                 borderWidth: 3,
                 pointRadius: 3, // 표식 크기 줄임
@@ -531,7 +531,7 @@ function updateManagementCostChart(fixedYears) {
                 x: { 
                     grid: { display: false },
                     ticks: { 
-                        font: { size: 13, weight: 'bold' }, // 가로축 글자 크기 증가
+                        font: { size: 11, weight: 'bold' }, // 가로축 글자 크기 증가
                         color: '#1f2937'
                     }
                 },
@@ -592,7 +592,7 @@ function updateIncomeRateChart(fixedYears) {
                     datalabels: {
                         anchor: 'end',
                         align: 'bottom', // 가로축에 가깝게
-                        formatter: (value) => '₩' + value.toLocaleString(),
+                        formatter: (value) => value.toLocaleString(),
                         font: { size: 9 },
                         color: '#374151'
                     }
@@ -920,6 +920,7 @@ document.addEventListener('DOMContentLoaded', function() {
     loadCSVFromGitHub();
 
 });
+
 
 
 

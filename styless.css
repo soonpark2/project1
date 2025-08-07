@@ -1,723 +1,399 @@
-/* 기본 스타일 */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-body {
-    font-family: 'Malgun Gothic', 'Segoe UI', sans-serif;
-    background: #f8f9fa;
-    font-size: 11px;
-    overflow-x: hidden;
-}
-
-/* 헤더 스타일 */
-.header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 12px 24px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
-.header-left {
-    display: flex;
-    align-items: center;
-}
-
-.logo {
-    font-size: 18px;
-    font-weight: bold;
-    background: linear-gradient(45deg, #ffd700, #ffed4e);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.header-center {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-}
-
-.nav-tabs {
-    display: flex;
-    gap: 8px;
-    background: rgba(255,255,255,0.1);
-    padding: 4px;
-    border-radius: 25px;
-    backdrop-filter: blur(10px);
-}
-
-.nav-tab {
-    padding: 8px 20px;
-    border-radius: 20px;
-    text-decoration: none;
-    color: rgba(255,255,255,0.8);
-    transition: all 0.3s ease;
-    font-weight: 500;
-}
-
-.nav-tab.active,
-.nav-tab:hover {
-    background: rgba(255,255,255,0.2);
-    color: white;
-    transform: translateY(-1px);
-}
-
-.header-right {
-    font-size: 12px;
-    opacity: 0.9;
-}
-
-/* 탭 컨텐츠 */
-.tab-content {
-    display: none;
-}
-
-.tab-content.active {
-    display: block;
-}
-
-/* 홈 화면 스타일 */
-.hero-section {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: 80px 0;
-    color: white;
-    overflow: hidden;
-    position: relative;
-}
-
-.hero-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><polygon fill="rgba(255,255,255,0.03)" points="0,1000 1000,0 1000,1000"/></svg>');
-    background-size: cover;
-}
-
-.hero-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 24px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
-    align-items: center;
-    position: relative;
-    z-index: 1;
-}
-
-.hero-text {
-    animation: fadeInUp 0.8s ease-out;
-}
-
-.hero-title {
-    font-size: 48px;
-    font-weight: 700;
-    margin-bottom: 16px;
-    background: linear-gradient(45deg, #ffffff, #ffd700);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.hero-subtitle {
-    font-size: 18px;
-    margin-bottom: 40px;
-    opacity: 0.9;
-    line-height: 1.6;
-}
-
-.hero-stats {
-    display: flex;
-    gap: 32px;
-    margin-bottom: 40px;
-}
-
-.stat-item {
-    text-align: center;
-}
-
-.stat-number {
-    font-size: 32px;
-    font-weight: bold;
-    color: #ffd700;
-    margin-bottom: 4px;
-}
-
-.stat-label {
-    font-size: 14px;
-    opacity: 0.8;
-}
-
-.cta-button {
-    background: linear-gradient(45deg, #ff6b6b, #ee5a24);
-    border: none;
-    padding: 16px 32px;
-    border-radius: 30px;
-    color: white;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 8px 25px rgba(238, 90, 36, 0.3);
-}
-
-.cta-button:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 30px rgba(238, 90, 36, 0.4);
-}
-
-.hero-visual {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    animation: fadeInRight 0.8s ease-out 0.2s both;
-}
-
-.chart-preview {
-    width: 400px;
-    height: 300px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 20px;
-    padding: 20px;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-}
-
-/* 섹션 공통 스타일 */
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 24px;
-}
-
-.section-title {
-    font-size: 36px;
-    font-weight: 700;
-    text-align: center;
-    margin-bottom: 60px;
-    color: #2d3748;
-    position: relative;
-}
-
-.section-title::after {
-    content: '';
-    width: 80px;
-    height: 4px;
-    background: linear-gradient(45deg, #667eea, #764ba2);
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-radius: 2px;
-}
-
-/* 기능 섹션 */
-.features-section {
-    padding: 100px 0;
-    background: white;
-}
-
-.features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 32px;
-}
-
-.feature-card {
-    background: white;
-    padding: 40px 32px;
-    border-radius: 16px;
-    text-align: center;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-    transition: all 0.3s ease;
-    border: 1px solid #f1f5f9;
-}
-
-.feature-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-}
-
-.feature-icon {
-    font-size: 48px;
-    margin-bottom: 24px;
-    display: block;
-}
-
-.feature-card h3 {
-    font-size: 20px;
-    font-weight: 600;
-    margin-bottom: 16px;
-    color: #2d3748;
-}
-
-.feature-card p {
-    color: #718096;
-    line-height: 1.6;
-    font-size: 14px;
-}
-
-/* 미리보기 섹션 */
-.preview-section {
-    padding: 100px 0;
-    background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
-}
-
-.preview-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-    gap: 32px;
-}
-
-.preview-card {
-    background: white;
-    padding: 32px;
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-}
-
-.preview-card h3 {
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 24px;
-    color: #2d3748;
-    text-align: center;
-}
-
-.preview-chart {
-    height: 300px;
-    position: relative;
-}
-
-/* 대시보드 컨테이너 */
-.dashboard-container {
-    display: grid;
-    grid-template-columns: 220px 1fr 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr 1fr;
-    gap: 10px;
-    padding: 10px;
-    min-height: 100vh;
-}
-
-/* 사이드바 스타일 */
-.sidebar {
-    grid-column: 1 / 2;
-    grid-row: 1 / 4;
-    background: #ffffff;
-    border-right: 1px solid #e5e7eb;
-    padding: 10px;
-    overflow-y: auto;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-}
-
-/* 차트 카드 스타일 */
-.chart-card {
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 16px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    transition: all 0.3s ease;
-}
-
-.chart-card:hover {
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-}
-
-.chart-title {
-    font-size: 14px;
-    font-weight: bold;
-    color: #1f2937;
-    margin-bottom: 12px;
-    text-align: center;
-    padding-bottom: 8px;
-    border-bottom: 2px solid #f3f4f6;
-}
-
-.chart-container {
-    position: relative;
-    height: 220px;
-}
-
-/* 그리드 레이아웃 */
-.income-analysis-section {
-    grid-column: 2 / 3;
-    grid-row: 1 / 4;
-}
-
-.total-income-chart {
-    grid-column: 3 / 4;
-    grid-row: 1 / 2;
-}
-
-.management-cost-chart {
-    grid-column: 3 / 4;
-    grid-row: 2 / 3;
-}
-
-.income-rate-chart {
-    grid-column: 3 / 4;
-    grid-row: 3 / 4;
-}
-
-.self-labor-chart {
-    grid-column: 4 / 5;
-    grid-row: 1 / 2;
-}
-
-.hired-labor-chart {
-    grid-column: 5 / 6;
-    grid-row: 1 / 2;
-}
-
-.annual-labor-chart {
-    grid-column: 4 / 6;
-    grid-row: 2 / 3;
-}
-
-.income-chart {
-    grid-column: 4 / 6;
-    grid-row: 3 / 4;
-}
-
-.income-chart .chart-container {
-    height: 180px;
-}
-
-/* 필터 스타일 */
-.filter-section {
-    margin-bottom: 15px;
-}
-
-.filter-title {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-    padding: 8px 12px;
-    font-weight: bold;
-    font-size: 12px;
-    border-radius: 6px 6px 0 0;
-}
-
-.filter-content {
-    border: 1px solid #e5e7eb;
-    border-top: none;
-    background: white;
-    max-height: 120px;
-    overflow-y: auto;
-    border-radius: 0 0 6px 6px;
-}
-
-.filter-item {
-    padding: 8px 12px;
-    cursor: pointer;
-    border-bottom: 1px solid #f3f4f6;
-    font-size: 12px;
-    transition: all 0.2s ease;
-}
-
-.filter-item:hover {
-    background: #f8fafc;
-}
-
-.filter-item.active {
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
-    color: #667eea;
-    font-weight: bold;
-}
-
-.year-buttons {
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-top: none;
-    border-radius: 0 0 6px 6px;
-}
-
-.year-btn {
-    padding: 8px 12px;
-    border: none;
-    border-bottom: 1px solid #f3f4f6;
-    background: white;
-    cursor: pointer;
-    font-size: 12px;
-    transition: all 0.2s ease;
-    width: 100%;
-    text-align: left;
-}
-
-.year-btn:hover {
-    background: #f8fafc;
-}
-
-.year-btn.active {
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
-    color: #667eea;
-    font-weight: bold;
-}
-
-/* 소득 분석 레이아웃 */
-.income-analysis-layout {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    height: 100%;
-}
-
-.main-summary-box {
-    background: linear-gradient(135deg, #dbeafe, #bfdbfe);
-    border: 2px solid #3b82f6;
-    border-radius: 8px;
-    padding: 16px;
-    text-align: center;
-}
-
-.main-summary-value {
-    font-size: 18px;
-    font-weight: bold;
-    color: #1f2937;
-    margin: 6px 0;
-}
-
-.summary-sublabel {
-    font-size: 12px;
-    color: #6b7280;
-    font-weight: 600;
-}
-
-.table-wrapper {
-    flex: 1;
-    overflow-y: auto;
-    border: 1px solid #e5e7eb;
-    border-radius: 6px;
-}
-
-/* 테이블 스타일 */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 11px;
-}
-
-th {
-    background: #f9fafb;
-    border-bottom: 2px solid #e5e7eb;
-    padding: 8px 6px;
-    text-align: left;
-    font-weight: bold;
-    color: #374151;
-    position: sticky;
-    top: 0;
-}
-
-td {
-    padding: 6px 8px;
-    border-bottom: 1px solid #f3f4f6;
-    color: #1f2937;
-}
-
-tr:hover {
-    background: #f9fafb;
-}
-
-.section-header {
-    background: #f3f4f6 !important;
-    font-weight: bold;
-    color: #374151;
-}
-
-.section-header td {
-    padding: 8px 6px;
-    border-bottom: 2px solid #d1d5db;
-    text-align: center;
-}
-
-/* 로딩 및 에러 스타일 */
-.loading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100px;
-    color: #6b7280;
-}
-
-.error-message {
-    color: #ef4444;
-    text-align: center;
-    padding: 20px;
-    background: #fef2f2;
-    border: 1px solid #fecaca;
-    border-radius: 6px;
-    margin: 10px;
-}
-
-/* 토글 버튼 */
-.toggle-btn {
-    display: none;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    margin: 8px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 11px;
-    transition: all 0.3s ease;
-}
-
-.toggle-btn:hover {
-    transform: translateY(-1px);
-}
-
-/* 애니메이션 */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes fadeInRight {
-    from {
-        opacity: 0;
-        transform: translateX(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-/* 반응형 디자인 */
-@media (max-width: 1400px) {
-    .dashboard-container {
-        grid-template-columns: 220px 1fr 1fr;
-        grid-template-rows: auto auto auto auto auto auto;
-    }
-    
-    .income-analysis-section {
-        grid-column: 2 / 4;
-        grid-row: 1 / 2;
-    }
-    
-    .total-income-chart {
-        grid-column: 2 / 3;
-        grid-row: 2 / 3;
-    }
-    
-    .management-cost-chart {
-        grid-column: 3 / 4;
-        grid-row: 2 / 3;
-    }
-    
-    .income-rate-chart {
-        grid-column: 2 / 3;
-        grid-row: 3 / 4;
-    }
-    
-    .self-labor-chart {
-        grid-column: 3 / 4;
-        grid-row: 3 / 4;
-    }
-    
-    .hired-labor-chart {
-        grid-column: 2 / 3;
-        grid-row: 4 / 5;
-    }
-    
-    .annual-labor-chart {
-        grid-column: 3 / 4;
-        grid-row: 4 / 5;
-    }
-    
-    .income-chart {
-        grid-column: 2 / 4;
-        grid-row: 5 / 6;
-    }
-}
-
-@media (max-width: 768px) {
-    .hero-content {
-        grid-template-columns: 1fr;
-        gap: 40px;
-        text-align: center;
-    }
-    
-    .hero-title {
-        font-size: 36px;
-    }
-    
-    .hero-stats {
-        justify-content: center;
-    }
-    
-    .features-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .preview-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .dashboard-container {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .sidebar {
-        width: 100%;
-        height: auto;
-        border-right: none;
-        border-bottom: 1px solid #e5e7eb;
-        max-height: 50px;
-        overflow: hidden;
-        transition: max-height 0.3s ease;
-    }
-
-    .sidebar.expanded {
-        max-height: 350px;
-    }
-
-    .toggle-btn {
-        display: block;
-    }
-
-    .sidebar.collapsed .filter-section,
-    .sidebar:not(.expanded) .filter-section {
-        display: none;
-    }
-
-    .chart-card {
-        padding: 12px;
-        margin-bottom: 10px;
-    }
-
-    .filter-content {
-        max-height: 100px;
-    }
-    
-    .nav-tabs {
-        flex-wrap: wrap;
-        gap: 4px;
-    }
-    
-    .nav-tab {
-        padding: 6px 16px;
-        font-size: 12px;
-    }
-}
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Malgun Gothic', 'Segoe UI', sans-serif;
+            background: #f8f9fa;
+            font-size: 11px;
+            overflow: auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            color: white;
+            padding: 6px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            border-bottom: 2px solid #1e40af;
+            height: 35px;
+        }
+
+        .header-left {
+            font-weight: bold;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 20px;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 220px 1fr 1fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr 1fr;
+            gap: 10px;
+            padding: 10px;
+            min-height: 100vh;
+            overflow: auto;
+        }
+
+        /* 사이드바 - 세로로 3행 차지 */
+        .sidebar {
+            grid-column: 1 / 2;
+            grid-row: 1 / 4;
+            background: #ffffff;
+            border-right: 1px solid #e5e7eb;
+            padding: 10px;
+            overflow-y: auto;
+        }
+
+        /* 소득분석표 - 세로로 3행 차지 */
+        .income-analysis-section {
+            grid-column: 2 / 3;
+            grid-row: 1 / 4;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 10px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        /* 총수입 그래프 */
+        .total-income-chart {
+            grid-column: 3 / 4;
+            grid-row: 1 / 2;
+        }
+
+        /* 경영비 그래프 */
+        .management-cost-chart {
+            grid-column: 3 / 4;
+            grid-row: 2 / 3;
+        }
+
+        /* 소득 및 소득률 그래프 */
+        .income-rate-chart {
+            grid-column: 3 / 4;
+            grid-row: 3 / 4;
+        }
+
+        /* 자가노동 그래프 */
+        .self-labor-chart {
+            grid-column: 4 / 5;
+            grid-row: 1 / 2;
+        }
+
+        /* 고용노동 그래프 */
+        .hired-labor-chart {
+            grid-column: 5 / 6;
+            grid-row: 1 / 2;
+        }
+
+        /* 년도별 노동 그래프 */
+        .annual-labor-chart {
+            grid-column: 4 / 6;
+            grid-row: 2 / 3;
+        }
+
+        /* 소득 그래프 */
+        .income-chart {
+            grid-column: 4 / 6;
+            grid-row: 3 / 4;
+        }
+
+        .chart-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 10px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .chart-title {
+            font-size: 12px;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 220px;
+        }
+
+        .income-chart .chart-container {
+            height: 180px;
+        }
+
+        .filter-section {
+            margin-bottom: 15px;
+        }
+
+        .filter-title {
+            background: #3b82f6;
+            color: white;
+            padding: 6px 10px;
+            font-weight: bold;
+            font-size: 11px;
+            border-radius: 3px 3px 0 0;
+        }
+
+        .filter-content {
+            border: 1px solid #e5e7eb;
+            border-top: none;
+            background: white;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+
+        .filter-item {
+            padding: 6px 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #f3f4f6;
+            font-size: 11px;
+            transition: background 0.2s;
+        }
+
+        .filter-item:hover {
+            background: #f3f4f6;
+        }
+
+        .filter-item.active {
+            background: #dbeafe;
+            color: #1e40af;
+            font-weight: bold;
+        }
+
+        .year-buttons {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-top: none;
+        }
+
+        .year-btn {
+            padding: 6px 10px;
+            border: none;
+            border-bottom: 1px solid #f3f4f6;
+            background: white;
+            cursor: pointer;
+            font-size: 11px;
+            transition: background 0.2s;
+            width: 100%;
+            text-align: left;
+        }
+
+        .year-btn:hover {
+            background: #f3f4f6;
+        }
+
+        .year-btn.active {
+            background: #dbeafe;
+            color: #1e40af;
+            font-weight: bold;
+        }
+
+        .income-analysis-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            height: 100%;
+        }
+
+        .main-summary-box {
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+            border: 2px solid #3b82f6;
+            border-radius: 6px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .main-summary-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #1f2937;
+            margin: 6px 0;
+        }
+
+        .summary-sublabel {
+            font-size: 12px;
+            color: #6b7280;
+            font-weight: 600;
+        }
+
+        .table-wrapper {
+            flex: 1;
+            overflow-y: auto;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+        }
+
+        .section-header {
+            background: #f3f4f6 !important;
+            font-weight: bold;
+            color: #374151;
+        }
+
+        .section-header td {
+            padding: 8px 6px;
+            border-bottom: 2px solid #d1d5db;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 10px;
+        }
+
+        th {
+            background: #f9fafb;
+            border-bottom: 2px solid #e5e7eb;
+            padding: 6px 5px;
+            text-align: left;
+            font-weight: bold;
+            color: #374151;
+            position: sticky;
+            top: 0;
+        }
+
+        td {
+            padding: 5px 6px;
+            border-bottom: 1px solid #f3f4f6;
+            color: #1f2937;
+        }
+
+        tr:hover {
+            background: #f9fafb;
+        }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100px;
+            color: #6b7280;
+        }
+
+        .toggle-btn {
+            display: none;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            margin: 8px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 10px;
+        }
+
+        .sidebar.collapsed {
+            height: auto;
+            max-height: 50px;
+            overflow: hidden;
+        }
+
+        .sidebar.collapsed .filter-section {
+            display: none;
+        }
+
+        .error-message {
+            color: #ef4444;
+            text-align: center;
+            padding: 20px;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 4px;
+            margin: 10px;
+        }
+
+        /* 반응형 디자인 */
+        @media (max-width: 1400px) {
+            .container {
+                grid-template-columns: 220px 1fr 1fr;
+                grid-template-rows: auto auto auto auto auto auto;
+            }
+            
+            .income-analysis-section {
+                grid-column: 2 / 4;
+                grid-row: 1 / 2;
+            }
+            
+            .total-income-chart {
+                grid-column: 2 / 3;
+                grid-row: 2 / 3;
+            }
+            
+            .management-cost-chart {
+                grid-column: 3 / 4;
+                grid-row: 2 / 3;
+            }
+            
+            .income-rate-chart {
+                grid-column: 2 / 3;
+                grid-row: 3 / 4;
+            }
+            
+            .self-labor-chart {
+                grid-column: 3 / 4;
+                grid-row: 3 / 4;
+            }
+            
+            .hired-labor-chart {
+                grid-column: 2 / 3;
+                grid-row: 4 / 5;
+            }
+            
+            .annual-labor-chart {
+                grid-column: 3 / 4;
+                grid-row: 4 / 5;
+            }
+            
+            .income-chart {
+                grid-column: 2 / 4;
+                grid-row: 5 / 6;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid #e5e7eb;
+                max-height: 50px;
+                overflow: hidden;
+                transition: max-height 0.3s ease;
+            }
+
+            .sidebar.expanded {
+                max-height: 350px;
+            }
+
+            .toggle-btn {
+                display: block;
+            }
+
+            .sidebar.collapsed .filter-section,
+            .sidebar:not(.expanded) .filter-section {
+                display: none;
+            }
+
+            .chart-card {
+                padding: 8px;
+                margin-bottom: 10px;
+            }
+
+            .filter-content {
+                max-height: 100px;
+            }
+        }

@@ -420,15 +420,14 @@ function updateTotalIncomeChart(fixedYears) {
     });
 
     const maxValue = Math.max(...values);
-    const yAxisMax = maxValue * 1.3; // 최대값의 130%로 설정하여 가운데 위치
+    const yAxisMax = maxValue * 1.3;
 
     const ctx = document.getElementById('totalIncomeChart').getContext('2d');
     if (charts['totalIncomeChart']) charts['totalIncomeChart'].destroy();
 
-    // 그라데이션 생성
     const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-    gradient.addColorStop(0, 'rgba(100, 57, 255, 0.4)');
-    gradient.addColorStop(1, 'rgba(21, 171, 255, 0.1)');
+    gradient.addColorStop(0, 'rgba(147, 197, 253, 0.6)'); // 밝은 하늘색
+    gradient.addColorStop(1, 'rgba(191, 219, 254, 0.2)');
 
     charts['totalIncomeChart'] = new Chart(ctx, {
         type: 'line',
@@ -436,13 +435,20 @@ function updateTotalIncomeChart(fixedYears) {
             labels: fixedYears.map(y => y + '년'),
             datasets: [{
                 data: values,
-                borderColor: 'rgba(100, 57, 255, 1)',
+                borderColor: 'rgba(59, 130, 246, 1)', // 하늘색
                 backgroundColor: gradient,
                 borderWidth: 3,
-                pointRadius: 4, // 표식 크기 줄임
-                pointHoverRadius: 6,
+                pointRadius: 3,
+                pointHoverRadius: 5,
                 tension: 0.4,
-                fill: true // 그라데이션 채우기
+                fill: true,
+                datalabels: {
+                    anchor: 'end',
+                    align: 'top',
+                    formatter: value => value.toLocaleString(),
+                    font: { size: 10 },
+                    color: '#374151'
+                }
             }]
         },
         options: {
@@ -450,6 +456,7 @@ function updateTotalIncomeChart(fixedYears) {
             maintainAspectRatio: false,
             plugins: { 
                 legend: { display: false },
+                datalabels: { display: true },
                 tooltip: {
                     callbacks: {
                         label: function(context) {
@@ -459,22 +466,24 @@ function updateTotalIncomeChart(fixedYears) {
                 }
             },
             scales: {
-                x: { 
+                x: {
                     grid: { display: false },
-                    ticks: { 
-                        font: { size: 13, weight: 'bold' }, // 가로축 글자 크기 증가
+                    ticks: {
+                        font: { size: 11, weight: 'bold' },
                         color: '#1f2937'
                     }
                 },
-                y: { 
+                y: {
                     display: false,
                     beginAtZero: true,
-                    max: yAxisMax // 축 최대값 설정
+                    max: yAxisMax
                 }
             }
-        }
+        },
+        plugins: [ChartDataLabels]
     });
 }
+
 
 function updateManagementCostChart(fixedYears) {
     const values = fixedYears.map(y => {
@@ -489,15 +498,14 @@ function updateManagementCostChart(fixedYears) {
     });
 
     const maxValue = Math.max(...values);
-    const yAxisMax = maxValue * 1.3; // 최대값의 130%로 설정하여 가운데 위치
+    const yAxisMax = maxValue * 1.3;
 
     const ctx = document.getElementById('managementCostChart').getContext('2d');
     if (charts['managementCostChart']) charts['managementCostChart'].destroy();
 
-    // 그라데이션 생성
     const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-    gradient.addColorStop(0, 'rgba(100, 57, 255, 0.4)');
-    gradient.addColorStop(1, 'rgba(21, 171, 255, 0.1)');
+    gradient.addColorStop(0, 'rgba(147, 197, 253, 0.6)');
+    gradient.addColorStop(1, 'rgba(191, 219, 254, 0.2)');
 
     charts['managementCostChart'] = new Chart(ctx, {
         type: 'line',
@@ -505,13 +513,20 @@ function updateManagementCostChart(fixedYears) {
             labels: fixedYears.map(y => y + '년'),
             datasets: [{
                 data: values,
-                borderColor: 'rgba(100, 57, 255, 1)',
+                borderColor: 'rgba(59, 130, 246, 1)',
                 backgroundColor: gradient,
                 borderWidth: 3,
-                pointRadius: 4, // 표식 크기 줄임
-                pointHoverRadius: 6,
+                pointRadius: 3,
+                pointHoverRadius: 5,
                 tension: 0.4,
-                fill: true // 그라데이션 채우기
+                fill: true,
+                datalabels: {
+                    anchor: 'end',
+                    align: 'top',
+                    formatter: value => value.toLocaleString(),
+                    font: { size: 10 },
+                    color: '#374151'
+                }
             }]
         },
         options: {
@@ -519,6 +534,7 @@ function updateManagementCostChart(fixedYears) {
             maintainAspectRatio: false,
             plugins: { 
                 legend: { display: false },
+                datalabels: { display: true },
                 tooltip: {
                     callbacks: {
                         label: function(context) {
@@ -528,22 +544,24 @@ function updateManagementCostChart(fixedYears) {
                 }
             },
             scales: {
-                x: { 
+                x: {
                     grid: { display: false },
-                    ticks: { 
-                        font: { size: 13, weight: 'bold' }, // 가로축 글자 크기 증가
+                    ticks: {
+                        font: { size: 11, weight: 'bold' },
                         color: '#1f2937'
                     }
                 },
-                y: { 
+                y: {
                     display: false,
                     beginAtZero: true,
-                    max: yAxisMax // 축 최대값 설정
+                    max: yAxisMax
                 }
             }
-        }
+        },
+        plugins: [ChartDataLabels]
     });
 }
+
 
 function updateIncomeRateChart(fixedYears) {
     const incomeValues = fixedYears.map(y => {
@@ -570,39 +588,39 @@ function updateIncomeRateChart(fixedYears) {
 
     const maxIncomeValue = Math.max(...incomeValues);
     const maxRateValue = Math.max(...rateValues);
-    const incomeAxisMax = maxIncomeValue * 1.3; // 소득 축 최대값의 130%
-    const rateAxisMax = maxRateValue * 1.3; // 소득률 축 최대값의 130%
+    const incomeAxisMax = maxIncomeValue * 1.3;
+    const rateAxisMax = maxRateValue * 1.3;
 
     const ctx = document.getElementById('incomeRateChart').getContext('2d');
     if (charts['incomeRateChart']) charts['incomeRateChart'].destroy();
 
     charts['incomeRateChart'] = new Chart(ctx, {
-        type: 'bar', // 기본 타입을 bar로 설정
+        type: 'bar',
         data: {
             labels: fixedYears.map(y => y + '년'),
             datasets: [
                 {
                     label: '소득',
                     data: incomeValues,
-                    type: 'bar', // 막대차트
-                    backgroundColor: '#3b82f6',
-                    borderColor: '#2563eb',
+                    type: 'bar',
+                    backgroundColor: 'rgba(147, 197, 253, 0.7)', // 하늘색 + 투명도
+                    borderColor: 'rgba(59, 130, 246, 1)',
                     borderWidth: 1,
                     yAxisID: 'y',
                     datalabels: {
-                        anchor: 'end',
-                        align: 'bottom', // 가로축에 가깝게
-                        formatter: (value) => '₩' + value.toLocaleString(),
-                        font: { size: 9 },
+                        anchor: 'center',
+                        align: 'center',
+                        formatter: value => value.toLocaleString(),
+                        font: { size: 10 },
                         color: '#374151'
                     }
                 },
                 {
                     label: '소득률',
                     data: rateValues,
-                    type: 'line', // 라인차트
-                    borderColor: 'rgba(100, 57, 255, 1)',
-                    backgroundColor: 'rgba(100, 57, 255, 1)',
+                    type: 'line',
+                    borderColor: 'rgba(99, 102, 241, 1)', // 연보라톤
+                    backgroundColor: 'rgba(99, 102, 241, 1)',
                     borderWidth: 3,
                     pointRadius: 4,
                     pointHoverRadius: 6,
@@ -611,8 +629,8 @@ function updateIncomeRateChart(fixedYears) {
                     fill: false,
                     datalabels: {
                         anchor: 'end',
-                        align: 'top', // 표식 위로
-                        formatter: (value) => value + '%',
+                        align: 'top',
+                        formatter: value => value + '%',
                         font: { size: 10 },
                         color: '#374151'
                     }
@@ -623,12 +641,8 @@ function updateIncomeRateChart(fixedYears) {
             responsive: true,
             maintainAspectRatio: false,
             plugins: { 
-                datalabels: {
-                    display: true
-                },
-                legend: { 
-                    display: false // 범례 삭제
-                },
+                datalabels: { display: true },
+                legend: { display: false },
                 tooltip: {
                     callbacks: {
                         label: function(context) {
@@ -642,29 +656,31 @@ function updateIncomeRateChart(fixedYears) {
                 }
             },
             scales: {
-                x: { 
+                x: {
                     grid: { display: false },
-                    ticks: { 
+                    ticks: {
                         font: { size: 13, weight: 'bold' },
                         color: '#1f2937'
                     }
                 },
-                y: { 
+                y: {
                     display: false,
                     beginAtZero: true,
                     position: 'left',
-                    max: incomeAxisMax // 축 최대값 설정
+                    max: incomeAxisMax
                 },
-                y1: { 
+                y1: {
                     display: false,
                     beginAtZero: true,
                     position: 'right',
-                    max: rateAxisMax // 축 최대값 설정
+                    max: rateAxisMax
                 }
             }
-        }
+        },
+        plugins: [ChartDataLabels]
     });
 }
+
 
 function updateSelfLaborChart() {
     const maleLabor = filteredData.find(i => i.category === '자가노동시간(남)')?.value || 0;
@@ -920,6 +936,7 @@ document.addEventListener('DOMContentLoaded', function() {
     loadCSVFromGitHub();
 
 });
+
 
 
 

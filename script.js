@@ -419,8 +419,16 @@ function updateTotalIncomeChart(fixedYears) {
         return match ? match.value : 0;
     });
 
+    const maxValue = Math.max(...values);
+    const yAxisMax = maxValue * 1.3; // 최대값의 130%로 설정하여 가운데 위치
+
     const ctx = document.getElementById('totalIncomeChart').getContext('2d');
     if (charts['totalIncomeChart']) charts['totalIncomeChart'].destroy();
+
+    // 그라데이션 생성
+    const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+    gradient.addColorStop(0, 'rgba(100, 57, 255, 0.8)');
+    gradient.addColorStop(1, 'rgba(21, 171, 255, 0.3)');
 
     charts['totalIncomeChart'] = new Chart(ctx, {
         type: 'line',
@@ -428,13 +436,13 @@ function updateTotalIncomeChart(fixedYears) {
             labels: fixedYears.map(y => y + '년'),
             datasets: [{
                 data: values,
-                borderColor: '#3b82f6',
-                backgroundColor: '#3b82f6',
+                borderColor: 'rgba(100, 57, 255, 1)',
+                backgroundColor: gradient,
                 borderWidth: 3,
-                pointRadius: 6,
-                pointHoverRadius: 8,
+                pointRadius: 4, // 표식 크기 줄임
+                pointHoverRadius: 6,
                 tension: 0.4,
-                fill: false
+                fill: true // 그라데이션 채우기
             }]
         },
         options: {
@@ -448,19 +456,26 @@ function updateTotalIncomeChart(fixedYears) {
                             return '₩' + context.parsed.y.toLocaleString();
                         }
                     }
+                },
+                title: {
+                    display: true,
+                    text: document.getElementById('totalIncomeTitle').textContent,
+                    font: { size: 15, weight: 'bold' }, // 제목 크기 증가
+                    color: '#1f2937'
                 }
             },
             scales: {
                 x: { 
                     grid: { display: false },
                     ticks: { 
-                        font: { size: 10, weight: 'bold' },
+                        font: { size: 13, weight: 'bold' }, // 가로축 글자 크기 증가
                         color: '#1f2937'
                     }
                 },
                 y: { 
                     display: false,
-                    beginAtZero: true
+                    beginAtZero: true,
+                    max: yAxisMax // 축 최대값 설정
                 }
             }
         }
@@ -479,8 +494,16 @@ function updateManagementCostChart(fixedYears) {
         return match ? match.value : 0;
     });
 
+    const maxValue = Math.max(...values);
+    const yAxisMax = maxValue * 1.3; // 최대값의 130%로 설정하여 가운데 위치
+
     const ctx = document.getElementById('managementCostChart').getContext('2d');
     if (charts['managementCostChart']) charts['managementCostChart'].destroy();
+
+    // 그라데이션 생성
+    const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+    gradient.addColorStop(0, 'rgba(100, 57, 255, 0.8)');
+    gradient.addColorStop(1, 'rgba(21, 171, 255, 0.3)');
 
     charts['managementCostChart'] = new Chart(ctx, {
         type: 'line',
@@ -488,13 +511,13 @@ function updateManagementCostChart(fixedYears) {
             labels: fixedYears.map(y => y + '년'),
             datasets: [{
                 data: values,
-                borderColor: '#ef4444',
-                backgroundColor: '#ef4444',
+                borderColor: 'rgba(100, 57, 255, 1)',
+                backgroundColor: gradient,
                 borderWidth: 3,
-                pointRadius: 6,
-                pointHoverRadius: 8,
+                pointRadius: 4, // 표식 크기 줄임
+                pointHoverRadius: 6,
                 tension: 0.4,
-                fill: false
+                fill: true // 그라데이션 채우기
             }]
         },
         options: {
@@ -508,19 +531,26 @@ function updateManagementCostChart(fixedYears) {
                             return '₩' + context.parsed.y.toLocaleString();
                         }
                     }
+                },
+                title: {
+                    display: true,
+                    text: document.getElementById('managementCostTitle').textContent,
+                    font: { size: 15, weight: 'bold' }, // 제목 크기 증가
+                    color: '#1f2937'
                 }
             },
             scales: {
                 x: { 
                     grid: { display: false },
                     ticks: { 
-                        font: { size: 10, weight: 'bold' },
+                        font: { size: 13, weight: 'bold' }, // 가로축 글자 크기 증가
                         color: '#1f2937'
                     }
                 },
                 y: { 
                     display: false,
-                    beginAtZero: true
+                    beginAtZero: true,
+                    max: yAxisMax // 축 최대값 설정
                 }
             }
         }
@@ -554,33 +584,45 @@ function updateIncomeRateChart(fixedYears) {
     if (charts['incomeRateChart']) charts['incomeRateChart'].destroy();
 
     charts['incomeRateChart'] = new Chart(ctx, {
-        type: 'line',
+        type: 'bar', // 기본 타입을 bar로 설정
         data: {
             labels: fixedYears.map(y => y + '년'),
             datasets: [
                 {
                     label: '소득',
                     data: incomeValues,
-                    borderColor: '#10b981',
-                    backgroundColor: '#10b981',
-                    borderWidth: 3,
-                    pointRadius: 6,
-                    pointHoverRadius: 8,
-                    tension: 0.4,
+                    type: 'bar', // 막대차트
+                    backgroundColor: '#3b82f6',
+                    borderColor: '#2563eb',
+                    borderWidth: 1,
                     yAxisID: 'y',
-                    fill: false
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'bottom', // 가로축에 가깝게
+                        formatter: (value) => '₩' + value.toLocaleString(),
+                        font: { size: 9 },
+                        color: '#374151'
+                    }
                 },
                 {
                     label: '소득률',
                     data: rateValues,
-                    borderColor: '#f59e0b',
-                    backgroundColor: '#f59e0b',
+                    type: 'line', // 라인차트
+                    borderColor: 'rgba(100, 57, 255, 1)',
+                    backgroundColor: 'rgba(100, 57, 255, 1)',
                     borderWidth: 3,
-                    pointRadius: 6,
-                    pointHoverRadius: 8,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
                     tension: 0.4,
                     yAxisID: 'y1',
-                    fill: false
+                    fill: false,
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'top', // 표식 위로
+                        formatter: (value) => value + '%',
+                        font: { size: 9 },
+                        color: '#374151'
+                    }
                 }
             ]
         },
@@ -589,24 +631,10 @@ function updateIncomeRateChart(fixedYears) {
             maintainAspectRatio: false,
             plugins: { 
                 datalabels: {
-                  anchor: 'end',
-                  align: 'top',
-                  formatter: (value, ctx) => {
-                    // 라벨: yAxisID에 따라 포맷 다르게
-                    return ctx.dataset.yAxisID === 'y'
-                      ? value.toLocaleString()
-                      : value + '%';
-                  },
-                  font: { size: 9 },
-                  color: '#374151'
+                    display: true
                 },
                 legend: { 
-                    display: true,
-                    position: 'top',
-                    labels: {
-                        boxWidth: 12,
-                        font: { size: 10 }
-                    }
+                    display: false // 범례 삭제
                 },
                 tooltip: {
                     callbacks: {
@@ -618,23 +646,31 @@ function updateIncomeRateChart(fixedYears) {
                             }
                         }
                     }
+                },
+                title: {
+                    display: true,
+                    text: document.getElementById('incomeRateTitle').textContent,
+                    font: { size: 15, weight: 'bold' },
+                    color: '#1f2937'
                 }
             },
             scales: {
                 x: { 
                     grid: { display: false },
                     ticks: { 
-                        font: { size: 10, weight: 'bold' },
+                        font: { size: 13, weight: 'bold' },
                         color: '#1f2937'
                     }
                 },
                 y: { 
                     display: false,
-                    beginAtZero: true
+                    beginAtZero: true,
+                    position: 'left'
                 },
                 y1: { 
                     display: false,
-                    beginAtZero: true
+                    beginAtZero: true,
+                    position: 'right'
                 }
             }
         }
@@ -893,4 +929,5 @@ Chart.register(ChartDataLabels);
 // 페이지 로드 시 초기화
 document.addEventListener('DOMContentLoaded', function() {
     loadCSVFromGitHub();
+
 });

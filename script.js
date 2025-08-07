@@ -496,8 +496,8 @@ function updateManagementCostChart(fixedYears) {
 
     // 그라데이션 생성
     const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-    gradient.addColorStop(0, 'rgba(30, 59, 139, 0.5)');
-    gradient.addColorStop(1, 'rgba(59, 130, 246, 0.1)');
+    gradient.addColorStop(0, 'rgba(29, 78, 216, 0.5)');
+    gradient.addColorStop(1, 'rgba(147, 197, 253, 0.7)');
 
     charts['managementCostChart'] = new Chart(ctx, {
         type: 'line',
@@ -920,6 +920,7 @@ document.addEventListener('DOMContentLoaded', function() {
     loadCSVFromGitHub();
 
 });
+
 
 
 

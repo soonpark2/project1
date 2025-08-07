@@ -496,8 +496,8 @@ function updateManagementCostChart(fixedYears) {
 
     // 그라데이션 생성
     const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-    gradient.addColorStop(0, 'rgba(100, 57, 255, 0.4)');
-    gradient.addColorStop(1, 'rgba(21, 171, 255, 0.1)');
+    gradient.addColorStop(0, 'rgba(30, 59, 139, 0.5)');
+    gradient.addColorStop(1, 'rgba(59, 130, 246, 0.1)');
 
     charts['managementCostChart'] = new Chart(ctx, {
         type: 'line',
@@ -505,11 +505,11 @@ function updateManagementCostChart(fixedYears) {
             labels: fixedYears.map(y => y + '년'),
             datasets: [{
                 data: values,
-                borderColor: 'rgba(100, 57, 255, 1)',
+                borderColor: 'rgba(30, 59, 139, 1)',
                 backgroundColor: gradient,
                 borderWidth: 3,
-                pointRadius: 4, // 표식 크기 줄임
-                pointHoverRadius: 6,
+                pointRadius: 3, // 표식 크기 줄임
+                pointHoverRadius: 5,
                 tension: 0.4,
                 fill: true // 그라데이션 채우기
             }]
@@ -920,6 +920,7 @@ document.addEventListener('DOMContentLoaded', function() {
     loadCSVFromGitHub();
 
 });
+
 
 
 

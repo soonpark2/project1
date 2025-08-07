@@ -427,8 +427,8 @@ function updateTotalIncomeChart(fixedYears) {
 
     // 그라데이션 생성
     const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-    gradient.addColorStop(0, 'rgba(100, 57, 255, 0.8)');
-    gradient.addColorStop(1, 'rgba(21, 171, 255, 0.3)');
+    gradient.addColorStop(0, 'rgba(100, 57, 255, 0.4)');
+    gradient.addColorStop(1, 'rgba(21, 171, 255, 0.1)');
 
     charts['totalIncomeChart'] = new Chart(ctx, {
         type: 'line',
@@ -456,12 +456,6 @@ function updateTotalIncomeChart(fixedYears) {
                             return '₩' + context.parsed.y.toLocaleString();
                         }
                     }
-                },
-                title: {
-                    display: true,
-                    text: document.getElementById('totalIncomeTitle').textContent,
-                    font: { size: 15, weight: 'bold' }, // 제목 크기 증가
-                    color: '#1f2937'
                 }
             },
             scales: {
@@ -502,8 +496,8 @@ function updateManagementCostChart(fixedYears) {
 
     // 그라데이션 생성
     const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-    gradient.addColorStop(0, 'rgba(100, 57, 255, 0.8)');
-    gradient.addColorStop(1, 'rgba(21, 171, 255, 0.3)');
+    gradient.addColorStop(0, 'rgba(100, 57, 255, 0.4)');
+    gradient.addColorStop(1, 'rgba(21, 171, 255, 0.1)');
 
     charts['managementCostChart'] = new Chart(ctx, {
         type: 'line',
@@ -531,12 +525,6 @@ function updateManagementCostChart(fixedYears) {
                             return '₩' + context.parsed.y.toLocaleString();
                         }
                     }
-                },
-                title: {
-                    display: true,
-                    text: document.getElementById('managementCostTitle').textContent,
-                    font: { size: 15, weight: 'bold' }, // 제목 크기 증가
-                    color: '#1f2937'
                 }
             },
             scales: {
@@ -579,6 +567,11 @@ function updateIncomeRateChart(fixedYears) {
         );
         return match ? match.value : 0;
     });
+
+    const maxIncomeValue = Math.max(...incomeValues);
+    const maxRateValue = Math.max(...rateValues);
+    const incomeAxisMax = maxIncomeValue * 1.3; // 소득 축 최대값의 130%
+    const rateAxisMax = maxRateValue * 1.3; // 소득률 축 최대값의 130%
 
     const ctx = document.getElementById('incomeRateChart').getContext('2d');
     if (charts['incomeRateChart']) charts['incomeRateChart'].destroy();
@@ -646,12 +639,6 @@ function updateIncomeRateChart(fixedYears) {
                             }
                         }
                     }
-                },
-                title: {
-                    display: true,
-                    text: document.getElementById('incomeRateTitle').textContent,
-                    font: { size: 15, weight: 'bold' },
-                    color: '#1f2937'
                 }
             },
             scales: {
@@ -665,12 +652,14 @@ function updateIncomeRateChart(fixedYears) {
                 y: { 
                     display: false,
                     beginAtZero: true,
-                    position: 'left'
+                    position: 'left',
+                    max: incomeAxisMax // 축 최대값 설정
                 },
                 y1: { 
                     display: false,
                     beginAtZero: true,
-                    position: 'right'
+                    position: 'right',
+                    max: rateAxisMax // 축 최대값 설정
                 }
             }
         }
@@ -931,3 +920,4 @@ document.addEventListener('DOMContentLoaded', function() {
     loadCSVFromGitHub();
 
 });
+

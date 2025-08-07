@@ -420,7 +420,7 @@ function updateTotalIncomeChart(fixedYears) {
     });
 
     const maxValue = Math.max(...values);
-    const yAxisMax = maxValue * 1.3;
+    const yAxisMax = maxValue * 1.5;
 
     const ctx = document.getElementById('totalIncomeChart').getContext('2d');
     if (charts['totalIncomeChart']) charts['totalIncomeChart'].destroy();
@@ -446,7 +446,9 @@ function updateTotalIncomeChart(fixedYears) {
                     anchor: 'end',
                     align: 'top',
                     formatter: value => value.toLocaleString(),
-                    font: { size: 10 },
+                    font: { size: 11,
+                          weight: 'bold'
+                          },
                     color: '#374151'
                 }
             }]
@@ -498,7 +500,7 @@ function updateManagementCostChart(fixedYears) {
     });
 
     const maxValue = Math.max(...values);
-    const yAxisMax = maxValue * 1.3;
+    const yAxisMax = maxValue * 1.5;
 
     const ctx = document.getElementById('managementCostChart').getContext('2d');
     if (charts['managementCostChart']) charts['managementCostChart'].destroy();
@@ -524,7 +526,10 @@ function updateManagementCostChart(fixedYears) {
                     anchor: 'end',
                     align: 'top',
                     formatter: value => value.toLocaleString(),
-                    font: { size: 10 },
+                    font: { 
+                        size: 11,
+                        weight: 'bold'
+                    },
                     color: '#374151'
                 }
             }]
@@ -604,14 +609,16 @@ function updateIncomeRateChart(fixedYears) {
                     data: incomeValues,
                     type: 'bar',
                     backgroundColor: 'rgba(147, 197, 253, 0.7)', // 하늘색 + 투명도
-                    borderColor: 'rgba(59, 130, 246, 1)',
-                    borderWidth: 1,
+                    borderColor: 'transparent',
+                    borderWidth: 0,
                     yAxisID: 'y',
                     datalabels: {
                         anchor: 'center',
                         align: 'center',
                         formatter: value => value.toLocaleString(),
-                        font: { size: 10 },
+                        font: { size: 11,
+                              weight: 'bold'
+                              },
                         color: '#374151'
                     }
                 },
@@ -631,7 +638,9 @@ function updateIncomeRateChart(fixedYears) {
                         anchor: 'end',
                         align: 'top',
                         formatter: value => value + '%',
-                        font: { size: 10 },
+                        font: { size: 11,
+                              weight: 'bold'
+                              },
                         color: '#374151'
                     }
                 }
@@ -936,6 +945,7 @@ document.addEventListener('DOMContentLoaded', function() {
     loadCSVFromGitHub();
 
 });
+
 
 
 

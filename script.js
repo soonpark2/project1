@@ -427,8 +427,8 @@ function updateTotalIncomeChart(fixedYears) {
 
     // 그라데이션 생성
     const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-    gradient.addColorStop(0, 'rgba(29, 78, 216, 0.7)');
-    gradient.addColorStop(1, 'rgba(147, 197, 253, 0.3)');
+    gradient.addColorStop(0, 'rgba(100, 57, 255, 0.4)');
+    gradient.addColorStop(1, 'rgba(21, 171, 255, 0.1)');
 
     charts['totalIncomeChart'] = new Chart(ctx, {
         type: 'line',
@@ -436,11 +436,11 @@ function updateTotalIncomeChart(fixedYears) {
             labels: fixedYears.map(y => y + '년'),
             datasets: [{
                 data: values,
-                borderColor: 'rgba(30, 59, 139, 0.8)',
+                borderColor: 'rgba(100, 57, 255, 1)',
                 backgroundColor: gradient,
                 borderWidth: 3,
-                pointRadius: 3, // 표식 크기 줄임
-                pointHoverRadius: 5,
+                pointRadius: 4, // 표식 크기 줄임
+                pointHoverRadius: 6,
                 tension: 0.4,
                 fill: true // 그라데이션 채우기
             }]
@@ -462,7 +462,7 @@ function updateTotalIncomeChart(fixedYears) {
                 x: { 
                     grid: { display: false },
                     ticks: { 
-                        font: { size: 11, weight: 'bold' }, // 가로축 글자 크기 증가
+                        font: { size: 13, weight: 'bold' }, // 가로축 글자 크기 증가
                         color: '#1f2937'
                     }
                 },
@@ -496,8 +496,8 @@ function updateManagementCostChart(fixedYears) {
 
     // 그라데이션 생성
     const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-    gradient.addColorStop(0, 'rgba(29, 78, 216, 0.7)');
-    gradient.addColorStop(1, 'rgba(147, 197, 253, 0.3)');
+    gradient.addColorStop(0, 'rgba(100, 57, 255, 0.4)');
+    gradient.addColorStop(1, 'rgba(21, 171, 255, 0.1)');
 
     charts['managementCostChart'] = new Chart(ctx, {
         type: 'line',
@@ -505,11 +505,11 @@ function updateManagementCostChart(fixedYears) {
             labels: fixedYears.map(y => y + '년'),
             datasets: [{
                 data: values,
-                borderColor: 'rgba(30, 59, 139, 0.8)',
+                borderColor: 'rgba(100, 57, 255, 1)',
                 backgroundColor: gradient,
                 borderWidth: 3,
-                pointRadius: 3, // 표식 크기 줄임
-                pointHoverRadius: 5,
+                pointRadius: 4, // 표식 크기 줄임
+                pointHoverRadius: 6,
                 tension: 0.4,
                 fill: true // 그라데이션 채우기
             }]
@@ -531,7 +531,7 @@ function updateManagementCostChart(fixedYears) {
                 x: { 
                     grid: { display: false },
                     ticks: { 
-                        font: { size: 11, weight: 'bold' }, // 가로축 글자 크기 증가
+                        font: { size: 13, weight: 'bold' }, // 가로축 글자 크기 증가
                         color: '#1f2937'
                     }
                 },
@@ -592,7 +592,7 @@ function updateIncomeRateChart(fixedYears) {
                     datalabels: {
                         anchor: 'end',
                         align: 'bottom', // 가로축에 가깝게
-                        formatter: (value) => value.toLocaleString(),
+                        formatter: (value) => '₩' + value.toLocaleString(),
                         font: { size: 9 },
                         color: '#374151'
                     }
@@ -613,7 +613,7 @@ function updateIncomeRateChart(fixedYears) {
                         anchor: 'end',
                         align: 'top', // 표식 위로
                         formatter: (value) => value + '%',
-                        font: { size: 9 },
+                        font: { size: 10 },
                         color: '#374151'
                     }
                 }
@@ -920,6 +920,7 @@ document.addEventListener('DOMContentLoaded', function() {
     loadCSVFromGitHub();
 
 });
+
 
 
 

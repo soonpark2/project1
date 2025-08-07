@@ -1,416 +1,399 @@
-/* 기본 스타일 */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-body {
-    font-family: 'Malgun Gothic', 'Segoe UI', sans-serif;
-    background: #f8f9fa;
-    font-size: 11px;
-    overflow: auto;
-}
+        body {
+            font-family: 'Malgun Gothic', 'Segoe UI', sans-serif;
+            background: #f8f9fa;
+            font-size: 11px;
+            overflow: auto;
+        }
 
-/* 헤더 */
-.header {
-    background: linear-gradient(135deg, #1e3a8a, #3b82f6);
-    color: white;
-    padding: 6px 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 12px;
-    border-bottom: 2px solid #1e40af;
-    height: 35px;
-}
+        .header {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            color: white;
+            padding: 6px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            border-bottom: 2px solid #1e40af;
+            height: 35px;
+        }
 
-.header-left {
-    font-weight: bold;
-}
+        .header-left {
+            font-weight: bold;
+        }
 
-.header-right {
-    display: flex;
-    gap: 20px;
-}
+        .header-right {
+            display: flex;
+            gap: 20px;
+        }
 
-/* 메인 컨테이너 그리드 레이아웃 */
-.container {
-    display: grid;
-    grid-template-columns: 220px 1fr 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr 1fr;
-    gap: 10px;
-    padding: 10px;
-    min-height: calc(100vh - 35px);
-    overflow: auto;
-}
+        .container {
+            display: grid;
+            grid-template-columns: 220px 1fr 1fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr 1fr;
+            gap: 10px;
+            padding: 10px;
+            min-height: 100vh;
+            overflow: auto;
+        }
 
-/* 사이드바 - 세로로 3행 차지 */
-.sidebar {
-    grid-column: 1 / 2;
-    grid-row: 1 / 5;
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 6px;
-    padding: 10px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-    overflow-y: auto;
-    min-height: 600px;
-}
+        /* 사이드바 - 세로로 3행 차지 */
+        .sidebar {
+            grid-column: 1 / 2;
+            grid-row: 1 / 4;
+            background: #ffffff;
+            border-right: 1px solid #e5e7eb;
+            padding: 10px;
+            overflow-y: auto;
+        }
 
-/* 소득분석표 - 세로로 4행 차지 */
-.income-analysis-section {
-    grid-column: 2 / 3;
-    grid-row: 1 / 5;
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 6px;
-    padding: 10px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-    min-height: 600px;
-}
+        /* 소득분석표 - 세로로 3행 차지 */
+        .income-analysis-section {
+            grid-column: 2 / 3;
+            grid-row: 1 / 4;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 10px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
 
-/* 차트 위치 지정 */
-.total-income-chart {
-    grid-column: 3 / 4;
-    grid-row: 1 / 2;
-}
+        /* 총수입 그래프 */
+        .total-income-chart {
+            grid-column: 3 / 4;
+            grid-row: 1 / 2;
+        }
 
-.management-cost-chart {
-    grid-column: 3 / 4;
-    grid-row: 2 / 3;
-}
+        /* 경영비 그래프 */
+        .management-cost-chart {
+            grid-column: 3 / 4;
+            grid-row: 2 / 3;
+        }
 
-.income-rate-chart {
-    grid-column: 3 / 4;
-    grid-row: 3 / 4;
-}
+        /* 소득 및 소득률 그래프 */
+        .income-rate-chart {
+            grid-column: 3 / 4;
+            grid-row: 3 / 4;
+        }
 
-.self-labor-chart {
-    grid-column: 4 / 5;
-    grid-row: 1 / 2;
-}
+        /* 자가노동 그래프 */
+        .self-labor-chart {
+            grid-column: 4 / 5;
+            grid-row: 1 / 2;
+        }
 
-.hired-labor-chart {
-    grid-column: 5 / 6;
-    grid-row: 1 / 2;
-}
+        /* 고용노동 그래프 */
+        .hired-labor-chart {
+            grid-column: 5 / 6;
+            grid-row: 1 / 2;
+        }
 
-.annual-labor-chart {
-    grid-column: 4 / 6;
-    grid-row: 2 / 3;
-}
+        /* 년도별 노동 그래프 */
+        .annual-labor-chart {
+            grid-column: 4 / 6;
+            grid-row: 2 / 3;
+        }
 
-.income-chart {
-    grid-column: 4 / 6;
-    grid-row: 3 / 5;
-}
+        /* 소득 그래프 */
+        .income-chart {
+            grid-column: 4 / 6;
+            grid-row: 3 / 4;
+        }
 
-/* 차트 카드 스타일 */
-.chart-card {
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 6px;
-    padding: 10px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-}
+        .chart-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 10px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
 
-.chart-title {
-    font-size: 12px;
-    font-weight: bold;
-    color: #1f2937;
-    margin-bottom: 10px;
-    text-align: center;
-}
+        .chart-title {
+            font-size: 12px;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 10px;
+            text-align: center;
+        }
 
-.chart-container {
-    position: relative;
-    height: 220px;
-}
+        .chart-container {
+            position: relative;
+            height: 220px;
+        }
 
-.income-chart .chart-container {
-    height: 180px;
-}
+        .income-chart .chart-container {
+            height: 180px;
+        }
 
-/* 필터 섹션 */
-.filter-section {
-    margin-bottom: 15px;
-}
+        .filter-section {
+            margin-bottom: 15px;
+        }
 
-.filter-title {
-    background: #3b82f6;
-    color: white;
-    padding: 6px 10px;
-    font-weight: bold;
-    font-size: 11px;
-    border-radius: 3px 3px 0 0;
-}
+        .filter-title {
+            background: #3b82f6;
+            color: white;
+            padding: 6px 10px;
+            font-weight: bold;
+            font-size: 11px;
+            border-radius: 3px 3px 0 0;
+        }
 
-.filter-content {
-    border: 1px solid #e5e7eb;
-    border-top: none;
-    background: white;
-    max-height: 120px;
-    overflow-y: auto;
-}
+        .filter-content {
+            border: 1px solid #e5e7eb;
+            border-top: none;
+            background: white;
+            max-height: 120px;
+            overflow-y: auto;
+        }
 
-.filter-item {
-    padding: 6px 10px;
-    cursor: pointer;
-    border-bottom: 1px solid #f3f4f6;
-    font-size: 11px;
-    transition: background 0.2s;
-}
+        .filter-item {
+            padding: 6px 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #f3f4f6;
+            font-size: 11px;
+            transition: background 0.2s;
+        }
 
-.filter-item:hover {
-    background: #f3f4f6;
-}
+        .filter-item:hover {
+            background: #f3f4f6;
+        }
 
-.filter-item.active {
-    background: #dbeafe;
-    color: #1e40af;
-    font-weight: bold;
-}
+        .filter-item.active {
+            background: #dbeafe;
+            color: #1e40af;
+            font-weight: bold;
+        }
 
-.year-buttons {
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-top: none;
-}
+        .year-buttons {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-top: none;
+        }
 
-.year-btn {
-    padding: 6px 10px;
-    border: none;
-    border-bottom: 1px solid #f3f4f6;
-    background: white;
-    cursor: pointer;
-    font-size: 11px;
-    transition: background 0.2s;
-    width: 100%;
-    text-align: left;
-}
+        .year-btn {
+            padding: 6px 10px;
+            border: none;
+            border-bottom: 1px solid #f3f4f6;
+            background: white;
+            cursor: pointer;
+            font-size: 11px;
+            transition: background 0.2s;
+            width: 100%;
+            text-align: left;
+        }
 
-.year-btn:hover {
-    background: #f3f4f6;
-}
+        .year-btn:hover {
+            background: #f3f4f6;
+        }
 
-.year-btn.active {
-    background: #dbeafe;
-    color: #1e40af;
-    font-weight: bold;
-}
+        .year-btn.active {
+            background: #dbeafe;
+            color: #1e40af;
+            font-weight: bold;
+        }
 
-/* 소득분석표 레이아웃 */
-.income-analysis-layout {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    height: 100%;
-}
+        .income-analysis-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            height: 100%;
+        }
 
-.main-summary-box {
-    background: linear-gradient(135deg, #dbeafe, #bfdbfe);
-    border: 2px solid #3b82f6;
-    border-radius: 6px;
-    padding: 15px;
-    text-align: center;
-}
+        .main-summary-box {
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+            border: 2px solid #3b82f6;
+            border-radius: 6px;
+            padding: 15px;
+            text-align: center;
+        }
 
-.main-summary-value {
-    font-size: 18px;
-    font-weight: bold;
-    color: #1f2937;
-    margin: 6px 0;
-}
+        .main-summary-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #1f2937;
+            margin: 6px 0;
+        }
 
-.summary-sublabel {
-    font-size: 12px;
-    color: #6b7280;
-    font-weight: 600;
-}
+        .summary-sublabel {
+            font-size: 12px;
+            color: #6b7280;
+            font-weight: 600;
+        }
 
-/* 테이블 스타일 */
-.table-wrapper {
-    flex: 1;
-    overflow-y: auto;
-    border: 1px solid #e5e7eb;
-    border-radius: 4px;
-}
+        .table-wrapper {
+            flex: 1;
+            overflow-y: auto;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+        }
 
-.section-header {
-    background: #f3f4f6 !important;
-    font-weight: bold;
-    color: #374151;
-}
+        .section-header {
+            background: #f3f4f6 !important;
+            font-weight: bold;
+            color: #374151;
+        }
 
-.section-header td {
-    padding: 8px 6px;
-    border-bottom: 2px solid #d1d5db;
-    text-align: center;
-}
+        .section-header td {
+            padding: 8px 6px;
+            border-bottom: 2px solid #d1d5db;
+            text-align: center;
+        }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 10px;
-}
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 10px;
+        }
 
-th {
-    background: #f9fafb;
-    border-bottom: 2px solid #e5e7eb;
-    padding: 6px 5px;
-    text-align: left;
-    font-weight: bold;
-    color: #374151;
-    position: sticky;
-    top: 0;
-}
+        th {
+            background: #f9fafb;
+            border-bottom: 2px solid #e5e7eb;
+            padding: 6px 5px;
+            text-align: left;
+            font-weight: bold;
+            color: #374151;
+            position: sticky;
+            top: 0;
+        }
 
-td {
-    padding: 5px 6px;
-    border-bottom: 1px solid #f3f4f6;
-    color: #1f2937;
-}
+        td {
+            padding: 5px 6px;
+            border-bottom: 1px solid #f3f4f6;
+            color: #1f2937;
+        }
 
-tr:hover {
-    background: #f9fafb;
-}
+        tr:hover {
+            background: #f9fafb;
+        }
 
-/* 로딩 및 에러 메시지 */
-.loading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100px;
-    color: #6b7280;
-}
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100px;
+            color: #6b7280;
+        }
 
-.error-message {
-    color: #ef4444;
-    text-align: center;
-    padding: 20px;
-    background: #fef2f2;
-    border: 1px solid #fecaca;
-    border-radius: 4px;
-    margin: 10px;
-}
+        .toggle-btn {
+            display: none;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            margin: 8px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 10px;
+        }
 
-/* 토글 버튼 (모바일용) */
-.toggle-btn {
-    display: none;
-    background: #3b82f6;
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    margin: 8px;
-    border-radius: 3px;
-    cursor: pointer;
-    font-size: 10px;
-}
+        .sidebar.collapsed {
+            height: auto;
+            max-height: 50px;
+            overflow: hidden;
+        }
 
-.sidebar.collapsed {
-    height: auto;
-    max-height: 50px;
-    overflow: hidden;
-}
+        .sidebar.collapsed .filter-section {
+            display: none;
+        }
 
-.sidebar.collapsed .filter-section {
-    display: none;
-}
+        .error-message {
+            color: #ef4444;
+            text-align: center;
+            padding: 20px;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 4px;
+            margin: 10px;
+        }
 
-/* 반응형 디자인 */
-@media (max-width: 1400px) {
-    .container {
-        grid-template-columns: 220px 1fr 1fr;
-        grid-template-rows: auto auto auto auto auto auto;
-    }
-    
-    .sidebar {
-        grid-column: 1 / 2;
-        grid-row: 1 / 7;
-    }
-    
-    .income-analysis-section {
-        grid-column: 2 / 4;
-        grid-row: 1 / 2;
-    }
-    
-    .total-income-chart {
-        grid-column: 2 / 3;
-        grid-row: 2 / 3;
-    }
-    
-    .management-cost-chart {
-        grid-column: 3 / 4;
-        grid-row: 2 / 3;
-    }
-    
-    .income-rate-chart {
-        grid-column: 2 / 3;
-        grid-row: 3 / 4;
-    }
-    
-    .self-labor-chart {
-        grid-column: 3 / 4;
-        grid-row: 3 / 4;
-    }
-    
-    .hired-labor-chart {
-        grid-column: 2 / 3;
-        grid-row: 4 / 5;
-    }
-    
-    .annual-labor-chart {
-        grid-column: 3 / 4;
-        grid-row: 4 / 5;
-    }
-    
-    .income-chart {
-        grid-column: 2 / 4;
-        grid-row: 5 / 6;
-    }
-}
+        /* 반응형 디자인 */
+        @media (max-width: 1400px) {
+            .container {
+                grid-template-columns: 220px 1fr 1fr;
+                grid-template-rows: auto auto auto auto auto auto;
+            }
+            
+            .income-analysis-section {
+                grid-column: 2 / 4;
+                grid-row: 1 / 2;
+            }
+            
+            .total-income-chart {
+                grid-column: 2 / 3;
+                grid-row: 2 / 3;
+            }
+            
+            .management-cost-chart {
+                grid-column: 3 / 4;
+                grid-row: 2 / 3;
+            }
+            
+            .income-rate-chart {
+                grid-column: 2 / 3;
+                grid-row: 3 / 4;
+            }
+            
+            .self-labor-chart {
+                grid-column: 3 / 4;
+                grid-row: 3 / 4;
+            }
+            
+            .hired-labor-chart {
+                grid-column: 2 / 3;
+                grid-row: 4 / 5;
+            }
+            
+            .annual-labor-chart {
+                grid-column: 3 / 4;
+                grid-row: 4 / 5;
+            }
+            
+            .income-chart {
+                grid-column: 2 / 4;
+                grid-row: 5 / 6;
+            }
+        }
 
-@media (max-width: 768px) {
-    .container {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
+        @media (max-width: 768px) {
+            .container {
+                display: flex;
+                flex-direction: column;
+            }
 
-    .sidebar {
-        width: 100%;
-        height: auto;
-        border: 1px solid #e5e7eb;
-        border-radius: 6px;
-        max-height: 50px;
-        overflow: hidden;
-        transition: max-height 0.3s ease;
-        grid-column: unset;
-        grid-row: unset;
-    }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid #e5e7eb;
+                max-height: 50px;
+                overflow: hidden;
+                transition: max-height 0.3s ease;
+            }
 
-    .sidebar.expanded {
-        max-height: 350px;
-    }
+            .sidebar.expanded {
+                max-height: 350px;
+            }
 
-    .toggle-btn {
-        display: block;
-    }
+            .toggle-btn {
+                display: block;
+            }
 
-    .sidebar.collapsed .filter-section,
-    .sidebar:not(.expanded) .filter-section {
-        display: none;
-    }
+            .sidebar.collapsed .filter-section,
+            .sidebar:not(.expanded) .filter-section {
+                display: none;
+            }
 
-    .chart-card {
-        padding: 8px;
-        margin-bottom: 10px;
-        grid-column: unset;
-        grid-row: unset;
-    }
+            .chart-card {
+                padding: 8px;
+                margin-bottom: 10px;
+            }
 
-    .filter-content {
-        max-height: 100px;
-    }
-}
+            .filter-content {
+                max-height: 100px;
+            }
+        }

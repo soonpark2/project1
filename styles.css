@@ -288,6 +288,13 @@ tr:hover {
     padding: 4px 6px;
     border-bottom: 1px solid #e2e8f0;
     vertical-align: middle;
+    text-align: left; /* 기본은 왼쪽 정렬 */
+}
+
+/* 숫자값 셀 우측 정렬 */
+#detailTableBody td.numeric,
+#detailTableBody td[data-type="number"] {
+    text-align: right;
 }
 
 #detailTableBody tr.summary-row td {
@@ -295,7 +302,7 @@ tr:hover {
     font-weight: 600;
     font-size: 12px;
     text-align: center;
-    border-bottom: 1px solid #c3dafe;
+    border-bottom: 2px solid #c3dafe;
 }
 
 #detailTableBody tr.separator-row td {
@@ -363,6 +370,7 @@ tr:hover {
         max-height: 100px;
     }
 }
+
 
 
 

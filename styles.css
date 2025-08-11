@@ -9,24 +9,26 @@
        }
        
        /* 헤더 */
-       .header {
-           display: flex;
-           justify-content: space-between;
-           align-items: center;
-           background-color: #6B1E6D;
-           color: white;
-           padding: 10px 20px;
-       }
-       
-       .header-left {
-           font-size: 20px;
-           font-weight: bold;
-       }
-       
-       .header-right {
-           display: flex;
-           gap: 10px;
-       }
+        .header {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            color: white;
+            padding: 6px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            border-bottom: 2px solid #1e40af;
+            height: 35px;
+        }
+
+        .header-left {
+            font-weight: bold;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 20px;
+        }
        
        /* 탭 버튼 */
        .tab-btn {
@@ -417,5 +419,6 @@
                 max-height: 100px;
             }
         }
+
 
 

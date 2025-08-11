@@ -332,6 +332,23 @@
             border-radius: 4px;
             margin: 10px;
         }
+      #detailTableBody td {
+          font-size: 14px;  /* 원하는 크기로 조절 */
+          padding: 6px 8px;
+          color: #1f2937;
+      }
+      
+      #detailTableBody tr.summary-row td {
+          background-color: #f3f4f6;
+          font-weight: bold;
+          text-align: center;
+          padding: 8px 8px;
+      }
+      
+      #detailTableBody tr.separator-row td {
+          border-bottom: 2px solid #d1d5db;
+          padding: 0;
+      }
 
         /* 반응형 디자인 */
         @media (max-width: 1400px) {
@@ -419,6 +436,7 @@
                 max-height: 100px;
             }
         }
+
 
 
 

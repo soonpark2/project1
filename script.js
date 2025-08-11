@@ -973,6 +973,72 @@ function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
     sidebar.classList.toggle('expanded');
 }
+// 모바일 사이드바 토글 기능
+function initMobileSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    
+    // 토글 버튼이 없으면 생성
+    let toggleBtn = sidebar.querySelector('.toggle-btn');
+    if (!toggleBtn) {
+        toggleBtn = document.createElement('button');
+        toggleBtn.className = 'toggle-btn';
+        toggleBtn.textContent = '필터';
+        sidebar.appendChild(toggleBtn);
+    }
+    
+    // 토글 버튼 클릭 이벤트
+    toggleBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        sidebar.classList.toggle('expanded');
+        
+        // 버튼 텍스트 변경
+        if (sidebar.classList.contains('expanded')) {
+            toggleBtn.textContent = '닫기';
+        } else {
+            toggleBtn.textContent = '필터';
+        }
+    });
+    
+    // 화면 크기 변경 감지
+    function handleResize() {
+        if (window.innerWidth > 768) {
+            // 데스크톱에서는 expanded 클래스 제거하고 토글 버튼 숨김
+            sidebar.classList.remove('expanded');
+            toggleBtn.style.display = 'none';
+        } else {
+            // 모바일에서는 토글 버튼 표시
+            toggleBtn.style.display = 'block';
+        }
+    }
+    
+    // 초기 실행 및 리사이즈 이벤트 등록
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    
+    // 사이드바 외부 클릭 시 닫기 (모바일에서)
+    document.addEventListener('click', function(e) {
+        if (window.innerWidth <= 768 && 
+            !sidebar.contains(e.target) && 
+            sidebar.classList.contains('expanded')) {
+            sidebar.classList.remove('expanded');
+            toggleBtn.textContent = '필터';
+        }
+    });
+}
+
+// DOM이 로드되면 초기화
+document.addEventListener('DOMContentLoaded', function() {
+    initMobileSidebar();
+});
+
+// 만약 이미 DOM이 로드되어 있다면 즉시 실행
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMobileSidebar);
+} else {
+    initMobileSidebar();
+}
 
 // 전역에서 한 번만
 Chart.register(ChartDataLabels);
@@ -982,6 +1048,7 @@ document.addEventListener('DOMContentLoaded', function() {
     loadCSVFromGitHub();
 
 });
+
 
 
 

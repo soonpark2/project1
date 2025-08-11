@@ -455,9 +455,9 @@ function updateTotalIncomeChart(fixedYears) {
         options: {
             layout: {
                 top: 10,
-                right: 30,
+                right: 100,
                 bottom: 10,
-                left: 30
+                left: 100
             },
             responsive: true,
             maintainAspectRatio: false,
@@ -950,6 +950,7 @@ document.addEventListener('DOMContentLoaded', function() {
     loadCSVFromGitHub();
 
 });
+
 
 
 

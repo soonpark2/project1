@@ -230,15 +230,15 @@
             background: linear-gradient(135deg, #dbeafe, #bfdbfe);
             border: 2px solid #3b82f6;
             border-radius: 6px;
-            padding: 15px;
+            padding: 8px 10px;
             text-align: center;
         }
 
         .main-summary-value {
-            font-size: 18px;
+            font-size: 14px;
             font-weight: bold;
-            color: #1f2937;
-            margin: 6px 0;
+            color: #000000;
+            margin: 4px 0;
         }
 
         .summary-sublabel {
@@ -419,6 +419,7 @@
                 max-height: 100px;
             }
         }
+
 
 
 

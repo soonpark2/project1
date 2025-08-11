@@ -116,7 +116,7 @@ body {
 }
 
 .chart-title {
-    font-size: var(--font-base);
+    font-size: 13px;
     font-weight: bold;
     color: var(--text-dark);
     margin-bottom: 10px;
@@ -375,6 +375,7 @@ tr:hover {
         max-height: 100px;
     }
 }
+
 
 
 

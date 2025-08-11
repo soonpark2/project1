@@ -329,7 +329,13 @@ tr:hover {
         grid-template-rows: auto auto auto auto auto auto;
     }
     
-    .income-analysis-section { grid-column: 2 / 4; grid-row: 1 / 2; }
+    .income-analysis-section { 
+        grid-column: 2 / 4;
+        grid-row: 1 / 2;
+        overflow: hidden;
+        max-height: 100%;
+    }
+    
     .total-income-chart { grid-column: 2 / 3; grid-row: 2 / 3; }
     .management-cost-chart { grid-column: 3 / 4; grid-row: 2 / 3; }
     .income-rate-chart { grid-column: 2 / 3; grid-row: 3 / 4; }
@@ -377,6 +383,7 @@ tr:hover {
         max-height: 100px;
     }
 }
+
 
 
 

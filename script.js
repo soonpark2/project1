@@ -419,7 +419,7 @@ function updateTotalIncomeChart(fixedYears) {
     });
 
     const maxValue = Math.max(...values);
-    const yAxisMax = maxValue * 1.5;
+    const yAxisMax = maxValue * 1.6;
 
     const ctx = document.getElementById('totalIncomeChart').getContext('2d');
     if (charts['totalIncomeChart']) charts['totalIncomeChart'].destroy();
@@ -445,7 +445,7 @@ function updateTotalIncomeChart(fixedYears) {
                     anchor: 'end',
                     align: 'top',
                     formatter: value => value.toLocaleString(),
-                    font: { size: 11,
+                    font: { size: 10,
                           weight: 'bold'
                           },
                     color: '#374151'
@@ -499,7 +499,7 @@ function updateManagementCostChart(fixedYears) {
     });
 
     const maxValue = Math.max(...values);
-    const yAxisMax = maxValue * 1.5;
+    const yAxisMax = maxValue * 1.6;
 
     const ctx = document.getElementById('managementCostChart').getContext('2d');
     if (charts['managementCostChart']) charts['managementCostChart'].destroy();
@@ -526,7 +526,7 @@ function updateManagementCostChart(fixedYears) {
                     align: 'top',
                     formatter: value => value.toLocaleString(),
                     font: { 
-                        size: 11,
+                        size: 10,
                         weight: 'bold'
                     },
                     color: '#374151'
@@ -615,7 +615,7 @@ function updateIncomeRateChart(fixedYears) {
                         anchor: 'center',
                         align: 'center',
                         formatter: value => value.toLocaleString(),
-                        font: { size: 11,
+                        font: { size: 10,
                               weight: 'bold'
                               },
                         color: '#374151'
@@ -625,8 +625,8 @@ function updateIncomeRateChart(fixedYears) {
                     label: '소득률',
                     data: rateValues,
                     type: 'line',
-                    borderColor: 'rgba(99, 102, 241, 1)', // 연보라톤
-                    backgroundColor: 'rgba(99, 102, 241, 1)',
+                    borderColor: 'rgba(59, 130, 246, 1)', // 연보라톤
+                    backgroundColor: 'rgba(59, 130, 246, 1)',
                     borderWidth: 3,
                     pointRadius: 4,
                     pointHoverRadius: 6,
@@ -637,7 +637,7 @@ function updateIncomeRateChart(fixedYears) {
                         anchor: 'end',
                         align: 'top',
                         formatter: value => value + '%',
-                        font: { size: 11,
+                        font: { size: 10,
                               weight: 'bold'
                               },
                         color: '#374151'
@@ -667,7 +667,7 @@ function updateIncomeRateChart(fixedYears) {
                 x: {
                     grid: { display: false },
                     ticks: {
-                        font: { size: 13, weight: 'bold' },
+                        font: { size: 11, weight: 'bold' },
                         color: '#1f2937'
                     }
                 },
@@ -944,6 +944,7 @@ document.addEventListener('DOMContentLoaded', function() {
     loadCSVFromGitHub();
 
 });
+
 
 
 

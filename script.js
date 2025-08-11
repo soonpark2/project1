@@ -302,7 +302,7 @@ function updateTable() {
     
     // 총수입 박스
     const totalRevenue = itemValueMap['총수입'] || 0;
-    html += `<tr style="background: #f3f4f6;"><td colspan="2" style="text-align: center; font-weight: bold; padding: 8px;">총수입 ₩${totalRevenue.toLocaleString()}</td></tr>`;
+    html += `<tr class="summary-row"><td colspan="2">총수입 ₩${totalRevenue.toLocaleString()}</td></tr>`;
     
     const revenueItems = ['주산물가액', '주산물수량', '부산물가액', '수취가격'];
     revenueItems.forEach(itemName => {
@@ -311,9 +311,9 @@ function updateTable() {
             (itemName === '주산물수량' ? value.toLocaleString() : (typeof value === 'number' ? value.toLocaleString() : value)) : '-';
         html += `<tr><td>${itemName}</td><td>${displayValue}</td></tr>`;
     });
-    html += '<tr><td colspan="2" style="border-bottom: 2px solid #d1d5db; padding: 0;"></td></tr>';
+    html += '<tr class="separator-row"><td colspan="2"></td></tr>';
     
-    // 중간재비 박스 - 작목군/작목 조건에 따라 항목 설정
+    // 중간재비 박스
     let allMaterialCostItems = [];
     
     if (currentFilters.cropGroup === '과수') {
@@ -329,7 +329,6 @@ function updateTable() {
             '대농구상각비', '영농시설상각비', '자동차비', '기타비용'
         ];
     } else {
-        // 기본값 또는 기타 작목일 때
         allMaterialCostItems = [
             '종자·종묘비', '보통(무기질)비료비', '부산물(유기질)비료비',
             '농약비', '수도광열비', '기타재료비', '소농구비',
@@ -345,9 +344,8 @@ function updateTable() {
             totalMaterialCost += value;
         }
     });
-    html += `<tr style="background: #f3f4f6;"><td colspan="2" style="text-align: center; font-weight: bold; padding: 8px;">중간재비 ₩${totalMaterialCost.toLocaleString()}</td></tr>`;
+    html += `<tr class="summary-row"><td colspan="2">중간재비 ₩${totalMaterialCost.toLocaleString()}</td></tr>`;
     
-    // 항목별 출력
     allMaterialCostItems.forEach(itemName => {
         const value = itemValueMap[itemName];
         const displayValue = value !== undefined ? value.toLocaleString() : '-';
@@ -356,7 +354,7 @@ function updateTable() {
     
     // 경영비 박스
     const totalCost = itemValueMap['경영비'] || 0;
-    html += `<tr style="background: #f3f4f6;"><td colspan="2" style="text-align: center; font-weight: bold; padding: 8px;">경영비 ₩${totalCost.toLocaleString()}</td></tr>`;
+    html += `<tr class="summary-row"><td colspan="2">경영비 ₩${totalCost.toLocaleString()}</td></tr>`;
     
     const costItems = ['농기계·시설임차료', '토지임차료', '위탁영농비', '고용노동비'];
     costItems.forEach(itemName => {
@@ -365,11 +363,11 @@ function updateTable() {
             (typeof value === 'number' ? value.toLocaleString() : value) : '-';
         html += `<tr><td>${itemName}</td><td>${displayValue}</td></tr>`;
     });
-    html += '<tr><td colspan="2" style="border-bottom: 2px solid #d1d5db; padding: 0;"></td></tr>';
+    html += '<tr class="separator-row"><td colspan="2"></td></tr>';
     
     // 생산비 박스
     const totalProductionCost = itemValueMap['생산비'] || 0;
-    html += `<tr style="background: #f3f4f6;"><td colspan="2" style="text-align: center; font-weight: bold; padding: 8px;">생산비 ₩${totalProductionCost.toLocaleString()}</td></tr>`;
+    html += `<tr class="summary-row"><td colspan="2">생산비 ₩${totalProductionCost.toLocaleString()}</td></tr>`;
     
     const productionItems = ['자가노동비', '유동자본용역비', '고정자본용역비', '토지자본용역비'];
     productionItems.forEach(itemName => {
@@ -381,6 +379,7 @@ function updateTable() {
     
     tableBody.innerHTML = html || '<tr><td colspan="2">데이터가 없습니다.</td></tr>';
 }
+
 
 function updateCharts() {
     const fixedYears = ['2019', '2020', '2021', '2022', '2023'];
@@ -945,6 +944,7 @@ document.addEventListener('DOMContentLoaded', function() {
     loadCSVFromGitHub();
 
 });
+
 
 
 

@@ -102,7 +102,7 @@ body {
     grid-row: 1 / 4;
     background: var(--bg-white);
     border-right: 1px solid var(--border-color);
-    padding: 10px;
+    padding: 5px;
     overflow-y: auto;
 }
 
@@ -363,6 +363,7 @@ tr:hover {
         max-height: 100px;
     }
 }
+
 
 
 

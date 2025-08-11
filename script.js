@@ -545,9 +545,9 @@ function updateManagementCostChart(fixedYears) {
             layout: {
                 padding: {
                     top: 0,
-                    right: 30,
+                    right: 25,
                     bottom: 0,
-                    left: 30
+                    left: 25
                 }
             },
             responsive: true,
@@ -665,9 +665,9 @@ function updateIncomeRateChart(fixedYears) {
             layout: {
                 padding: {
                     top: 0,
-                    right: 30,
+                    right: 5,
                     bottom: 0,
-                    left: 30
+                    left: 5
                 }
             },
             responsive: true,
@@ -968,6 +968,7 @@ document.addEventListener('DOMContentLoaded', function() {
     loadCSVFromGitHub();
 
 });
+
 
 
 

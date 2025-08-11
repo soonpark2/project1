@@ -1,7 +1,31 @@
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+        *
+       .header-right {
+           display: flex;
+           gap: 10px;
+       }
+       
+       .tab-btn {
+           background-color: #6B1E6D;
+           color: white;
+           border: none;
+           padding: 6px 12px;
+           border-radius: 6px;
+           cursor: pointer;
+           font-size: 14px;
+       }
+       
+       .tab-btn.active {
+           background-color: #9b3a9b; /* 활성화 색상 */
+       }
+       
+       .tab-btn:hover {
+           background-color: #8b2e8b;
+       }
+
+       {
+              box-sizing: border-box;
+              margin: 0;
+              padding: 0;
         }
 
         body {
@@ -397,3 +421,4 @@
                 max-height: 100px;
             }
         }
+

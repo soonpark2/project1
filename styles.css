@@ -338,7 +338,7 @@ tr:hover {
     .income-analysis-section {
         grid-column: 3 / 4;
         grid-row: 1 / 4;
-        overflow: hidden; /* 추가 */
+        overflow: auto; /* 추가 */
         display: flex; /* 추가 */
         flex-direction: column; /* 추가 */
     }
@@ -389,4 +389,5 @@ tr:hover {
         max-height: 100px;
     }
 }
+
 

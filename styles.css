@@ -332,22 +332,31 @@
             border-radius: 4px;
             margin: 10px;
         }
+
       #detailTableBody td {
-          font-size: 10px;  /* 원하는 크기로 조절 */
-          padding: 6px 8px;
-          color: #1f2937;
+          font-size: 15px;
+          color: #2d3748;
+          padding: 10px 12px;
+          border-bottom: 1px solid #e2e8f0;
+          vertical-align: middle;
       }
       
       #detailTableBody tr.summary-row td {
-          background-color: #f3f4f6;
-          font-weight: bold;
+          background-color: #e0e7ff; /* 은은한 연한 파랑 */
+          font-weight: 600;
+          font-size: 16px;
           text-align: center;
-          padding: 8px 8px;
+          border-bottom: 3px solid #c3dafe;
       }
       
       #detailTableBody tr.separator-row td {
-          border-bottom: 2px solid #d1d5db;
+          border-bottom: 3px solid #cbd5e1;
           padding: 0;
+      }
+      
+      #detailTableBody tr:hover {
+          background-color: #ebf8ff;
+          cursor: default;
       }
 
         /* 반응형 디자인 */
@@ -436,6 +445,7 @@
                 max-height: 100px;
             }
         }
+
 
 
 

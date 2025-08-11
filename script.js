@@ -726,7 +726,7 @@ function updateSelfLaborChart() {
             labels: ['남성', '여성'],
             datasets: [{
                 data: [maleLabor, femaleLabor],
-                backgroundColor: ['#87CEEB', '#DDA0DD'], // 하늘색, 연보라색
+                backgroundColor: ['#1E88E5', '#4DD0E1'], // 하늘색, 연보라색
                 borderWidth: 2,
                 borderColor: '#ffffff'
             }]
@@ -768,14 +768,13 @@ function updateHiredLaborChart() {
     
     const ctx = document.getElementById('hiredLaborChart').getContext('2d');
     if (charts['hiredLaborChart']) charts['hiredLaborChart'].destroy();
-
     charts['hiredLaborChart'] = new Chart(ctx, {
         type: 'doughnut',
         data: {
             labels: ['남성', '여성'],
             datasets: [{
                 data: [maleLabor, femaleLabor],
-                backgroundColor: ['#06b6d4', '#8b5cf6'],
+                backgroundColor: ['#1E88E5', '#4DD0E1'], // 미디엄 블루, 청록색
                 borderWidth: 2,
                 borderColor: '#ffffff'
             }]
@@ -785,10 +784,18 @@ function updateHiredLaborChart() {
             maintainAspectRatio: false,
             plugins: {
                 legend: {
-                    position: 'bottom',
-                    labels: {
-                        boxWidth: 12,
-                        font: { size: 10 }
+                    display: false // 범례 삭제
+                },
+                datalabels: {
+                    display: true,
+                    formatter: function(value, context) {
+                        const label = context.chart.data.labels[context.dataIndex];
+                        return label + ' ' + value.toFixed(1); // "남성 1.2" 형태로 표시
+                    },
+                    color: '#000000',
+                    font: {
+                        size: 12,
+                        weight: 'bold'
                     }
                 },
                 tooltip: {
@@ -975,6 +982,7 @@ document.addEventListener('DOMContentLoaded', function() {
     loadCSVFromGitHub();
 
 });
+
 
 
 

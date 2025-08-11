@@ -445,7 +445,7 @@ function updateTotalIncomeChart(fixedYears) {
                     anchor: 'end',
                     align: 'top',
                     formatter: value => value.toLocaleString(),
-                    font: { size: 10,
+                    font: { size: 11,
                           weight: 'bold'
                           },
                     color: '#374151'
@@ -456,9 +456,9 @@ function updateTotalIncomeChart(fixedYears) {
             layout: {
                 padding: {
                     top: 10,
-                    right: 50,
+                    right: 40,
                     bottom: 10,
-                    left: 50
+                    left: 30
                 }
             },
             responsive: true,
@@ -952,6 +952,7 @@ document.addEventListener('DOMContentLoaded', function() {
     loadCSVFromGitHub();
 
 });
+
 
 
 

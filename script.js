@@ -456,7 +456,7 @@ function updateTotalIncomeChart(fixedYears) {
             layout: {
                 padding: {
                     top: 10,
-                    right: 40,
+                    right: 30,
                     bottom: 10,
                     left: 30
                 }
@@ -534,7 +534,7 @@ function updateManagementCostChart(fixedYears) {
                     align: 'top',
                     formatter: value => value.toLocaleString(),
                     font: { 
-                        size: 10,
+                        size: 11,
                         weight: 'bold'
                     },
                     color: '#374151'
@@ -542,6 +542,14 @@ function updateManagementCostChart(fixedYears) {
             }]
         },
         options: {
+            layout: {
+                padding: {
+                    top: 10,
+                    right: 30,
+                    bottom: 10,
+                    left: 30
+                }
+            },
             responsive: true,
             maintainAspectRatio: false,
             plugins: { 
@@ -623,7 +631,7 @@ function updateIncomeRateChart(fixedYears) {
                         anchor: 'center',
                         align: 'center',
                         formatter: value => value.toLocaleString(),
-                        font: { size: 10,
+                        font: { size: 11,
                               weight: 'bold'
                               },
                         color: '#374151'
@@ -645,7 +653,7 @@ function updateIncomeRateChart(fixedYears) {
                         anchor: 'end',
                         align: 'top',
                         formatter: value => value + '%',
-                        font: { size: 10,
+                        font: { size: 11,
                               weight: 'bold'
                               },
                         color: '#374151'
@@ -654,6 +662,14 @@ function updateIncomeRateChart(fixedYears) {
             ]
         },
         options: {
+            layout: {
+                padding: {
+                    top: 10,
+                    right: 30,
+                    bottom: 10,
+                    left: 30
+                }
+            },
             responsive: true,
             maintainAspectRatio: false,
             plugins: { 
@@ -952,6 +968,7 @@ document.addEventListener('DOMContentLoaded', function() {
     loadCSVFromGitHub();
 
 });
+
 
 
 

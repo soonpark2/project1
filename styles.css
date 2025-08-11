@@ -221,6 +221,8 @@ body {
     border-radius: 6px;
     padding: 8px 10px;
     text-align: center;
+    font-size: var(--font-base);
+    font-weight: bold;
 }
 
 .main-summary-value {
@@ -387,6 +389,7 @@ tr:hover {
         max-height: 100px;
     }
 }
+
 
 
 

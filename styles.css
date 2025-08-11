@@ -1,60 +1,56 @@
-        *
+       * {
+           box-sizing: border-box;
+           margin: 0;
+           padding: 0;
+       }
+       
+       body {
+           font-family: 'Noto Sans KR', sans-serif;
+       }
+       
+       /* 헤더 */
+       .header {
+           display: flex;
+           justify-content: space-between;
+           align-items: center;
+           background-color: #6B1E6D;
+           color: white;
+           padding: 10px 20px;
+       }
+       
+       .header-left {
+           font-size: 20px;
+           font-weight: bold;
+       }
+       
        .header-right {
            display: flex;
            gap: 10px;
        }
        
+       /* 탭 버튼 */
        .tab-btn {
-           background-color: #6B1E6D;
-           color: white;
+           background: white;
            border: none;
-           padding: 6px 12px;
+           padding: 8px 14px;
            border-radius: 6px;
            cursor: pointer;
-           font-size: 14px;
+           color: #6B1E6D;
+           font-weight: bold;
        }
        
        .tab-btn.active {
-           background-color: #9b3a9b; /* 활성화 색상 */
+           background: #ffdfef;
        }
        
-       .tab-btn:hover {
-           background-color: #8b2e8b;
+       /* 탭 콘텐츠 */
+       .tab-content {
+           display: none;
        }
-
-       {
-              box-sizing: border-box;
-              margin: 0;
-              padding: 0;
-        }
-
-        body {
-            font-family: 'Malgun Gothic', 'Segoe UI', sans-serif;
-            background: #f8f9fa;
-            font-size: 11px;
-            overflow: auto;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
-            color: white;
-            padding: 6px 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 12px;
-            border-bottom: 2px solid #1e40af;
-            height: 35px;
-        }
-
-        .header-left {
-            font-weight: bold;
-        }
-
-        .header-right {
-            display: flex;
-            gap: 20px;
-        }
+       
+       .tab-content.active {
+           display: block;
+       }
 
         .container {
             display: grid;
@@ -421,4 +417,5 @@
                 max-height: 100px;
             }
         }
+
 

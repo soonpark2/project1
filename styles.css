@@ -234,8 +234,8 @@
             text-align: center;
         }
 
-        .main-summary-value {
-            font-size: 14px;
+        #totalIncome, #totalRate {
+            font-size: 12px;
             font-weight: bold;
             color: #000000;
             margin: 4px 0;
@@ -419,6 +419,7 @@
                 max-height: 100px;
             }
         }
+
 
 
 

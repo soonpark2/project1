@@ -283,9 +283,9 @@ tr:hover {
 
 /* 동적으로 추가되는 테이블 스타일 */
 #detailTableBody td {
-    font-size: 12px;
+    font-size: 11px;
     color: #2d3748;
-    padding: 6px 8px;
+    padding: 4px 6px;
     border-bottom: 1px solid #e2e8f0;
     vertical-align: middle;
 }
@@ -293,14 +293,14 @@ tr:hover {
 #detailTableBody tr.summary-row td {
     background-color: #e0e7ff;
     font-weight: 600;
-    font-size: 12px;
+    font-size: 11px;
     text-align: center;
-    border-bottom: 2px solid #c3dafe;
+    border-bottom: 1px solid #c3dafe;
 }
 
 #detailTableBody tr.separator-row td {
-    border-bottom: 2px solid #cbd5e1;
-    padding: 2px 0;
+    border-bottom: 1px solid #cbd5e1;
+    padding: 1px 0;
 }
 
 #detailTableBody tr:hover {
@@ -363,6 +363,7 @@ tr:hover {
         max-height: 100px;
     }
 }
+
 
 
 

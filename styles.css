@@ -219,6 +219,13 @@ body {
     text-align: center;
 }
 
+.main-summary-value {
+    font-size: var(--font-base);
+    font-weight: bold;
+    color: #000000;
+    margin: 4px 0;
+    }
+
 #totalIncome, #totalRate {
     font-size: var(--font-base);
     font-weight: bold;
@@ -368,6 +375,7 @@ tr:hover {
         max-height: 100px;
     }
 }
+
 
 
 

@@ -92,8 +92,8 @@ body {
     grid-template-rows: 1fr 1fr 1fr 1fr;
     gap: 10px;
     padding: 0px;
-    min-height: 100vh;
-    overflow: auto;
+    height: calc(100vh - 35px); /* min-height 대신 height로 변경 */
+    overflow: hidden; /* auto 대신 hidden으로 변경 */
 }
 
 /* 사이드바 */
@@ -383,6 +383,7 @@ tr:hover {
         max-height: 100px;
     }
 }
+
 
 
 

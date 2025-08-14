@@ -1,3 +1,10 @@
+/* 1400px 이상에서만 차트 카드 간격 제거 */
+@media (min-width: 1400px) {
+    .chart-card {
+        margin-bottom: 0;
+    }
+}
+
 /* CSS 변수로 중복 제거 */
 :root {
     --primary-blue: #3b82f6;
@@ -11,11 +18,11 @@
     --bg-gray-light: #f9fafb;
     --bg-gray: #f3f4f6;
     --shadow: 0 1px 2px rgba(0,0,0,0.1);
-    --sidebar-width: 200px;
+    --sidebar-width: 240px; /* 사이드바 폭 증가 */
     --header-height: 35px;
-    --font-xs: 10px;
-    --font-sm: 11px;
-    --font-base: 12px;
+    --font-xs: 18px; /* 폰트 크기 증가 */
+    --font-sm: 15px;
+    --font-base: 24px;
 }
 
 * {
@@ -26,23 +33,29 @@
 
 body {
     font-family: 'Noto Sans KR', sans-serif;
+    margin: 0;
+    padding: 0;
     width: 100%;
-    overflow-x: hidden;
+    height: 100vh;
+    overflow: hidden; /* 페이지 전체 스크롤 방지 */
 }
 
 /* 헤더 */
 .header {
     background: var(--primary-blue-gradient);
     color: white;
-    padding: 6px 8px;
+    padding: 8px 12px; /* 패딩 증가 */
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-size: var(--font-base);
     border-bottom: 2px solid var(--primary-blue-dark);
     height: var(--header-height);
-    position: relative;
-    z-index: 100;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
 }
 
 .header-left {
@@ -52,6 +65,11 @@ body {
 .header-right {
     display: flex;
     gap: 20px;
+}
+
+.logo{
+    height: 30px;
+    width: auto;
 }
 
 /* 공통 버튼 스타일 */
@@ -84,85 +102,406 @@ body {
 .tab-content {
     padding: 20px;
     display: none;
-    width: 100%;
-    overflow: hidden;
 }
 
 .tab-content.active {
     display: block;
 }
 
-/* 컨테이너 - 데스크톱 기본 */
+/* 기본 컨테이너 */
 .container {
-    display: grid;
-    grid-template-columns: var(--sidebar-width) 1fr 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr 1fr;
-    gap: 10px;
-    padding: 0px;
-    height: calc(100vh - 35px);
-    overflow: hidden;
+    box-sizing: border-box;
     width: 100%;
+    height: 100vh;
+    padding-top:  var(--header-height); /* 헤더 높이 + 10px 간격 */
+    position: relative;
+    overflow: hidden;
 }
 
-/* 사이드바 */
+/* === 반응형 레이아웃 정리: 작은화면은 flex, 큰화면은 grid === */
+
+/* 기본(모바일 우선): flex 세로 스택 */
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow: auto;
+    grid-template-columns: none;
+    grid-template-rows: none;
+    padding: 10px;
+    padding-top: calc(var(--header-height) + 10px); /* 헤더 아래 10px 간격 */
+}
+
+/* 모바일용 토글 버튼 - 화면 최상단에 고정 위치 */
+.mobile-toggle-btn {
+    display: none;
+    position: fixed;
+    top: calc(35px + 10px); /* 헤더 바로 아래 + 10px 간격 */
+    left: 10px;
+    background: var(--primary-blue);
+    color: white;
+    border: 2px solid white;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    z-index: 9999;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    transition: all 0.2s ease;
+}
+
+.mobile-toggle-btn:hover {
+    background: var(--primary-blue-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+.mobile-toggle-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+/* 작은화면: 세로 쌓기 (≤1399px) */
+@media screen and (max-width: 1399px) {
+    .container {
+        padding-top: calc(var(--header-height) + 10px); /* 헤더 아래 10px 간격 */
+    }
+
+    .mobile-toggle-btn {
+        display: block !important;
+    }
+
+    .sidebar {
+        width: 100%;
+        border-bottom: 1px solid var(--border-color);
+        border-right: none;
+        max-height: 45px; /* 기본 접힌 높이 */
+        overflow: hidden;
+        transition: max-height 0.4s ease-in-out;
+        margin-top: 5px;
+        background: var(--bg-white);
+        border-radius: 8px;
+        box-shadow: var(--shadow);
+    }
+
+    .sidebar.expanded {
+        max-height: 400px !important; /* 충분한 높이 확보 */
+        overflow-y: auto !important;
+    }
+
+    .sidebar.collapsed,
+    .sidebar:not(.expanded) {
+        max-height: 45px !important;
+        overflow: hidden !important;
+    }
+    
+    .sidebar.collapsed .filter-section,
+    .sidebar:not(.expanded) .filter-section {
+        display: none !important;
+    }
+
+    .sidebar.expanded .filter-section {
+        display: block !important;
+        animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .income-analysis-section {
+        width: 100%;
+        height: auto;
+        position: static;
+        margin: 10px 0 15px 0;
+        grid-column: unset;
+        grid-row: unset;
+        flex: 1 1 auto;
+        min-height: 450px;
+        max-width: 100%;
+        order: 0;
+    }
+}
+
+/* 큰화면: 그리드 (≥1400px) - 화면 꽉차게 수정 */
+@media screen and (min-width: 1400px) {
+    .container {
+        display: grid;
+        grid-template-columns: var(--sidebar-width) 1.5fr 1.5fr 1fr 1fr; /* 비율 조정 */
+        grid-template-rows: 1fr 1fr 1fr; /* 균등 분할 */
+        gap: 4px; /* 간격 증가 */
+        overflow: hidden;
+        padding: 4px; /* 패딩 증가 */
+        width: 100%;
+        height: calc(100vh - var(--header-height) - 10px); /* 헤더 높이와 10px 간격 고려 */
+        margin: 0;
+        padding-top: calc(var(--header-height) + 10px); /* 헤더 아래 10px 간격 */
+    }
+
+    .mobile-toggle-btn {
+        display: none !important;
+    }
+
+    /* grid로 전환될 때 모든 직계 자식의 flex 속성 초기화 */
+    .container > * {
+        flex: unset;
+        width: 100%;
+        height: 100%;
+        min-width: 0;
+        margin: 0;
+    }
+
+    .sidebar {
+        grid-column: 1 / 2;
+        grid-row: 1 / 4;
+        width: 100%;
+        height: 100%;
+        max-height: none;
+        border-right: 1px solid var(--border-color);
+        overflow-y: auto;
+    }
+
+    .income-analysis-section {
+        grid-column: 3 / 4;
+        grid-row: 1 / 4;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+        flex: none;
+        margin: 0;
+        min-height: 0;
+        justify-self: stretch;
+        align-self: stretch;
+    }
+
+    /* 개별 차트들도 100% 크기 활용 */
+    .total-income-chart { 
+        grid-column: 2 / 3; 
+        grid-row: 1 / 2; 
+        width: 100%;
+        height: 100%;
+    }
+    .management-cost-chart { 
+        grid-column: 2 / 3; 
+        grid-row: 2 / 3; 
+        width: 100%;
+        height: 100%;
+    }
+    .income-rate-chart { 
+        grid-column: 2 / 3; 
+        grid-row: 3 / 4; 
+        width: 100%;
+        height: 100%;
+    }
+    .self-labor-chart { 
+        grid-column: 4 / 5; 
+        grid-row: 1 / 2; 
+        width: 100%;
+        height: 100%;
+    }
+    .hired-labor-chart { 
+        grid-column: 5 / 6; 
+        grid-row: 1 / 2; 
+        width: 100%;
+        height: 100%;
+    }
+    .annual-labor-chart { 
+        grid-column: 4 / 6; 
+        grid-row: 2 / 3; 
+        width: 100%;
+        height: 100%;
+    }
+    .income-chart { 
+        grid-column: 4 / 6; 
+        grid-row: 3 / 4;
+        width: 100%;
+        height: 100%;
+    }
+}
+
+/* 사이드바 기본 스타일 */
 .sidebar {
-    grid-column: 1 / 2;
-    grid-row: 1 / 4;
     background: var(--bg-white);
     border-right: 1px solid var(--border-color);
-    padding: 5px;
-    overflow-y: auto;
+    padding: 8px;
     position: relative;
+    overflow-y: auto;
+}
+
+/* 1400px 미만: 세로 쌓기용 사이드바 */
+@media (max-width: 1399px) {
+    .sidebar {
+        width: 100% !important;
+        border-bottom: 1px solid var(--border-color) !important;
+        border-right: none !important;
+        max-height: 45px !important;
+        overflow: hidden !important;
+        transition: max-height 0.4s ease-in-out !important;
+        background: var(--bg-white) !important;
+        border-radius: 8px !important;
+        box-shadow: var(--shadow) !important;
+        position: relative !important;
+        z-index: 1 !important;
+    }
+    
+    .sidebar.expanded {
+        max-height: 80vh !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        position: absolute !important;
+        top: 60px !important;
+        left: 10px !important;
+        right: 10px !important;
+        width: calc(100% - 20px) !important;
+        z-index: 9998 !important;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3) !important;
+        border: 2px solid var(--primary-blue) !important;
+    }
+    
+    .sidebar.collapsed,
+    .sidebar:not(.expanded) {
+        max-height: 45px !important;
+        overflow: hidden !important;
+        position: relative !important;
+        z-index: 1 !important;
+    }
+    
+    .sidebar.collapsed .filter-section,
+    .sidebar:not(.expanded) .filter-section {
+        display: none !important;
+    }
+
+    .sidebar.expanded .filter-section {
+        display: block !important;
+        animation: fadeIn 0.3s ease-in-out !important;
+    }
+}
+
+/* 페이드인 애니메이션 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 1400px 이상: 그리드용 사이드바 */
+@media (min-width: 1400px) {
+    .sidebar {
+        grid-column: 1 / 2;
+        grid-row: 1 / 4; /* 전체 높이 사용 */
+        width: 100%;
+        height: 100%;
+        max-height: none !important;
+        border-bottom: none;
+        border-right: 1px solid var(--border-color);
+        overflow-y: auto !important;
+    }
+    
+    .sidebar.collapsed .filter-section,
+    .sidebar:not(.expanded) .filter-section {
+        display: block !important;
+    }
 }
 
 /* 공통 차트 카드 스타일 */
 .chart-card {
     background: var(--bg-white);
     border: 1px solid var(--border-color);
-    border-radius: 6px;
-    padding: 10px;
+    border-radius: 4px;
+    padding: 4px; /* 1400px에서 패딩 줄임 */
     box-shadow: var(--shadow);
+    margin-bottom: 10px;
     width: 100%;
-    min-height: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 1400px 이상에서 차트카드 최적화 */
+@media (min-width: 1400px) {
+    .chart-card {
+        margin-bottom: 0;
+        padding: 4px; /* 패딩 더 줄임 */
+    }
 }
 
 .chart-title {
-    font-size: 13px;
+    font-size: 16px; /* 제목 크기 약간 줄임 */
     font-weight: bold;
+    padding: 2px;
     color: var(--text-dark);
-    margin-bottom: 10px;
+    margin-bottom: 0px;
     text-align: center;
+    flex-shrink: 0;
 }
 
 .chart-container {
     position: relative;
-    height: 220px;
-    width: 100%;
+    flex: 1; /* 남은 공간 모두 사용 */
+    min-height: 0; /* flex 아이템이 축소될 수 있도록 */
 }
 
-/* 개별 그리드 위치 */
+/* 1400px 미만에서만 고정 높이 */
+@media (max-width: 1399px) {
+    .chart-container {
+        height: 240px;
+        flex: none;
+    }
+}
+
+/* income-analysis-section 완전 재설정 */
 .income-analysis-section {
-    grid-column: 3 / 4;
-    grid-row: 1 / 4;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: auto !important;
+    box-sizing: border-box !important;
 }
 
-.total-income-chart { grid-column: 2 / 3; grid-row: 1 / 2; }
-.management-cost-chart { grid-column: 2 / 3; grid-row: 2 / 3; }
-.income-rate-chart { grid-column: 2 / 3; grid-row: 3 / 4; }
-.self-labor-chart { grid-column: 4 / 5; grid-row: 1 / 2; }
-.hired-labor-chart { grid-column: 5 / 6; grid-row: 1 / 2; }
-.annual-labor-chart { grid-column: 4 / 6; grid-row: 2 / 3; }
-.income-chart { 
-    grid-column: 4 / 6; 
-    grid-row: 3 / 4;
+/* 1399px 이하: 세로 쌓기 */
+@media screen and (max-width: 1399px) {
+    .income-analysis-section {
+        width: 100% !important;
+        height: auto !important;
+        position: static !important;
+        transform: none !important;
+        margin: 0 0 15px 0 !important;
+        left: auto !important;
+        top: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        float: none !important;
+        grid-column: unset !important;
+        grid-row: unset !important;
+        flex: 1 1 auto !important;
+        flex-grow: 1 !important;
+        flex-shrink: 1 !important;
+        flex-basis: auto !important;
+        min-height: 450px !important;
+        max-width: 100% !important;
+        order: 0 !important;
+    }
 }
 
-.income-chart .chart-container {
-    height: 180px;
+/* 1400px 이상: 그리드 레이아웃 */
+@media screen and (min-width: 1400px) {
+    .income-analysis-section {
+        grid-column: 3 / 4 !important;
+        grid-row: 1 / 4 !important;
+        width: 100% !important;
+        height: 100% !important;
+        flex: none !important;
+        flex-grow: 0 !important;
+        flex-shrink: 0 !important;
+        flex-basis: auto !important;
+        margin: 0 !important;
+        min-height: 0 !important;
+        max-width: none !important;
+        position: static !important;
+        order: unset !important;
+    }
 }
 
 /* 필터 섹션 */
@@ -173,7 +512,7 @@ body {
 .filter-title {
     background: var(--primary-blue);
     color: white;
-    padding: 6px 10px;
+    padding: 8px 12px;
     font-weight: bold;
     font-size: var(--font-sm);
     border-radius: 3px 3px 0 0;
@@ -183,14 +522,14 @@ body {
     border: 1px solid var(--border-color);
     border-top: none;
     background: var(--bg-white);
-    max-height: 120px;
+    max-height: 140px;
     overflow-y: auto;
 }
 
 /* 공통 필터 아이템 스타일 */
 .filter-item,
 .year-btn {
-    padding: 6px 10px;
+    padding: 8px 12px;
     cursor: pointer;
     border-bottom: 1px solid var(--bg-gray);
     font-size: var(--font-sm);
@@ -223,32 +562,31 @@ body {
 .income-analysis-layout {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px; /* 간격 줄임 */
     height: 100%;
-    overflow: hidden;
-    min-width: 0;
+    overflow: auto;
 }
 
 .main-summary-box {
     background: linear-gradient(135deg, var(--active-bg), #bfdbfe);
     border: 2px solid var(--primary-blue);
     border-radius: 6px;
-    padding: 8px 10px;
+    padding: 10px 12px; /* 패딩 약간 줄임 */
     text-align: center;
-    font-size: 13px;
+    font-size: 18px; 
     font-weight: bold;
     flex-shrink: 0;
 }
 
 .main-summary-value {
-    font-size: 13px;
+    font-size: 18px;
     font-weight: bold;
     color: #000000;
     margin: 4px 0;
 }
 
 #totalIncome, #totalRate {
-    font-size: 13px;
+    font-size: 18px;
     font-weight: bold;
     color: #000000;
     margin: 4px 0;
@@ -268,15 +606,12 @@ table {
     width: 100%;
     border-collapse: collapse;
     font-size: var(--font-xs);
-    min-width: 0;
 }
 
 td {
-    padding: 5px 6px;
+    padding: 4px 6px; /* 패딩 줄임 */
     border-bottom: 1px solid var(--bg-gray);
     color: var(--text-dark);
-    word-wrap: break-word;
-    overflow-wrap: break-word;
 }
 
 tr:hover {
@@ -291,38 +626,26 @@ tr:hover {
     color: var(--text-gray);
 }
 
-/* JavaScript로 제어되는 요소들 */
+/* 기존 토글 버튼 숨김 */
 .toggle-btn {
-    display: none;
-    background: var(--primary-blue);
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    margin: 8px;
-    border-radius: 3px;
-    cursor: pointer;
-    font-size: var(--font-xs);
-    position: absolute;
-    top: 0;
-    right: 0;
-    z-index: 10;
+    display: none !important;
+    visibility: hidden !important;
 }
 
-.sidebar.collapsed {
-    height: auto;
-    max-height: 50px;
-    overflow: hidden;
-}
-
-.sidebar.collapsed .filter-section {
-    display: none;
+/* 데스크탑(≥1400px): 모바일 토글 숨김 */
+@media screen and (min-width: 1400px) {
+    .mobile-toggle-btn {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+    }
 }
 
 /* 동적으로 추가되는 테이블 스타일 */
 #detailTableBody td {
-    font-size: 12px;
+    font-size: 18px; /* 폰트 크기 약간 줄임 */
     color: #2d3748;
-    padding: 4px 6px;
+    padding: 4px 6px; /* 패딩 줄임 */
     border-bottom: 1px solid #e2e8f0;
     vertical-align: middle;
     text-align: left;
@@ -335,335 +658,17 @@ tr:hover {
 #detailTableBody tr.summary-row td {
     background-color: #e0e7ff;
     font-weight: 600;
-    font-size: 12px;
+    font-size: 19px;
     text-align: center;
     border-bottom: 2px solid #c3dafe;
 }
 
 #detailTableBody tr.separator-row td {
-    border-bottom: 1px solid #cbd5e1;
+    border-bottom: 2px solid #cbd5e1;
     padding: 1px 0;
 }
 
 #detailTableBody tr:hover {
     background-color: #ebf8ff;
     cursor: default;
-}
-
-/* 태블릿 반응형 (1400px 이하) */
-@media (max-width: 1400px) {
-    .container {
-        grid-template-columns: var(--sidebar-width) 1fr 1fr;
-        grid-template-rows: auto auto auto auto auto auto;
-        gap: 8px;
-        height: calc(100vh - 35px);
-    }
-    
-    .income-analysis-section {
-        grid-column: 3 / 4;
-        grid-row: 1 / 4;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-    }
-    
-    .total-income-chart { grid-column: 2 / 3; grid-row: 1 / 2; }
-    .management-cost-chart { grid-column: 2 / 3; grid-row: 2 / 3; }
-    .income-rate-chart { grid-column: 2 / 3; grid-row: 3 / 4; }
-    .self-labor-chart { grid-column: 3 / 4; grid-row: 4 / 5; }
-    .hired-labor-chart { grid-column: 2 / 3; grid-row: 4 / 5; }
-    .annual-labor-chart { grid-column: 2 / 4; grid-row: 5 / 6; }
-    .income-chart { 
-        grid-column: 2 / 4; 
-        grid-row: 6 / 7;
-    }
-    
-    .chart-container {
-        height: 180px;
-    }
-}
-
-/* 모바일 반응형 (768px 이하) */
-@media (max-width: 768px) {
-    /* 헤더 조정 */
-    .header {
-        padding: 4px 8px;
-        font-size: 11px;
-        height: 32px;
-    }
-    
-    .header-right {
-        gap: 10px;
-    }
-    
-    .tab-btn {
-        padding: 4px 8px;
-        font-size: 10px;
-    }
-    
-    /* 탭 콘텐츠 조정 */
-    .tab-content {
-        padding: 10px;
-        height: calc(100vh - 32px);
-        overflow-y: auto;
-        overflow-x: hidden;
-    }
-    
-    /* 컨테이너를 세로 배치로 변경 */
-    .container {
-        display: flex;
-        flex-direction: column;
-        height: auto;
-        min-height: calc(100vh - 32px);
-        gap: 10px;
-        padding: 0;
-        overflow: visible;
-    }
-
-    /* 사이드바 모바일 스타일 */
-    .sidebar {
-        width: 100%;
-        height: auto;
-        border-right: none;
-        border-bottom: 1px solid var(--border-color);
-        max-height: 50px;
-        overflow: hidden;
-        transition: max-height 0.3s ease;
-        position: relative;
-        order: -1; /* 맨 위로 배치 */
-        background: var(--bg-white);
-    }
-
-    /* 모바일에서 사이드바가 확장되었을 때 */
-    .sidebar.expanded {
-        max-height: 500px !important;
-        overflow-y: auto !important;
-    }
-
-    /* 모바일 토글 버튼 - 항상 표시 */
-    .toggle-btn {
-        display: block !important;
-        position: absolute;
-        top: 8px;
-        right: 8px;
-        padding: 4px 8px;
-        font-size: 9px;
-        margin: 0;
-        z-index: 20;
-        background: var(--primary-blue);
-        color: white;
-        border: none;
-        border-radius: 3px;
-        cursor: pointer;
-    }
-
-    /* 기본 상태에서는 필터 숨김 */
-    .sidebar .filter-section {
-        display: none;
-    }
-
-    /* expanded 클래스가 있을 때만 필터 표시 */
-    .sidebar.expanded .filter-section {
-        display: block !important;
-        margin-top: 25px; /* 토글 버튼 공간 확보 */
-    }
-
-    /* 사이드바 기본 내용 (토글 버튼 영역) */
-    .sidebar::before {
-        content: "필터 메뉴";
-        display: block;
-        padding: 8px 10px;
-        font-weight: bold;
-        font-size: 11px;
-        color: var(--text-dark);
-        border-bottom: 1px solid var(--border-color);
-        background: var(--bg-gray-light);
-    }
-    
-    /* 필터 섹션 모바일 조정 */
-    .filter-title {
-        padding: 4px 8px;
-        font-size: 10px;
-    }
-    
-    .filter-item,
-    .year-btn {
-        padding: 4px 8px;
-        font-size: 10px;
-    }
-    
-    .filter-content {
-        max-height: 80px;
-    }
-
-    /* 차트 카드들을 세로로 배치 */
-    .chart-card {
-        padding: 8px;
-        margin-bottom: 10px;
-        width: 100%;
-        box-sizing: border-box;
-        order: 1;
-    }
-    
-    .chart-title {
-        font-size: 11px;
-        margin-bottom: 6px;
-    }
-
-    .chart-container {
-        height: 200px;
-        width: 100%;
-    }
-    
-    /* 각 차트들의 순서 조정 */
-    .income-analysis-section {
-        order: 2;
-        height: auto;
-        min-height: 300px;
-    }
-    
-    .total-income-chart { order: 3; }
-    .management-cost-chart { order: 4; }
-    .income-rate-chart { order: 5; }
-    .self-labor-chart { order: 6; }
-    .hired-labor-chart { order: 7; }
-    .annual-labor-chart { order: 8; }
-    .income-chart { order: 9; }
-    
-    /* 소득분석표 모바일 조정 */
-    .income-analysis-layout {
-        height: auto;
-        min-height: 300px;
-        overflow: visible;
-    }
-    
-    .main-summary-box {
-        padding: 6px 8px;
-        font-size: 11px;
-        margin-bottom: 8px;
-    }
-    
-    .main-summary-value,
-    #totalIncome, 
-    #totalRate {
-        font-size: 11px;
-    }
-    
-    .table-wrapper {
-        height: 200px;
-        overflow-y: auto;
-        border-radius: 3px;
-    }
-    
-    /* 테이블 모바일 조정 */
-    table {
-        font-size: 9px;
-    }
-    
-    td {
-        padding: 3px 4px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 0;
-    }
-    
-    #detailTableBody td {
-        font-size: 9px;
-        padding: 3px 4px;
-    }
-    
-    #detailTableBody tr.summary-row td {
-        font-size: 10px;
-        font-weight: bold;
-    }
-}
-
-/* 초소형 모바일 (480px 이하) */
-@media (max-width: 480px) {
-    .header {
-        height: 28px;
-        font-size: 10px;
-        padding: 2px 6px;
-    }
-    
-    .tab-btn {
-        padding: 3px 6px;
-        font-size: 9px;
-    }
-    
-    .tab-content {
-        padding: 8px;
-        height: calc(100vh - 28px);
-    }
-    
-    .sidebar {
-        max-height: 45px;
-        padding: 3px;
-    }
-    
-    .sidebar.expanded {
-        max-height: 350px;
-    }
-    
-    .toggle-btn {
-        padding: 2px 6px;
-        font-size: 8px;
-        top: 3px;
-        right: 3px;
-    }
-    
-    .chart-card {
-        padding: 6px;
-        margin-bottom: 8px;
-    }
-    
-    .chart-title {
-        font-size: 10px;
-        margin-bottom: 4px;
-    }
-    
-    .chart-container {
-        height: 180px;
-    }
-    
-    .main-summary-box {
-        padding: 4px 6px;
-        font-size: 10px;
-    }
-    
-    .main-summary-value,
-    #totalIncome, 
-    #totalRate {
-        font-size: 10px;
-        margin: 2px 0;
-    }
-    
-    .table-wrapper {
-        height: 180px;
-    }
-    
-    table {
-        font-size: 8px;
-    }
-    
-    td {
-        padding: 2px 3px;
-    }
-    
-    #detailTableBody td {
-        font-size: 8px;
-        padding: 2px 3px;
-    }
-    
-    .filter-title {
-        padding: 3px 6px;
-        font-size: 9px;
-    }
-    
-    .filter-item,
-    .year-btn {
-        padding: 3px 6px;
-        font-size: 9px;
-    }
 }

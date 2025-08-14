@@ -269,6 +269,7 @@ function updateSummaryTitle() {
     const selectedYear = currentFilters.year || '2023';
     const selectedRegion = currentFilters.region || '전국';
     const selectedCrop = currentFilters.crop || '';
+    const selectedCropGroup = currentFilters.cropGroup || ''; // cropGroupFilter에서 가져온 값
     
     let titleParts = [selectedYear + '년', selectedRegion];
     
@@ -281,11 +282,19 @@ function updateSummaryTitle() {
     const summaryTitle = document.getElementById('summaryTitle');
     summaryTitle.textContent = titleParts.join(' ');
 
-    // 각 차트 제목 업데이트
+    // 각 차트 제목 업데이트 - 지역과 작물 정보 포함
+    const regionText = selectedRegion;
     const cropDetailText = selectedCrop || '전체';
-    document.getElementById('totalIncomeTitle').textContent = `${cropDetailText} 총수입`;
-    document.getElementById('managementCostTitle').textContent = `${cropDetailText} 경영비`;
-    document.getElementById('incomeRateTitle').textContent = `${cropDetailText} 소득 및 소득률`;
+    const cropText = selectedCropGroup || '전체작물'; // cropGroupFilter의 값 사용
+    
+    // 기존 차트들
+    document.getElementById('totalIncomeTitle').textContent = `${regionText} ${cropDetailText} 총수입`;
+    document.getElementById('managementCostTitle').textContent = `${regionText} ${cropDetailText} 경영비`;
+    document.getElementById('incomeRateTitle').textContent = `${regionText} ${cropDetailText} 소득 및 소득률`;
+    document.querySelector('.self-labor-chart .chart-title').textContent = `${selectedYear}년 ${regionText} ${cropDetailText} 자가노동시간`;
+    document.querySelector('.hired-labor-chart .chart-title').textContent = `${selectedYear}년 ${regionText} ${cropDetailText} 고용노동시간`;
+    document.querySelector('.annual-labor-chart .chart-title').textContent = `${regionText} ${cropDetailText} 노동시간`;
+    document.querySelector('.income-chart .chart-title').textContent = `${selectedYear}년 ${regionText} ${cropText} 소득`;
 }
 
 function updateTable() {
@@ -445,7 +454,7 @@ function updateTotalIncomeChart(fixedYears) {
                     anchor: 'end',
                     align: 'top',
                     formatter: value => value.toLocaleString(),
-                    font: { size: 11,
+                    font: { size: 16,
                           weight: 'bold'
                           },
                     color: '#374151'
@@ -456,9 +465,9 @@ function updateTotalIncomeChart(fixedYears) {
             layout: {
                 padding: {
                     top: 0,
-                    right: 27,
+                    right: 45,
                     bottom: 0,
-                    left: 27
+                    left: 45
                 }
             },
             responsive: true,
@@ -467,6 +476,14 @@ function updateTotalIncomeChart(fixedYears) {
                 legend: { display: false },
                 datalabels: { display: true },
                 tooltip: {
+                    titleFont: {
+                        size: 18,
+                        weight: 'bold'
+                    },
+                    bodyFont: {
+                        size: 18,
+                        weight: 'bold'
+                    },
                     callbacks: {
                         label: function(context) {
                             return '₩' + context.parsed.y.toLocaleString();
@@ -478,7 +495,7 @@ function updateTotalIncomeChart(fixedYears) {
                 x: {
                     grid: { display: false },
                     ticks: {
-                        font: { size: 11, weight: 'bold' },
+                        font: { size: 14, weight: 'bold' },
                         color: '#1f2937'
                     }
                 },
@@ -534,7 +551,7 @@ function updateManagementCostChart(fixedYears) {
                     align: 'top',
                     formatter: value => value.toLocaleString(),
                     font: { 
-                        size: 11,
+                        size: 16,
                         weight: 'bold'
                     },
                     color: '#374151'
@@ -545,9 +562,9 @@ function updateManagementCostChart(fixedYears) {
             layout: {
                 padding: {
                     top: 0,
-                    right: 27,
+                    right: 45,
                     bottom: 0,
-                    left: 27
+                    left: 45
                 }
             },
             responsive: true,
@@ -556,6 +573,14 @@ function updateManagementCostChart(fixedYears) {
                 legend: { display: false },
                 datalabels: { display: true },
                 tooltip: {
+                    titleFont: {
+                        size: 18,
+                        weight: 'bold'
+                    },
+                    bodyFont: {
+                        size: 18,
+                        weight: 'bold'
+                    },
                     callbacks: {
                         label: function(context) {
                             return '₩' + context.parsed.y.toLocaleString();
@@ -567,7 +592,7 @@ function updateManagementCostChart(fixedYears) {
                 x: {
                     grid: { display: false },
                     ticks: {
-                        font: { size: 11, weight: 'bold' },
+                        font: { size: 14, weight: 'bold' },
                         color: '#1f2937'
                     }
                 },
@@ -608,8 +633,8 @@ function updateIncomeRateChart(fixedYears) {
 
     const maxIncomeValue = Math.max(...incomeValues);
     const maxRateValue = Math.max(...rateValues);
-    const incomeAxisMax = maxIncomeValue * 1.3;
-    const rateAxisMax = maxRateValue * 1.3;
+    const incomeAxisMax = maxIncomeValue * 1.6;
+    const rateAxisMax = maxRateValue * 1.6;
 
     const ctx = document.getElementById('incomeRateChart').getContext('2d');
     if (charts['incomeRateChart']) charts['incomeRateChart'].destroy();
@@ -631,7 +656,7 @@ function updateIncomeRateChart(fixedYears) {
                         anchor: 'center',
                         align: 'center',
                         formatter: value => value.toLocaleString(),
-                        font: { size: 11,
+                        font: { size: 16,
                               weight: 'bold'
                               },
                         color: '#374151'
@@ -641,7 +666,7 @@ function updateIncomeRateChart(fixedYears) {
                     label: '소득률',
                     data: rateValues,
                     type: 'line',
-                    borderColor: 'rgba(59, 130, 246, 1)', // 연보라톤
+                    borderColor: 'rgba(59, 130, 246, 1)', // 
                     backgroundColor: 'rgba(59, 130, 246, 1)',
                     borderWidth: 3,
                     pointRadius: 4,
@@ -653,7 +678,7 @@ function updateIncomeRateChart(fixedYears) {
                         anchor: 'end',
                         align: 'top',
                         formatter: value => value + '%',
-                        font: { size: 11,
+                        font: { size: 16,
                               weight: 'bold'
                               },
                         color: '#374151'
@@ -676,6 +701,14 @@ function updateIncomeRateChart(fixedYears) {
                 datalabels: { display: true },
                 legend: { display: false },
                 tooltip: {
+                    titleFont: {
+                        size: 18,
+                        weight: 'bold'
+                    },
+                    bodyFont: {
+                        size: 18,
+                        weight: 'bold'
+                    },
                     callbacks: {
                         label: function(context) {
                             if (context.datasetIndex === 0) {
@@ -691,7 +724,7 @@ function updateIncomeRateChart(fixedYears) {
                 x: {
                     grid: { display: false },
                     ticks: {
-                        font: { size: 11, weight: 'bold' },
+                        font: { size: 14, weight: 'bold' },
                         color: '#1f2937'
                     }
                 },
@@ -742,15 +775,23 @@ function updateSelfLaborChart() {
                     display: true,
                     formatter: function(value, context) {
                         const label = context.chart.data.labels[context.dataIndex];
-                        return label + ' ' + value.toFixed(1); // "남성 1.2" 형태로 표시
+                        return label + ' ' + value.toFixed(1) + '시간'; // "남성 1.2" 형태로 표시
                     },
                     color: '#000000',
                     font: {
-                        size: 12,
+                        size: 15,
                         weight: 'bold'
                     }
                 },
                 tooltip: {
+                    titleFont: {
+                        size: 18,
+                        weight: 'bold'
+                    },
+                    bodyFont: {
+                        size: 18,
+                        weight: 'bold'
+                    },
                     callbacks: {
                         label: function(context) {
                             return context.label + ': ' + context.parsed + '시간';
@@ -790,15 +831,23 @@ function updateHiredLaborChart() {
                     display: true,
                     formatter: function(value, context) {
                         const label = context.chart.data.labels[context.dataIndex];
-                        return label + ' ' + value.toFixed(1); // "남성 1.2" 형태로 표시
+                        return label + ' ' + value.toFixed(1) + '시간'; // "남성 1.2" 형태로 표시
                     },
                     color: '#000000',
                     font: {
-                        size: 12,
+                        size: 15,
                         weight: 'bold'
                     }
                 },
                 tooltip: {
+                    titleFont: {
+                        size: 18,
+                        weight: 'bold'
+                    },
+                    bodyFont: {
+                        size: 18,
+                        weight: 'bold'
+                    },
                     callbacks: {
                         label: function(context) {
                             return context.label + ': ' + context.parsed + '시간';
@@ -812,7 +861,7 @@ function updateHiredLaborChart() {
 
 function updateAnnualLaborChart() {
     const fixedYears = ['2019', '2020', '2021', '2022', '2023'];
-    
+
     const selfLaborData = fixedYears.map(y => {
         const match = csvData.find(row =>
             row.category === '자가노동시간' &&
@@ -835,6 +884,13 @@ function updateAnnualLaborChart() {
         return match ? match.value : 0;
     });
 
+    // 누적 최대값 계산 (자가 + 고용 노동시간의 합)
+    const stackedTotals = fixedYears.map((_, index) => 
+        selfLaborData[index] + hiredLaborData[index]
+    );
+    const maxStackedValue = Math.max(...stackedTotals);
+    const yAxisMax = maxStackedValue * 1.35;
+
     const ctx = document.getElementById('annualLaborChart').getContext('2d');
     if (charts['annualLaborChart']) charts['annualLaborChart'].destroy();
 
@@ -844,18 +900,18 @@ function updateAnnualLaborChart() {
             labels: fixedYears.map(y => y + '년'),
             datasets: [
                 {
-                    label: '자가노동',
+                    label: '자가노동시간',
                     data: selfLaborData,
-                    backgroundColor: '#10b981',
-                    borderColor: '#059669',
-                    borderWidth: 1
+                    backgroundColor: 'rgba(37, 99, 235, 0.5)',
+                    borderColor: 'transparent',
+                    borderWidth: 0
                 },
                 {
-                    label: '고용노동',
+                    label: '고용노동시간',
                     data: hiredLaborData,
-                    backgroundColor: '#f59e0b',
-                    borderColor: '#d97706',
-                    borderWidth: 1
+                    backgroundColor: 'rgba(96, 165, 250, 0.5)',
+                    borderColor: 'transparent',
+                    borderWidth: 0
                 }
             ]
         },
@@ -864,18 +920,37 @@ function updateAnnualLaborChart() {
             maintainAspectRatio: false,
             plugins: {
                 legend: {
-                    position: 'top',
-                    labels: {
-                        boxWidth: 12,
-                        font: { size: 10 }
-                    }
+                    display: false
                 },
                 tooltip: {
+                    titleFont: {
+                        size: 18,
+                        weight: 'bold'
+                    },
+                    bodyFont: {
+                        size: 18,
+                        weight: 'bold'
+                    },
                     callbacks: {
                         label: function(context) {
                             return context.dataset.label + ': ' + context.parsed.y + '시간';
                         }
                     }
+                },
+                datalabels: {
+                    anchor: 'center',
+                    align: 'center',
+                    font: { weight: 'bold', size: 15 },
+                    formatter: function(value, context) {
+                        const label = context.dataset.label;
+                        if(label === '자가노동시간') {
+                            return '자가 ' + value.toFixed(1) + '시간';
+                        } else if(label === '고용노동시간') {
+                            return '고용 ' + value.toFixed(1) + '시간';
+                        }
+                        return value.toFixed(1);
+                    },
+                    color: '#000'
                 }
             },
             scales: {
@@ -883,15 +958,17 @@ function updateAnnualLaborChart() {
                     stacked: true,
                     grid: { display: false },
                     ticks: {
-                        font: { size: 10 },
+                        font: { size: 15, weight: 'bold' },
                         color: '#1f2937'
                     }
                 },
                 y: {
                     stacked: true,
+                    display: false,
                     beginAtZero: true,
+                    max: yAxisMax,
                     ticks: {
-                        font: { size: 9 },
+                        font: { size: 18 },
                         color: '#6b7280'
                     }
                 }
@@ -900,26 +977,25 @@ function updateAnnualLaborChart() {
     });
 }
 
+
 function updateCropIncomeChart() {
-    // 현재 지역과 년도로 필터링된 작목별 소득 데이터
     let cropIncomeData = csvData.filter(item => {
         return item.category === '소득' &&
                item.region === currentFilters.region &&
                item.year === currentFilters.year &&
                (!currentFilters.cropGroup || item.cropGroup === currentFilters.cropGroup);
     });
-    
-    // 작목별로 그룹핑하고 정렬
+
     const cropIncomes = cropIncomeData
         .map(item => ({
             crop: item.crop,
             income: item.value
         }))
         .sort((a, b) => b.income - a.income);
-    
+
     const ctx = document.getElementById('cropIncomeChart').getContext('2d');
     if (charts['cropIncomeChart']) charts['cropIncomeChart'].destroy();
-    
+
     charts['cropIncomeChart'] = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -927,36 +1003,59 @@ function updateCropIncomeChart() {
             datasets: [{
                 label: '소득',
                 data: cropIncomes.map(item => item.income),
-                backgroundColor: ['#10b981', '#06b6d4', '#8b5cf6', '#f59e0b', '#ef4444', '#84cc16'],
-                borderColor: ['#059669', '#0891b2', '#7c3aed', '#d97706', '#dc2626', '#65a30d'],
-                borderWidth: 1
+                backgroundColor: 'rgba(147, 197, 253, 0.7)',  // 통일된 색상
+                borderColor: 'transparent', // 테두리 없음
+                borderWidth: 0
             }]
         },
         options: {
             responsive: true,
-            indexAxis: 'y', // 가로 막대로 설정
+            indexAxis: 'y',
             maintainAspectRatio: false,
+            layout: {
+                padding: {
+                    right: 15  // 우측 여백 15px
+                }
+            },
             scales: {
                 x: {
-                    ticks: {
-                        font: { size: 9 },
-                        callback: val => '₩' + val.toLocaleString()
-                    }
+                    display: false, // x축 숨김
+                    grid: {
+                        display: false // x축 격자 숨김
+                    },
+                    max: Math.max(...cropIncomes.map(item => item.income)) * 1.35 // 최대값의 1.5배
                 },
                 y: {
-                    ticks: { font: { size: 9 } }
+                    grid: {
+                        display: false // y축 격자 숨김
+                    },
+                    ticks: {
+                        maxWidth: 150,
+                        font: {
+                            size: 15,   // 
+                            weight: 'bold' // 굵게
+                        }
+                    }
                 }
             },
             plugins: {
                 datalabels: {
-                    anchor: 'end', //바 끝에
-                    align: 'right', // 오른쪽으로
-                    formatter: value => '₩' + value.toLocaleString(),
-                    font: { size : 10},
+                    anchor: 'end',
+                    align: 'right',  // 막대 끝쪽에서 안쪽으로
+                    formatter: value => value.toLocaleString(), // '₩' 제거
+                    font: { size: 15, weight: 'bold'},
                     color: '#374151'
                 },
                 legend: { display: false },
                 tooltip: {
+                    titleFont: {
+                        size: 18,
+                        weight: 'bold'
+                    },
+                    bodyFont: {
+                        size: 18,
+                        weight: 'bold'
+                    },
                     callbacks: {
                         label: function(context) {
                             return '소득: ₩' + context.parsed.x.toLocaleString();
@@ -968,108 +1067,212 @@ function updateCropIncomeChart() {
     });
 }
 
-// 사이드바 토글 함수 (모바일용)
+// 1. 사이드바 토글 (모바일 전용) - 디버깅 추가
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
-    sidebar.classList.toggle('expanded');
-}
-// 모바일 사이드바 토글 기능
-function initMobileSidebar() {
-    const sidebar = document.querySelector('.sidebar');
+    const toggleBtn = document.querySelector('.mobile-toggle-btn');
     
-    // 토글 버튼이 없으면 생성
-    let toggleBtn = sidebar.querySelector('.toggle-btn');
-    if (!toggleBtn) {
-        toggleBtn = document.createElement('button');
-        toggleBtn.className = 'toggle-btn';
-        toggleBtn.textContent = '필터';
-        sidebar.appendChild(toggleBtn);
+    if (!sidebar) {
+        console.error('사이드바를 찾을 수 없습니다.');
+        return;
     }
     
-    // 토글 버튼 클릭 이벤트
-    toggleBtn.addEventListener('click', function(e) {
+    console.log('토글 시작 - 현재 클래스:', sidebar.className);
+    
+    // 강제로 클래스 토글
+    if (sidebar.classList.contains('expanded')) {
+        // 축소
+        sidebar.classList.remove('expanded');
+        sidebar.classList.add('collapsed');
+        sidebar.style.maxHeight = '45px';
+        sidebar.style.overflow = 'hidden';
+        sidebar.style.position = 'relative'; // 일반 위치로 복원
+        sidebar.style.top = '';
+        sidebar.style.left = '';
+        sidebar.style.right = '';
+        sidebar.style.width = '';
+        sidebar.style.zIndex = '';
+        if (toggleBtn) {
+            toggleBtn.textContent = '필터 ▼';
+            toggleBtn.setAttribute('aria-expanded', 'false');
+        }
+        console.log('사이드바 축소됨');
+    } else {
+        // 확장
+        sidebar.classList.remove('collapsed');
+        sidebar.classList.add('expanded');
+        sidebar.style.maxHeight = '80vh'; // 문자열로 올바르게 설정
+        sidebar.style.overflow = 'auto';
+        if (toggleBtn) {
+            toggleBtn.textContent = '필터 ▲';
+            toggleBtn.setAttribute('aria-expanded', 'true');
+        }
+        console.log('사이드바 확장됨');
+    }
+    
+    console.log('토글 완료 - 변경된 클래스:', sidebar.className);
+    console.log('현재 maxHeight:', sidebar.style.maxHeight);
+}
+
+// 안전하게 토글을 생성/반환 (있으면 재사용)
+function ensureToggleExists() {
+    let btn = document.querySelector('.mobile-toggle-btn');
+    if (btn) return btn;
+
+    btn = document.createElement('button');
+    btn.className = 'mobile-toggle-btn';
+    btn.type = 'button';
+    btn.innerText = '필터 ▼';
+    btn.setAttribute('aria-expanded', 'false');
+    
+    // ★ 생성과 동시에 이벤트 리스너 등록 - 디버깅 추가
+    btn.addEventListener('click', function(e) {
+        console.log('클릭 이벤트 발생!'); // 디버깅용
         e.preventDefault();
-        e.stopPropagation();
-        
-        sidebar.classList.toggle('expanded');
-        
-        // 버튼 텍스트 변경
-        if (sidebar.classList.contains('expanded')) {
-            toggleBtn.textContent = '닫기';
-        } else {
-            toggleBtn.textContent = '필터';
-        }
+        toggleSidebar();
     });
     
-    // 화면 크기 변경 감지
-    function handleResize() {
-        if (window.innerWidth > 768) {
-            // 데스크톱에서는 expanded 클래스 제거하고 토글 버튼 숨김
-            sidebar.classList.remove('expanded');
-            toggleBtn.style.display = 'none';
-        } else {
-            // 모바일에서는 토글 버튼 표시
-            toggleBtn.style.display = 'block';
-        }
+    btn.addEventListener('touchstart', function(e) {
+        console.log('터치 이벤트 발생!'); // 디버깅용
+        e.preventDefault();
+        toggleSidebar();
+    });
+    
+    console.log('버튼 생성 및 이벤트 리스너 등록 완료'); // 디버깅용
+    
+    const container = document.querySelector('.container');
+    if (container) {
+        container.appendChild(btn);
+    } else {
+        document.body.appendChild(btn);
     }
     
-    // 초기 실행 및 리사이즈 이벤트 등록
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    
-    // 사이드바 외부 클릭 시 닫기 (모바일에서)
-    document.addEventListener('click', function(e) {
-        if (window.innerWidth <= 768 && 
-            !sidebar.contains(e.target) && 
-            sidebar.classList.contains('expanded')) {
-            sidebar.classList.remove('expanded');
-            toggleBtn.textContent = '필터';
-        }
-    });
+    return btn;
 }
 
-// DOM이 로드되면 초기화
-document.addEventListener('DOMContentLoaded', function() {
-    initMobileSidebar();
-});
+function handleResize() {
+    const width = window.innerWidth;
+    const sidebar = document.getElementById('sidebar');
+    const container = document.querySelector('.container');
+    const incomeSection = document.querySelector('.income-analysis-section');
+    const toggleBtn = ensureToggleExists();
 
-// 만약 이미 DOM이 로드되어 있다면 즉시 실행
+    // 안전: container가 없다면 더 이상 진행하지 않음
+    if (!container) return;
+
+    if (width >= 1400) {
+        // 데스크탑 모드
+        if (toggleBtn) {
+            toggleBtn.style.display = 'none';
+            toggleBtn.style.visibility = 'hidden';
+            toggleBtn.setAttribute('aria-hidden', 'true');
+        }
+
+        if (sidebar) {
+            sidebar.classList.remove('expanded', 'collapsed');
+            sidebar.style.maxHeight = '';
+            sidebar.style.overflow = '';
+        }
+
+        // CSS 기반 그리드로 맡기되, 인라인 스타일로 강제한 것이 있다면 초기화
+        container.style.display = '';
+        container.style.gridTemplateColumns = '';
+        container.style.gridTemplateRows = '';
+        container.style.flexDirection = '';
+
+        if (incomeSection) {
+            incomeSection.style.cssText = '';
+        }
+
+    } else {
+        // 모바일 모드
+        if (toggleBtn) {
+            // CSS에서 이미 fixed 위치로 설정했으므로 display만 제어
+            toggleBtn.style.display = 'block';
+            toggleBtn.style.visibility = 'visible';
+            toggleBtn.style.opacity = '1';
+            // fixed 위치는 CSS에서 처리하므로 position 관련 인라인 스타일 제거
+            toggleBtn.style.position = '';
+            toggleBtn.style.top = '';
+            toggleBtn.style.right = '';
+            toggleBtn.setAttribute('aria-hidden', 'false');
+        }
+
+        container.style.display = 'flex';
+        container.style.flexDirection = 'column';
+
+        if (incomeSection) {
+            incomeSection.style.width = '100%';
+            incomeSection.style.height = 'auto';
+            incomeSection.style.flex = '1 1 auto';
+            incomeSection.style.gridColumn = 'unset';
+            incomeSection.style.gridRow = 'unset';
+        }
+
+        if (sidebar && !sidebar.classList.contains('expanded')) {
+            sidebar.classList.add('collapsed');
+            sidebar.style.maxHeight = '45px'; // CSS와 일치하도록 수정
+            sidebar.style.overflow = 'hidden';
+        }
+    }
+}
+
+function initResponsiveSidebar() {
+    // 토글이 없으면 생성, 클릭 이벤트 한 번만 붙임
+    const toggleBtn = ensureToggleExists();
+    const sidebar = document.getElementById('sidebar');
+
+    // if (toggleBtn && !toggleBtn.__sidebarToggleInitialized) {
+    //     // 클릭과 터치 이벤트 모두 처리
+    //     toggleBtn.addEventListener('click', function(e) {
+    //         e.preventDefault();
+    //         toggleSidebar();
+    //     });
+        
+    //     toggleBtn.addEventListener('touchstart', function(e) {
+    //         e.preventDefault();
+    //         toggleSidebar();
+    //     });
+        
+    //     // 마커로 중복 등록 방지
+    //     toggleBtn.__sidebarToggleInitialized = true;
+    // }
+
+    // 초기 상태 설정 - 모바일에서는 기본적으로 축소 상태
+    if (sidebar && window.innerWidth < 1400) {
+        sidebar.classList.remove('expanded');
+        sidebar.classList.add('collapsed');
+        sidebar.style.maxHeight = '45px';
+        sidebar.style.overflow = 'hidden';
+        console.log('초기 상태: 사이드바 축소');
+    }
+
+    // resize 이벤트 (디바운스)
+    let tid = null;
+    window.addEventListener('resize', () => {
+        if (tid) clearTimeout(tid);
+        tid = setTimeout(handleResize, 120);
+    });
+
+    // 초기 상태 적용
+    handleResize();
+}
+
+// 4. 페이지 초기화
+function initializeApp() {
+    initResponsiveSidebar();
+
+    if (typeof loadCSVFromGitHub === 'function') {
+        loadCSVFromGitHub();
+    }
+}
+
+// 5. 실행
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initMobileSidebar);
+  document.addEventListener('DOMContentLoaded', initializeApp);
 } else {
-    initMobileSidebar();
+  initializeApp();
 }
 
 // 전역에서 한 번만
 Chart.register(ChartDataLabels);
-
-// 페이지 로드 시 초기화
-document.addEventListener('DOMContentLoaded', function() {
-    loadCSVFromGitHub();
-
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

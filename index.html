@@ -16,8 +16,10 @@
 </head>
 <body>
     <div class="header">
-        <div class="header-left">소득조사 대시보드</div>
+        <div class="header-left">
+            소득조사 대시보드</div>
         <div class="header-right">
+            <img src = "https://raw.githubusercontent.com/soonpark2/project1/main/강원특별자치도농업기술원1.png" alt="회사 로고" class="logo">
             <button class="tab-btn active" onclick="showTab('home')">홈</button>
             <button class="tab-btn" onclick="showTab('status')">현황</button>
         </div>
@@ -35,11 +37,14 @@
     </div>
 
     <!-- 현황 탭 -->
+<!-- 현황 탭 -->
     <div id="status" class="tab-content">
         <div class="container">
-            <!-- 기존 필터 사이드바 -->
+            <!-- 모바일용 토글 버튼 - 사이드바 밖으로 이동 -->
+            <button class="mobile-toggle-btn" onclick="toggleSidebar()">필터 ▼</button>
+            
+            <!-- 기존 필터 사이드바 - 토글 버튼 제거 -->
             <div class="sidebar" id="sidebar">
-                <button class="toggle-btn" onclick="toggleSidebar()">필터 열기/닫기</button>
                 <div class="filter-section">
                     <div class="filter-title">지역구분</div>
                     <div class="filter-content" id="regionFilter">
@@ -63,7 +68,7 @@
                 </div>
             </div>
 
-            <!-- 차트 카드 -->
+            <!-- 차트 카드들은 그대로 유지 -->
             <div class="chart-card income-analysis-section">
                 <div class="chart-title" id="summaryTitle">2023년 전국 소득분석표</div>
                 <div class="income-analysis-layout">
@@ -116,7 +121,7 @@
             </div>
 
             <div class="chart-card annual-labor-chart">
-                <div class="chart-title">년도별 노동그래프</div>
+                <div class="chart-title">노동그래프</div>
                 <div class="chart-container">
                     <canvas id="annualLaborChart"></canvas>
                 </div>

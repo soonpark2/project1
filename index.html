@@ -12,71 +12,223 @@
     
     <!-- CSS 파일 -->
     <link rel="stylesheet" href="styles.css">
-
+    
+    <!-- 웹폰트 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="header">
         <div class="header-left">
-            소득조사 대시보드</div>
+            <img src="https://raw.githubusercontent.com/soonpark2/project1/main/강원특별자치도농업기술원1.png" alt="회사 로고" class="logo">
+            <div class="header-title">소득조사 대시보드</div>
+        </div>
         <div class="header-right">
-            <img src = "https://raw.githubusercontent.com/soonpark2/project1/main/강원특별자치도농업기술원1.png" alt="회사 로고" class="logo">
-            <button class="tab-btn active" onclick="showTab('home')">홈</button>
-            <button class="tab-btn" onclick="showTab('status')">현황</button>
+            <button class="tab-btn active" onclick="showTab('home', event)">홈</button>
+            <button class="tab-btn" onclick="showTab('summary', event)">요약</button>
+            <button class="tab-btn" onclick="showTab('status', event)">작목별 조회</button>
+            <button class="tab-btn" onclick="showTab('compare', event)">전국 vs 강원</button>
+            <button class="tab-btn" onclick="showTab('yearly', event)">평년</button>
         </div>
     </div>
 
     <!-- 홈 탭 -->
     <div id="home" class="tab-content active">
-        <h2>환영합니다!</h2>
-        <p>이 페이지는 소득조사 데이터를 시각적으로 분석하는 대시보드입니다.</p>
-        <ul>
-            <li>현황 탭에서 연도별, 작목별 소득 분석 가능</li>
-            <li>필터를 사용하여 지역, 작목, 연도별 데이터 확인</li>
-            <li>차트로 직관적인 데이터 이해 가능</li>
-        </ul>
+        <div class="welcome-container">
+            <div class="welcome-header">
+                <h1>소득조사 분석 시스템</h1>
+                <p class="welcome-subtitle">농업 소득 데이터를 한눈에 분석하고 관리하세요</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card" onclick="showTab('summary')">
+                    <h3>요약</h3>
+                    <p>농업 소득 데이터의 종합적인 요약 정보와 핵심 지표들을 한눈에 확인할 수 있습니다.</p>
+                </div>
+                
+                <div class="feature-card" onclick="showTab('status')">
+                    <h3>작목별 조회</h3>
+                    <p>지역별, 작목별 소득 현황을 상세하게 분석하고 경영비 구성을 파악할 수 있습니다.</p>
+                </div>
+                
+                <div class="feature-card" onclick="showTab('compare')">
+                    <h3>전국 vs 강원</h3>
+                    <p>전국과 강원도의 소득 격차를 비교 분석하여 지역별 특성을 파악합니다.</p>
+                </div>
+                
+                <div class="feature-card" onclick="showTab('yearly')">
+                    <h3>평년</h3>
+                    <p>장기간 데이터를 통한 트렌드 분석으로 농업 소득의 변화 패턴을 확인합니다.</p>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- 현황 탭 -->
-<!-- 현황 탭 -->
+    <!-- 요약 탭 -->
+    <div id="summary" class="tab-content">
+        <!-- 필터 헤더 영역 -->
+        <div class="summary-filters-header">
+            <div class="summary-filter-group">
+                <label class="summary-filter-label">지역구분:</label>
+                <div class="summary-filter-buttons" id="summaryRegionFilter">
+                    <button class="summary-filter-btn" data-region="강원">강원</button>
+                    <button class="summary-filter-btn" data-region="전국">전국</button>
+                </div>
+            </div>
+            <div class="summary-filter-group">
+                <label class="summary-filter-label">년:</label>
+                <div class="summary-filter-buttons" id="summaryYearFilter">
+                </div>
+            </div>
+        </div>
+
+        <!-- 3x3 그리드 레이아웃 -->
+        <div class="summary-grid">
+            <!-- 1열 1행: 소득 TOP 5 -->
+            <div class="grid-item top5-card">
+                <div class="card-header">
+                    <h3 class="card-title">소득 TOP 5</h3>
+                </div>
+                <div class="card-content">
+                    <div class="top5-list" id="incomeTop5List">
+                        <div class="loading-item">데이터 로딩 중...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2열 1행: 노동생산성 TOP 5 -->
+            <div class="grid-item top5-card">
+                <div class="card-header">
+                    <h3 class="card-title">노동생산성 TOP 5</h3>
+                </div>
+                <div class="card-content">
+                    <div class="top5-list" id="laborTop5List">
+                        <div class="loading-item">데이터 로딩 중...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3열 1-3행: 상세 데이터 표 (rowspan=3) -->
+            <div class="grid-item data-table-area">
+                <div class="table-header">
+                    <h2 class="table-title">상세 조회</h2>
+                    <div class="table-filters">
+                        <select id="cropGroupFilter" class="table-filter-select">
+                            <option value="all">전체 작목군</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table class="summary-data-table">
+                        <thead>
+                            <tr>
+                                <th class="sortable" data-sort="cropGroup">작목군 <span class="sort-arrow"></span></th>
+                                <th class="sortable" data-sort="crop">작목 <span class="sort-arrow"></span></th>
+                                <th class="sortable" data-sort="income">소득 <span class="sort-arrow"></span></th>
+                                <th class="sortable" data-sort="incomeRank">소득순위 <span class="sort-arrow"></span></th>
+                                <th class="sortable" data-sort="laborProductivity">노동생산성 <span class="sort-arrow"></span></th>
+                                <th class="sortable" data-sort="laborRank">노동순위 <span class="sort-arrow"></span></th>
+                                <th class="sortable" data-sort="capitalProductivity">자본생산성 <span class="sort-arrow"></span></th>
+                                <th class="sortable" data-sort="capitalRank">자본순위 <span class="sort-arrow"></span></th>
+                                <th class="sortable" data-sort="landProductivity">kg당 생산비 <span class="sort-arrow"></span></th>
+                                <th class="sortable" data-sort="landRank">kg당순위 <span class="sort-arrow"></span></th>
+                            </tr>
+                        </thead>
+                        <tbody id="summaryTableBody">
+                            <tr>
+                                <td colspan="10" class="loading-cell">데이터를 불러오는 중...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 1열 2행: 자본생산성 TOP 5 -->
+            <div class="grid-item top5-card">
+                <div class="card-header">
+                    <h3 class="card-title">자본생산성 TOP 5</h3>
+                </div>
+                <div class="card-content">
+                    <div class="top5-list" id="capitalTop5List">
+                        <div class="loading-item">데이터 로딩 중...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2열 2행: kg당 생산비 TOP 5 -->
+            <div class="grid-item top5-card">
+                <div class="card-header">
+                    <h3 class="card-title">kg당 생산비 TOP5(저비용)</h3>
+                </div>
+                <div class="card-content">
+                    <div class="top5-list" id="landTop5List">
+                        <div class="loading-item">데이터 로딩 중...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 작목별 조회 탭 -->
     <div id="status" class="tab-content">
         <div class="container">
-            <!-- 모바일용 토글 버튼 - 사이드바 밖으로 이동 -->
+            <!-- 모바일용 토글 버튼 -->
             <button class="mobile-toggle-btn" onclick="toggleSidebar()">필터 ▼</button>
             
-            <!-- 기존 필터 사이드바 - 토글 버튼 제거 -->
+            <!-- 필터 사이드바 -->
             <div class="sidebar" id="sidebar">
                 <div class="filter-section">
-                    <div class="filter-title">지역구분</div>
+                    <div class="filter-title">
+                        지역구분
+                    </div>
                     <div class="filter-content" id="regionFilter">
                         <div class="filter-item active" data-region="전국">전국</div>
                     </div>
                 </div>
 
                 <div class="filter-section">
-                    <div class="filter-title">작목</div>
-                    <div class="filter-content" id="cropGroupFilter"></div>
-                </div>
-
-                <div class="filter-section">
-                    <div class="filter-title">작목상세</div>
-                    <div class="filter-content" id="cropFilter"></div>
-                </div>
-
-                <div class="filter-section">
-                    <div class="filter-title">년</div>
+                    <div class="filter-title">
+                        년
+                    </div>
                     <div class="year-buttons" id="yearFilter"></div>
+                </div>
+
+                <div class="filter-section">
+                    <div class="filter-title">
+                        작목군
+                    </div>
+                    <div class="filter-content" id="statusCropGroupFilter"></div>
+                </div>
+
+                <div class="filter-section">
+                    <div class="filter-title">
+                        작목상세
+                    </div>
+                    <div class="filter-content" id="cropFilter"></div>
                 </div>
             </div>
 
-            <!-- 차트 카드들은 그대로 유지 -->
+            <!-- 차트 카드들 -->
             <div class="chart-card income-analysis-section">
                 <div class="chart-title" id="summaryTitle">2023년 전국 소득분석표</div>
                 <div class="income-analysis-layout">
                     <div class="main-summary-box">
-                        소득 <span id="totalIncome">₩0</span> / 소득률 <span id="totalRate">0%</span>
+                        <div class="summary-item">
+                            <span class="summary-label">소득</span>
+                            <span id="totalIncome">₩0</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">소득률</span>
+                            <span id="totalRate">0%</span>
+                        </div>
                     </div>
                     <div class="table-wrapper">
                         <table>
+                            <thead>
+                                <tr>
+                                    <th>구분</th>
+                                    <th>값</th>
+                                </tr>
+                            </thead>
                             <tbody id="detailTableBody">
                                 <tr><td colspan="2" class="loading">데이터를 불러오는 중...</td></tr>
                             </tbody>
@@ -86,81 +238,382 @@
             </div>
 
             <div class="chart-card total-income-chart">
-                <div class="chart-title" id="totalIncomeTitle">총수입</div>
-                <div class="chart-container">
-                    <canvas id="totalIncomeChart"></canvas>
+                <div class="chart-title" id="combinedIncomeTitle">
+                    총수입 및 경영비 추이
                 </div>
-            </div>
-
-            <div class="chart-card management-cost-chart">
-                <div class="chart-title" id="managementCostTitle">경영비</div>
                 <div class="chart-container">
-                    <canvas id="managementCostChart"></canvas>
+                    <canvas id="combinedIncomeChart"></canvas>
                 </div>
             </div>
 
             <div class="chart-card income-rate-chart">
-                <div class="chart-title" id="incomeRateTitle">소득 및 소득률</div>
+                <div class="chart-title" id="incomeRateTitle">
+                    소득 및 소득률
+                </div>
                 <div class="chart-container">
                     <canvas id="incomeRateChart"></canvas>
                 </div>
             </div>
 
-            <div class="chart-card self-labor-chart">
-                <div class="chart-title">자가노동그래프</div>
+            <div class="chart-card productivity-chart">
+                <div class="chart-title-with-select">
+                    <span id="productivityTitle">생산성 추이</span>
+                    <select id="productivitySelector" class="chart-select">
+                        <option value="labor">노동생산성</option>
+                        <option value="capital">자본생산성</option>
+                        <option value="land">토지생산성</option>
+                    </select>
+                </div>
                 <div class="chart-container">
-                    <canvas id="selfLaborChart"></canvas>
+                    <canvas id="productivityChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-card cost-efficiency-chart">
+                <div class="chart-title-with-select">
+                    <span id="costEfficiencyTitle">단위당 비용</span>
+                    <select id="costEfficiencySelector" class="chart-select">
+                        <option value="production">kg당 생산비</option>
+                        <option value="management">kg당 경영비</option>
+                    </select>
+                </div>
+                <div class="chart-container">
+                    <canvas id="costEfficiencyChart"></canvas>
                 </div>
             </div>
 
-            <div class="chart-card hired-labor-chart">
-                <div class="chart-title">고용노동그래프</div>
+            <div class="chart-card yield-price-chart">
+                <div class="chart-title" id="yieldPriceTitle">
+                    주산물수량 및 수취가격
+                </div>
                 <div class="chart-container">
-                    <canvas id="hiredLaborChart"></canvas>
+                    <canvas id="yieldPriceChart"></canvas>
                 </div>
             </div>
 
             <div class="chart-card annual-labor-chart">
-                <div class="chart-title">노동그래프</div>
+                <div class="chart-title" id="annualLaborTitle">
+                    연간 노동시간
+                </div>
                 <div class="chart-container">
                     <canvas id="annualLaborChart"></canvas>
                 </div>
             </div>
 
-            <div class="chart-card income-chart">
-                <div class="chart-title">소득그래프</div>
+        </div>
+    </div>
+
+    <!-- 전국 vs 강원 탭 -->
+    <div id="compare" class="tab-content">
+        <div class="container">
+            <!-- 모바일용 토글 버튼 -->
+            <button class="mobile-toggle-btn" onclick="toggleCompareSidebar()">필터</button>
+            
+            <!-- 필터 사이드바 (지역구분 제외) -->
+            <div class="sidebar" id="compareSidebar">
+                <div class="filter-section">
+                    <div class="filter-title">
+                        년
+                    </div>
+                    <div class="year-buttons" id="compareYearFilter"></div>
+                </div>
+
+                <div class="filter-section">
+                    <div class="filter-title">
+                        작목군
+                    </div>
+                    <div class="filter-content" id="compareCropGroupFilter"></div>
+                </div>
+
+                <div class="filter-section">
+                    <div class="filter-title">
+                        작목상세
+                    </div>
+                    <div class="filter-content" id="compareCropFilter"></div>
+                </div>
+            </div>
+
+            <!-- 비교 분석표 -->
+            <div class="chart-card income-analysis-section">
+                <div class="chart-title" id="compareSummaryTitle">2023년 전국, 강원 소득비교표</div>
+                <div class="income-analysis-layout">
+                    <div class="main-summary-box">
+                        <div class="summary-item">
+                            <span class="summary-label">전국소득</span>
+                            <span id="compareNationalIncome">₩0</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">강원소득</span>
+                            <span id="compareGangwonIncome">₩0</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">차이</span>
+                            <span id="compareDifference">₩0</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">대비</span>
+                            <span id="compareRatio">0%</span>
+                        </div>
+                    </div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>구분</th>
+                                    <th>전국</th>
+                                    <th>강원</th>
+                                    <th>차이</th>
+                                    <th>대비(%)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="compareDetailTableBody">
+                                <tr><td colspan="5" class="loading">데이터를 불러오는 중...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 비교 차트들 -->
+            <div class="chart-card total-income-chart">
+                <div class="chart-title-with-select">
+                    <span id="compareDataTitle">전국, 강원 비교</span>
+                    <select id="compareDataSelect" class="chart-select">
+                        <option value="totalIncome">총수입</option>
+                        <option value="income">소득</option>
+                        <option value="incomeRate">소득률</option>
+                        <option value="mainProductQuantity">주산물수량</option>
+                        <option value="receivedPrice">수취가격</option>
+                    </select>
+                </div>
                 <div class="chart-container">
-                    <canvas id="cropIncomeChart"></canvas>
+                    <canvas id="compareDataChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card management-cost-chart">
+                <div class="chart-title-with-select">
+                    <span id="compareProductivityTitle">전국, 강원 생산성 비교</span>
+                    <select id="compareProductivitySelect" class="chart-select">
+                        <option value="laborProductivity">노동생산성</option>
+                        <option value="capitalProductivity">자본생산성</option>
+                        <option value="landProductivity">토지생산성</option>
+                    </select>
+                </div>
+                <div class="chart-container">
+                    <canvas id="compareProductivityChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card income-rate-chart">
+                <div class="chart-title-with-select">
+                    <span id="compareCostTitle">전국, 강원 비용 비교</span>
+                    <select id="compareCostSelect" class="chart-select">
+                        <option value="intermediateCost">중간재비</option>
+                        <option value="managementCost">경영비</option>
+                        <option value="productionCost">생산비</option>
+                        <option value="managementCostPerKg">kg당 경영비</option>
+                        <option value="costPerKg">kg당 생산비</option>
+                    </select>
+                </div>
+                <div class="chart-container">
+                    <canvas id="compareCostChart"></canvas>
+                </div>
+            </div>
+
+
+            <div class="chart-card annual-labor-chart">
+                <div class="chart-title-with-select">
+                    <span id="compareLaborTitle">전국, 강원 노동시간 비교</span>
+                    <select id="compareLaborSelect" class="chart-select">
+                        <option value="totalLaborTime">총노동시간</option>
+                        <option value="selfLaborTime">자가노동시간</option>
+                        <option value="hiredLaborTime">고용노동시간</option>
+                    </select>
+                </div>
+                <div class="chart-container">
+                    <canvas id="compareLaborChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card income-table">
+                <div class="chart-title" id="compareCropIncomeTitle">
+                    전국, 강원 전체 작목별 소득
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>작목</th>
+                                <th>전국</th>
+                                <th>강원</th>
+                                <th>차이</th>
+                                <th>대비(%)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="compareCropIncomeTableBody">
+                            <tr><td colspan="5" class="loading">데이터를 불러오는 중...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 평년 탭 -->
+    <div id="yearly" class="tab-content">
+        <div class="container">
+            <!-- 모바일용 토글 버튼 -->
+            <button class="mobile-toggle-btn" onclick="toggleYearlySidebar()">필터</button>
+            
+            <!-- 사이드바 (1열 1-3행) -->
+            <div class="sidebar" id="yearlySidebar">
+                <div class="filter-section">
+                    <div class="filter-title">
+                        비교 모드
+                    </div>
+                    <div class="filter-select-container">
+                        <select id="comparisonModeSelect" class="filter-select">
+                            <!-- 동적으로 생성 -->
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filter-section">
+                    <div class="filter-title">
+                        작목군
+                    </div>
+                    <div class="filter-content" id="yearlyCropGroupFilter">
+                        <!-- 동적으로 생성 -->
+                    </div>
+                </div>
+
+                <div class="filter-section">
+                    <div class="filter-title">
+                        작목상세
+                    </div>
+                    <div class="filter-content" id="yearlyCropFilter">
+                        <!-- 동적으로 생성 -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- 주의사항 섹션 (2열 1행) -->
+            <div class="chart-card yearly-notice">
+                <div class="chart-title">평년 데이터 안내</div>
+                <div class="notice-content">
+                    <div class="notice-item">
+                        <strong>평년:</strong> 각 비목별 최소 최대값을 제외한 3개년 평균
+                    </div>
+                    <div class="notice-item">
+                        <strong>2023년:</strong> 시설작물 작형(촉성, 반촉성, 억제) 통폐합, 수경/토경 분리 조사로 평년 미제공
+                    </div>
+                </div>
+            </div>
+
+            <!-- 빈 영역들 (2열 2-3행, 3열 1-3행) -->
+            <div class="chart-card empty-space-1">
+                <!-- 향후 차트 영역 -->
+            </div>
+            <div class="chart-card empty-space-2">
+                <!-- 향후 차트 영역 -->
+            </div>
+            <div class="chart-card empty-space-3">
+                <!-- 향후 차트 영역 -->
+            </div>
+            <div class="chart-card empty-space-4">
+                <!-- 향후 차트 영역 -->
+            </div>
+            <div class="chart-card empty-space-5">
+                <!-- 향후 차트 영역 -->
+            </div>
+
+            <!-- 평년 분석표 (4열 1-3행) -->
+            <div class="chart-card yearly-analysis-section">
+                <div class="chart-title" id="yearlyAnalysisTitle">전국 전체 평년 대비 분석</div>
+                <div class="yearly-analysis-layout">
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>지표명</th>
+                                    <th>평년값</th>
+                                    <th>2023년값</th>
+                                    <th>증감</th>
+                                    <th>증감률</th>
+                                </tr>
+                            </thead>
+                            <tbody id="yearlyAnalysisTableBody">
+                                <tr><td colspan="5" class="loading">데이터를 불러오는 중...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        function showTab(tabName) {
-            // 모든 탭 숨기기
+        function showTab(tabName, ev) {
+            // 탭 상태 업데이트
+            if (typeof window.setCurrentTab === 'function') {
+                window.setCurrentTab(tabName);
+            }
+            
+            // 탭 컨텐츠 토글
             document.querySelectorAll('.tab-content').forEach(content => {
                 content.classList.remove('active');
             });
-            
-            // 선택된 탭만 보이기
-            document.getElementById(tabName).classList.add('active');
-            
+
+            const targetTab = document.getElementById(tabName);
+            if (targetTab) targetTab.classList.add('active');
+
             // 탭 버튼 스타일 변경
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            // 클릭된 버튼에 active 클래스 추가
-            event.target.classList.add('active');
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+
+            // 이벤트가 있으면 클릭한 버튼을 active로, 없으면 해당 tabName을 가진 버튼 검색해서 처리
+            if (ev && (ev.currentTarget || ev.target)) {
+                const btn = ev.currentTarget || ev.target;
+                btn.classList.add('active');
+            } else {
+                // fallback: 버튼의 onclick 텍스트를 검사해서 일치하는 버튼 찾아 active 추가
+                const btn = Array.from(document.querySelectorAll('.tab-btn')).find(b => {
+                    const onclick = b.getAttribute('onclick') || '';
+                    return onclick.includes(`showTab('${tabName}')`) || onclick.includes(`showTab("${tabName}")`);
+                });
+                if (btn) btn.classList.add('active');
+            }
+
+            // 만약 'status' 또는 'compare' 탭을 열면 차트들이 보이도록 리사이즈/업데이트 시도
+            if (tabName === 'status' || tabName === 'compare') {
+                // 반응형 사이드바(모바일 토글) 재초기화(있다면)
+                if (typeof initResponsiveSidebar === 'function') {
+                    try { initResponsiveSidebar(); } catch(e) { /* 무시 */ }
+                }
+
+                // charts 전역 객체가 있으면 각 차트를 resize/update
+                if (window.charts) {
+                    Object.values(window.charts).forEach(chart => {
+                        try {
+                            // Chart.js 인스턴스이면 resize와 update 호출
+                            if (chart && typeof chart.resize === 'function') {
+                                chart.resize();
+                                chart.update();
+                            }
+                        } catch (e) {
+                            // 안전하게 무시
+                            console.warn('차트 업데이트 중 오류:', e);
+                        }
+                    });
+                }
+
+                // 브라우저가 레이아웃을 재계산하도록 강제 resize 이벤트 발생 (추가 안전장치)
+                setTimeout(() => window.dispatchEvent(new Event('resize')), 80);
+            }
         }
     </script>
+
 
     <!-- JavaScript 파일 -->
     <script src="script.js"></script>
 </body>
 </html>
-
-
-
-

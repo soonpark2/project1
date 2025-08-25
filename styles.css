@@ -120,6 +120,16 @@ body {
     font-size: var(--font-size-xl);
     font-weight: var(--font-weight-bold);
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: color var(--transition-fast);
+}
+
+.header-title:hover {
+    color: var(--primary-blue);
+}
+
+.logo:hover {
+    opacity: 0.8;
+    transition: opacity var(--transition-fast);
 }
 
 .header-right {
@@ -358,7 +368,7 @@ body {
 .mobile-toggle-btn {
     display: none;
     position: fixed;
-    top: calc(var(--header-height) + 1rem);
+    top: calc(var(--header-height) + 0.5rem);
     left: 1rem;
     background: var(--primary-blue-gradient);
     color: white;
@@ -696,6 +706,23 @@ tr:hover {
     
     .mobile-toggle-btn {
         display: block !important;
+        position: sticky !important;
+        top: calc(var(--header-height) + 0.1rem) !important;
+        left: auto !important;
+        margin: 0 0.5rem 0.25rem 0.5rem !important;
+        width: fit-content !important;
+        z-index: 100 !important;
+        background: var(--primary-blue) !important;
+        box-shadow: 0 2px 8px rgba(30, 64, 175, 0.3) !important;
+        border-radius: var(--border-radius) !important;
+        font-size: var(--font-size-sm) !important;
+        padding: 0.5rem 1rem !important;
+        transition: all var(--transition-normal) !important;
+    }
+    
+    .mobile-toggle-btn:hover {
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 12px rgba(30, 64, 175, 0.4) !important;
     }
     
     .sidebar {
@@ -822,45 +849,43 @@ tr:hover {
         animation: fadeIn 0.3s ease-in-out;
     }
     
-    /* 평년탭 모바일 토글 버튼 특별 스타일 */
+    /* 평년탭 모바일 토글 버튼 숨김 */
     #yearly .mobile-toggle-btn {
-        background: linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #8b5cf6 100%);
-        color: white;
-        border: none;
-        padding: 0.75rem 1.5rem;
-        border-radius: 12px;
-        cursor: pointer;
-        font-size: 0.875rem;
-        font-weight: 600;
-        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3), 0 2px 4px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
+        display: none !important;
     }
-
-    #yearly .mobile-toggle-btn::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.2) 50%, transparent 100%);
-        transition: left 0.5s;
+    
+    /* 평년탭 모바일 필터 헤더 위치 조정 */
+    #yearly .yearly-filters-header {
+        position: relative !important;
+        margin: 0.25rem !important;
+        margin-top: calc(var(--header-height) + 0.25rem) !important;
+        margin-bottom: 0.25rem !important;
+        padding: 0.4rem !important;
+        z-index: 10 !important;
+        order: 0 !important;
     }
-
-    #yearly .mobile-toggle-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4), 0 4px 8px rgba(0, 0, 0, 0.15);
+    
+    /* 평년탭 모바일 컨테이너 여백 조정 */
+    #yearly .container {
+        padding-top: 0.5rem !important;
+        gap: 0.5rem !important;
     }
-
-    #yearly .mobile-toggle-btn:hover::before {
-        left: 100%;
+    
+    /* 평년탭 모바일 요소 순서 설정 */
+    #yearly .yearly-top5-card {
+        order: 1 !important;
     }
-
-    #yearly .mobile-toggle-btn:active {
-        transform: translateY(0px);
-        box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+    
+    #yearly .yearly-national-top5-card {
+        order: 2 !important;
+    }
+    
+    #yearly .income-table {
+        order: 3 !important;
+    }
+    
+    #yearly .yearly-analysis-section {
+        order: 4 !important;
     }
     
     .chart-card {
@@ -886,6 +911,7 @@ tr:hover {
     .income-analysis-section {
         grid-column: unset !important;
         grid-row: unset !important;
+        order: 999 !important;
     }
 }
 
@@ -922,6 +948,56 @@ tr:hover {
         overflow: hidden;
         background: linear-gradient(135deg, #f0f9ff 0%, #dbeafe 100%);
         box-sizing: border-box;
+    }
+    
+    /* 프리미엄 평년탭 그리드 - 3열 x 2행 */
+    #yearly .container {
+        display: grid !important;
+        grid-template-columns: 1fr 1.3fr 1.3fr !important;
+        grid-template-rows: 1fr 1fr !important;
+        gap: 0.75rem !important;
+        padding: 0.5rem !important;
+        height: calc(100vh - var(--header-height) - 80px) !important;
+        min-height: 700px !important;
+        overflow-y: auto !important;
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* 평년탭 chart-container 기본 높이 복원 */
+    #yearly .chart-container {
+        height: 320px;
+        min-height: 0;
+    }
+    
+    /* 평년탭 분석표 positive/negative 스타일 */
+    #yearly .positive {
+        color: #10b981 !important;
+        font-weight: var(--font-weight-semibold);
+    }
+    
+    #yearly .negative {
+        color: #ef4444 !important;
+        font-weight: var(--font-weight-semibold);
+    }
+    
+    /* 1400px 이상에서 평년탭 최적화 */
+    @media (min-width: 1400px) {
+        #yearly .container {
+            height: calc(100vh - var(--header-height) - 80px) !important;
+            min-height: 700px !important;
+            padding: 0.5rem !important;
+            gap: 0.75rem !important;
+            overflow-y: auto !important;
+        }
+        
+        .yearly-filters-header {
+            margin-top: var(--header-height);
+            margin-bottom: 0.5rem;
+            padding: 0.4rem 1rem;
+            position: relative;
+            width: auto;
+        }
     }
 
     .mobile-toggle-btn {
@@ -1016,34 +1092,193 @@ tr:hover {
         font-size: 12px;
     }
     
-    /* 평년탭 그리드 위치 */
+    /* 평년탭 summary-data-table 내용 폰트 크기 */
+    #yearly .summary-data-table td {
+        font-size: 12px;
+    }
+    
+    /* 평년탭 summary-data-table 정렬 설정 */
+    #yearly .summary-data-table td {
+        text-align: right;
+    }
+    
+    /* 평년탭 summary-data-table 첫 번째 컬럼(작목)은 좌측 정렬 */
+    #yearly .summary-data-table td:first-child {
+        text-align: left;
+    }
+    
+    /* 평년탭 테이블 컨테이너 스크롤 설정 */
+    #yearly .income-table .table-container {
+        flex: 1;
+        overflow-y: auto;
+        min-height: 0;
+    }
+    
+    /* 평년탭 헤더와 필터 영역 */
+    #yearly .income-table .chart-header-with-filter {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-shrink: 0;
+        margin-bottom: 1rem;
+    }
+    
+    #yearly .income-table .chart-header-with-filter .chart-title {
+        margin: 0;
+        flex: 1;
+    }
+    
+    #yearly .income-table .chart-header-with-filter .filter-group {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-left: 1rem;
+    }
+    
+    #yearly .income-table .chart-header-with-filter .filter-group label {
+        font-size: var(--font-size-sm);
+        font-weight: var(--font-weight-medium);
+        color: var(--text-secondary);
+        white-space: nowrap;
+    }
+    
+    #yearly .income-table .chart-header-with-filter .filter-group select {
+        padding: 0.25rem 0.5rem;
+        border: 1px solid var(--border-medium);
+        border-radius: var(--border-radius-sm);
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        font-size: var(--font-size-sm);
+        min-width: 120px;
+    }
+    
+    /* 평년탭 그리드 위치 - 3열 x 2행 그리드 */
     #yearly .yearly-notice {
-        grid-column: 2 / 3;
+        display: none;
+    }
+    #yearly .yearly-top5-card {
+        grid-column: 1 / 2;
         grid-row: 1 / 2;
+        position: relative;
     }
-    #yearly .empty-space-1 {
-        grid-column: 2 / 3;
+    
+    /* 평년탭 TOP 5 필터를 우측 상단에 위치 */
+    #yearly .yearly-top5-filter {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        z-index: 10;
+    }
+    
+    #yearly .yearly-top5-filter label {
+        font-size: var(--font-size-sm);
+        font-weight: var(--font-weight-medium);
+        color: var(--text-secondary);
+        white-space: nowrap;
+    }
+    
+    #yearly .yearly-top5-filter select {
+        padding: 0.25rem 0.5rem;
+        border: 1px solid var(--border-medium);
+        border-radius: var(--border-radius-sm);
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        font-size: var(--font-size-sm);
+        min-width: 120px;
+    }
+    
+    /* 평년탭 TOP 5 아이템 간격 조정 */
+    #yearly .yearly-top5-card .top5-item {
+        margin-bottom: 0.2rem;
+    }
+    
+    #yearly .yearly-top5-card .top5-item:last-child {
+        margin-bottom: 0;
+    }
+    
+    /* 평년탭 TOP 5 제목과 컨테이너 간격 조정 */
+    #yearly .yearly-top5-card .chart-title {
+        margin-bottom: 0.5rem;
+    }
+    
+    #yearly .yearly-top5-card .top5-container {
+        margin-top: 0.5rem;
+    }
+    
+    /* 평년탭 전국 평년 TOP 5 카드 */
+    #yearly .yearly-national-top5-card {
+        grid-column: 1 / 2;
         grid-row: 2 / 3;
+        position: relative;
     }
-    #yearly .empty-space-2 {
+    
+    /* 평년탭 전국 평년 TOP 5 필터를 우측 상단에 위치 */
+    #yearly .yearly-national-top5-filter {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        z-index: 10;
+    }
+    
+    #yearly .yearly-national-top5-filter label {
+        font-size: var(--font-size-sm);
+        font-weight: var(--font-weight-medium);
+        color: var(--text-secondary);
+        white-space: nowrap;
+    }
+    
+    #yearly .yearly-national-top5-filter select {
+        padding: 0.25rem 0.5rem;
+        border: 1px solid var(--border-medium);
+        border-radius: var(--border-radius-sm);
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        font-size: var(--font-size-sm);
+        min-width: 120px;
+    }
+    
+    /* 평년탭 전국 평년 TOP 5 아이템 간격 조정 */
+    #yearly .yearly-national-top5-card .top5-item {
+        margin-bottom: 0.2rem;
+    }
+    
+    #yearly .yearly-national-top5-card .top5-item:last-child {
+        margin-bottom: 0;
+    }
+    
+    /* 평년탭 전국 평년 TOP 5 제목과 컨테이너 간격 조정 */
+    #yearly .yearly-national-top5-card .chart-title {
+        margin-bottom: 0.5rem;
+    }
+    
+    #yearly .yearly-national-top5-card .top5-container {
+        margin-top: 0.5rem;
+    }
+    
+    /* 평년탭 요약박스와 분석표 헤더 사이 여백 조정 */
+    #yearly .main-summary-box {
+        margin-bottom: 0.5rem;
+    }
+    
+    #yearly .yearly-analysis-section #yearlyAnalysisTableHead {
+        margin-top: 0.5rem;
+    }
+    #yearly .income-table {
         grid-column: 2 / 3;
-        grid-row: 3 / 4;
-    }
-    #yearly .empty-space-3 {
-        grid-column: 3 / 4;
-        grid-row: 1 / 2;
-    }
-    #yearly .empty-space-4 {
-        grid-column: 3 / 4;
-        grid-row: 2 / 3;
-    }
-    #yearly .empty-space-5 {
-        grid-column: 3 / 4;
-        grid-row: 3 / 4;
+        grid-row: 1 / 3;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
     }
     #yearly .yearly-analysis-section {
-        grid-column: 4 / 5;
-        grid-row: 1 / 4;
+        grid-column: 3 / 4;
+        grid-row: 1 / 3;
         min-height: 0;
     }
     
@@ -1106,7 +1341,7 @@ tr:hover {
         transform: translateY(-50%);
         width: 4px;
         height: 4px;
-        background: linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #8b5cf6 100%);
+        background: var(--primary-blue);
         border-radius: 50%;
         box-shadow: 0 0 6px rgba(139, 92, 246, 0.6);
     }
@@ -1659,15 +1894,14 @@ tr:hover {
     text-align: right;
 }
 
-.summary-data-table td:first-child,
-.summary-data-table td:nth-child(2) {
+.summary-data-table td:first-child {
     text-align: left;
 }
 
-.summary-data-table td:nth-child(4),
-.summary-data-table td:nth-child(6),
-.summary-data-table td:nth-child(8),
-.summary-data-table td:nth-child(10) {
+.summary-data-table td:nth-child(3),
+.summary-data-table td:nth-child(5),
+.summary-data-table td:nth-child(7),
+.summary-data-table td:nth-child(9) {
     text-align: center;
 }
 
@@ -1797,6 +2031,94 @@ tr:hover {
     box-shadow: var(--shadow-sm);
 }
 
+/* ========== 평년탭 필터 헤더 ========== */
+.yearly-filters-header {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-light);
+    border-radius: var(--border-radius);
+    padding: 0.4rem 1rem;
+    margin: 0.5rem;
+    margin-top: calc(var(--header-height) + 0.5rem);
+    margin-bottom: 0.5rem;
+    box-shadow: var(--shadow-md);
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 100;
+}
+
+.yearly-filter-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.yearly-filter-label {
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-primary);
+    font-size: var(--font-size-sm);
+}
+
+.yearly-filter-buttons {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.yearly-filter-select-container {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.yearly-filter-select {
+    padding: 0.4rem 0.8rem;
+    border: 1px solid var(--border-medium);
+    border-radius: var(--border-radius);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    min-width: 120px;
+}
+
+.yearly-filter-select:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+}
+
+.yearly-filter-btn {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-medium);
+    border-radius: var(--border-radius);
+    padding: 0.4rem 0.8rem;
+    cursor: pointer;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--text-primary);
+    transition: all var(--transition-fast);
+    min-width: 80px;
+    text-align: center;
+}
+
+.yearly-filter-btn:hover {
+    background: var(--bg-accent);
+    color: var(--primary-blue);
+    transform: translateY(-1px);
+}
+
+.yearly-filter-btn.active {
+    background: var(--primary-blue);
+    color: white;
+    border-color: var(--primary-blue);
+    box-shadow: var(--shadow-sm);
+}
+
+/* 평년탭 컨테이너 여백 조정 - 위의 그리드 설정으로 통합됨 */
+
 /* 반응형 디자인 - 새로운 그리드 레이아웃 */
 @media (max-width: 1200px) {
     .summary-grid {
@@ -1811,11 +2133,187 @@ tr:hover {
     }
 }
 
+/* ========== 중간 모바일 (769px - 1024px) ========== */
+@media (max-width: 1024px) and (min-width: 769px) {
+    .header {
+        padding: 0.75rem;
+    }
+    
+    .header-title {
+        font-size: var(--font-size-lg);
+    }
+    
+    .tab-btn {
+        font-size: var(--font-size-sm);
+        padding: 0.4rem 0.75rem;
+    }
+    
+    .chart-card {
+        padding: 0.75rem;
+    }
+    
+    .chart-title,
+    .chart-title-with-select span {
+        font-size: var(--font-size-base) !important;
+    }
+    
+    .chart-container {
+        height: 300px;
+    }
+    
+    .main-summary-box {
+        padding: 0.4rem 0.75rem;
+    }
+}
+
 @media (max-width: 768px) {
+    /* 헤더 모바일 대응 */
+    .header {
+        padding: 0.5rem;
+        height: auto;
+        min-height: var(--header-height);
+        flex-wrap: wrap;
+    }
+    
+    .header-left {
+        gap: 0.5rem;
+        flex: 1;
+        min-width: 0;
+    }
+    
+    .logo {
+        height: 1.75rem;
+        width: auto;
+        flex-shrink: 0;
+    }
+    
+    .header-title {
+        font-size: var(--font-size-sm);
+        font-weight: var(--font-weight-semibold);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .header-right {
+        gap: 0.25rem;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+    
+    .tab-btn {
+        font-size: var(--font-size-xs);
+        padding: 0.25rem 0.5rem;
+        min-height: 1.75rem;
+        border-radius: var(--border-radius-sm);
+        min-width: 3rem;
+        white-space: nowrap;
+    }
+    
+    /* 카드 및 차트 모바일 최적화 */
+    .chart-card {
+        padding: 0.5rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .chart-title,
+    .chart-title-with-select span {
+        font-size: var(--font-size-sm) !important;
+        margin-bottom: 0.25rem;
+    }
+    
+    .chart-container {
+        height: 280px;
+        min-height: 280px;
+    }
+    
+    /* 테이블 모바일 최적화 */
+    table {
+        font-size: var(--font-size-xs);
+    }
+    
+    th, td {
+        padding: 0.25rem 0.35rem;
+    }
+    
+    th {
+        font-size: var(--font-size-xs);
+        white-space: nowrap;
+    }
+    
+    /* 필터 및 사이드바 모바일 최적화 */
+    .filter-title {
+        font-size: var(--font-size-xs);
+        padding: 0.25rem 0.35rem;
+    }
+    
+    .filter-item, .year-btn {
+        font-size: var(--font-size-xs);
+        padding: 0.25rem 0.35rem;
+    }
+    
+    .chart-select {
+        font-size: var(--font-size-xs);
+        padding: 0.25rem 0.5rem;
+    }
+    
+    /* 요약 박스 모바일 최적화 */
+    .main-summary-box {
+        padding: 0.25rem 0.5rem;
+        gap: 0.35rem;
+        flex-wrap: wrap;
+    }
+    
+    .summary-label {
+        font-size: var(--font-size-xs);
+    }
+    
+    #totalIncome, #totalRate {
+        font-size: var(--font-size-base);
+    }
+    
+    /* TOP 5 카드 모바일 최적화 */
+    .top5-item {
+        padding: 0.4rem;
+        margin-bottom: 0.25rem;
+    }
+    
+    .crop-name {
+        font-size: var(--font-size-xs);
+        line-height: 1.2;
+    }
+    
+    .crop-value {
+        font-size: var(--font-size-xs);
+        font-weight: var(--font-weight-bold);
+    }
+    
+    /* 테이블 가로 스크롤 개선 */
+    .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* 필터 버튼 터치 최적화 */
+    .summary-filter-btn,
+    .yearly-filter-btn {
+        min-height: 44px;
+        padding: 0.5rem 0.75rem;
+    }
+    
     .summary-filters-header {
         margin: 0.5rem;
         margin-top: calc(var(--header-height) + 0.5rem);
         padding: 1rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .yearly-filters-header {
+        margin: 0.25rem;
+        margin-top: var(--header-height);
+        padding: 0.5rem;
         flex-direction: column;
         align-items: flex-start;
         gap: 1rem;
@@ -1878,37 +2376,145 @@ tr:hover {
 }
 
 @media (max-width: 480px) {
-    .summary-grid {
+    /* 극소형 모바일 (480px 이하) 최적화 */
+    .header {
+        padding: 0.25rem;
+    }
+    
+    .header-left {
+        gap: 0.25rem;
+    }
+    
+    .logo {
+        height: 1.5rem;
+    }
+    
+    .header-title {
+        font-size: var(--font-size-xs);
+    }
+    
+    .tab-btn {
+        font-size: 10px;
+        padding: 0.2rem 0.4rem;
+        min-height: 1.5rem;
+        min-width: 2.5rem;
+    }
+    
+    .container {
         padding: 0.5rem;
         gap: 0.5rem;
+    }
+    
+    .chart-card {
+        padding: 0.4rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .chart-title,
+    .chart-title-with-select span {
+        font-size: var(--font-size-xs) !important;
+    }
+    
+    .chart-container {
+        height: 250px;
+        min-height: 250px;
+    }
+    
+    .summary-grid {
+        padding: 0.25rem;
+        gap: 0.4rem;
     }
     
     .card-header {
-        padding: 0.75rem;
-    }
-    
-    .card-title {
-        font-size: var(--font-size-base);
-    }
-    
-    .top5-item {
-        gap: 0.5rem;
         padding: 0.5rem;
     }
     
+    .card-title {
+        font-size: var(--font-size-sm);
+    }
+    
+    .top5-item {
+        gap: 0.4rem;
+        padding: 0.4rem;
+    }
+    
     .rank-number {
-        width: 20px;
-        height: 20px;
-        font-size: 10px;
+        width: 18px;
+        height: 18px;
+        font-size: 9px;
     }
     
     .crop-name,
     .crop-value {
-        font-size: 12px;
+        font-size: 11px;
     }
     
     .crop-group {
+        font-size: 9px;
+    }
+    
+    /* 테이블 극소형 최적화 */
+    table {
         font-size: 10px;
+    }
+    
+    th, td {
+        padding: 0.2rem 0.25rem;
+    }
+    
+    /* 필터 극소형 최적화 */
+    .filter-title {
+        font-size: 11px;
+        padding: 0.2rem 0.25rem;
+    }
+    
+    .filter-item, .year-btn {
+        font-size: 11px;
+        padding: 0.2rem 0.25rem;
+    }
+    
+    .chart-select {
+        font-size: 11px;
+        padding: 0.2rem 0.4rem;
+    }
+    
+    .main-summary-box {
+        padding: 0.2rem 0.4rem;
+        gap: 0.25rem;
+    }
+    
+    .summary-label {
+        font-size: 11px;
+    }
+    
+    #totalIncome, #totalRate {
+        font-size: var(--font-size-sm);
+    }
+    
+    /* 평년탭 필터 헤더 극소형 최적화 */
+    .yearly-filters-header {
+        padding: 0.4rem;
+        margin: 0.2rem;
+        gap: 0.5rem;
+    }
+    
+    .yearly-filter-label {
+        font-size: var(--font-size-xs);
+    }
+    
+    .yearly-filter-select,
+    .yearly-filter-btn {
+        font-size: var(--font-size-xs);
+        padding: 0.2rem 0.4rem;
+        min-width: 60px;
+    }
+    
+    /* mobile-toggle-btn 극소형 최적화 */
+    .mobile-toggle-btn {
+        font-size: var(--font-size-xs) !important;
+        padding: 0.4rem 0.75rem !important;
+        margin: 0 0.25rem 0.2rem 0.25rem !important;
+        border-radius: var(--border-radius-sm) !important;
     }
 }
 

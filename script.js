@@ -1949,7 +1949,7 @@ function updateCompareTable() {
         
         const nationalDisplay = nationalValue === 0 ? '-' : nationalValue.toLocaleString();
         const gangwonDisplay = gangwonValue === 0 ? '-' : gangwonValue.toLocaleString();
-        const differenceDisplay = Math.abs(difference) === 0 ? '-' : Math.abs(difference).toLocaleString();
+        const differenceDisplay = (Math.abs(difference) === 0 && baseValue === 0 && compareValue === 0) ? '-' : Math.abs(difference).toLocaleString();
         const changeRate = ratio === 0 ? 0 : ratio - 100;
         const ratioDisplay = ratio === 0 ? '-' : 
             changeRate > 0 ? `▲ +${changeRate.toFixed(1)}%` : 
@@ -2028,7 +2028,7 @@ function updateCompareTable() {
         
         const nationalDisplay = nationalValue === 0 ? '-' : nationalValue.toLocaleString();
         const gangwonDisplay = gangwonValue === 0 ? '-' : gangwonValue.toLocaleString();
-        const differenceDisplay = Math.abs(difference) === 0 ? '-' : Math.abs(difference).toLocaleString();
+        const differenceDisplay = (Math.abs(difference) === 0 && baseValue === 0 && compareValue === 0) ? '-' : Math.abs(difference).toLocaleString();
         const changeRate = ratio === 0 ? 0 : ratio - 100;
         const ratioDisplay = ratio === 0 ? '-' : 
             changeRate > 0 ? `▲ +${changeRate.toFixed(1)}%` : 
@@ -2078,7 +2078,7 @@ function updateCompareTable() {
         
         const nationalDisplay = nationalValue === 0 ? '-' : nationalValue.toLocaleString();
         const gangwonDisplay = gangwonValue === 0 ? '-' : gangwonValue.toLocaleString();
-        const differenceDisplay = Math.abs(difference) === 0 ? '-' : Math.abs(difference).toLocaleString();
+        const differenceDisplay = (Math.abs(difference) === 0 && baseValue === 0 && compareValue === 0) ? '-' : Math.abs(difference).toLocaleString();
         const changeRate = ratio === 0 ? 0 : ratio - 100;
         const ratioDisplay = ratio === 0 ? '-' : 
             changeRate > 0 ? `▲ +${changeRate.toFixed(1)}%` : 
@@ -2128,7 +2128,7 @@ function updateCompareTable() {
         
         const nationalDisplay = nationalValue === 0 ? '-' : nationalValue.toLocaleString();
         const gangwonDisplay = gangwonValue === 0 ? '-' : gangwonValue.toLocaleString();
-        const differenceDisplay = Math.abs(difference) === 0 ? '-' : Math.abs(difference).toLocaleString();
+        const differenceDisplay = (Math.abs(difference) === 0 && baseValue === 0 && compareValue === 0) ? '-' : Math.abs(difference).toLocaleString();
         const changeRate = ratio === 0 ? 0 : ratio - 100;
         const ratioDisplay = ratio === 0 ? '-' : 
             changeRate > 0 ? `▲ +${changeRate.toFixed(1)}%` : 
@@ -2218,7 +2218,7 @@ function updateCompareTable() {
             gangwonDisplay = gangwonValue === 0 ? '-' : gangwonValue.toLocaleString();
         }
         
-        const differenceDisplay = Math.abs(difference) === 0 ? '-' : Math.abs(difference).toLocaleString();
+        const differenceDisplay = (Math.abs(difference) === 0 && baseValue === 0 && compareValue === 0) ? '-' : Math.abs(difference).toLocaleString();
         const ratioDisplay = ratio === 0 ? '-' : 
             changeRate > 0 ? `▲ +${changeRate.toFixed(1)}%` : 
             changeRate < 0 ? `▼ ${changeRate.toFixed(1)}%` : `0.0%`;
@@ -2273,7 +2273,7 @@ function updateCompareCharts() {
 // 비교 차트 datalabels 공통 함수들
 function getDynamicAlign(context) {
     const datasets = context.chart.data.datasets;
-    const currentValue = context.dataset.data[context.dataIndex];
+    const compareValue = context.dataset.data[context.dataIndex];
     
     // 같은 인덱스의 다른 데이터셋 값 찾기 (전국 vs 강원)
     let otherValue = 0;
@@ -2284,9 +2284,9 @@ function getDynamicAlign(context) {
     });
     
     // 각 포인트별로 값 비교: 큰 값은 위쪽, 작은 값은 아래쪽
-    if (currentValue > otherValue) {
+    if (compareValue > otherValue) {
         return 'top';  // 현재 값이 더 크면 위쪽
-    } else if (currentValue < otherValue) {
+    } else if (compareValue < otherValue) {
         return 'bottom';  // 현재 값이 더 작으면 아래쪽
     } else {
         // 값이 같을 때는 첫 번째 데이터셋(전국)은 위, 두 번째(강원)는 아래
@@ -2296,7 +2296,7 @@ function getDynamicAlign(context) {
 
 function getDynamicOffset(context) {
     const datasets = context.chart.data.datasets;
-    const currentValue = context.dataset.data[context.dataIndex];
+    const compareValue = context.dataset.data[context.dataIndex];
     
     let otherValue = 0;
     datasets.forEach((dataset, idx) => {
@@ -2305,8 +2305,8 @@ function getDynamicOffset(context) {
         }
     });
     
-    const diff = Math.abs(currentValue - otherValue);
-    const maxValue = Math.max(currentValue, otherValue);
+    const diff = Math.abs(compareValue - otherValue);
+    const maxValue = Math.max(compareValue, otherValue);
     
     // 값이 비슷할 때 (10% 이내 차이) 더 큰 간격으로 분리
     if (diff < maxValue * 0.1) {
@@ -3354,22 +3354,40 @@ function initializeSummaryFilters() {
 
 // ========== 평년탭 필터 초기화 ==========
 
-// 비교 모드 드롭다운 옵션 업데이트
+// 비교 모드 버튼 옵션 업데이트
 function updateComparisonModeOptions() {
-    const comparisonModeSelect = document.getElementById('comparisonModeSelect');
-    if (!comparisonModeSelect) return;
+    const comparisonModeFilter = document.getElementById('comparisonModeFilter');
+    if (!comparisonModeFilter) return;
     
     const latestYear = getLatestYear();
     
-    comparisonModeSelect.innerHTML = `
-        <option value="gangwon-yearly-vs-current">강원 평년 vs 강원 ${latestYear}년</option>
-        <option value="national-vs-gangwon-yearly">전국 평년 vs 강원 평년</option>
-        <option value="national-yearly-vs-gangwon-current">전국 평년 vs 강원 ${latestYear}년</option>
-        <option value="national-yearly-vs-current">전국 평년 vs 전국 ${latestYear}년</option>
-    `;
+    const modes = [
+        { value: 'gangwon-yearly-vs-current', label: `강원 평년 vs 강원 ${latestYear}년` },
+        { value: 'national-vs-gangwon-yearly', label: '전국 평년 vs 강원 평년' },
+        { value: 'national-yearly-vs-gangwon-current', label: `전국 평년 vs 강원 ${latestYear}년` },
+        { value: 'national-yearly-vs-current', label: `전국 평년 vs 전국 ${latestYear}년` }
+    ];
     
-    // 현재 선택된 값 유지
-    comparisonModeSelect.value = yearlyFilters.comparisonMode;
+    comparisonModeFilter.innerHTML = modes.map(mode => 
+        `<button class="yearly-filter-btn ${yearlyFilters.comparisonMode === mode.value ? 'active' : ''}" 
+                 data-value="${mode.value}">${mode.label}</button>`
+    ).join('');
+    
+    // 버튼 클릭 이벤트 리스너 추가
+    comparisonModeFilter.querySelectorAll('.yearly-filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            // 기존 active 제거
+            comparisonModeFilter.querySelectorAll('.yearly-filter-btn').forEach(b => b.classList.remove('active'));
+            // 새로운 active 추가
+            this.classList.add('active');
+            
+            yearlyFilters.comparisonMode = this.dataset.value;
+            yearlyFilters.cropGroup = ''; // 비교 모드 변경 시 초기화
+            yearlyFilters.crop = '';
+            updateYearlyCropGroups();
+            updateYearlyAnalysisTitle();
+        });
+    });
 }
 
 // 분석표 헤더 업데이트
@@ -3404,17 +3422,7 @@ function initializeYearlyFilters() {
     // 분석표 헤더 업데이트
     updateYearlyAnalysisHeader();
     
-    // 비교 모드 드롭다운 초기화
-    const comparisonModeSelect = document.getElementById('comparisonModeSelect');
-    if (comparisonModeSelect) {
-        comparisonModeSelect.addEventListener('change', function() {
-            yearlyFilters.comparisonMode = this.value;
-            yearlyFilters.cropGroup = ''; // 비교 모드 변경 시 초기화
-            yearlyFilters.crop = '';
-            updateYearlyCropGroups();
-            updateYearlyAnalysisTitle();
-        });
-    }
+    // 비교 모드 버튼 초기화는 updateComparisonModeOptions()에서 처리됨
     
     // 이벤트 리스너 초기화
     initializeYearlyEventListeners();
@@ -3422,32 +3430,29 @@ function initializeYearlyFilters() {
     // 작목군 필터 업데이트
     updateYearlyCropGroups();
     
+    // 작목군 드롭다운 초기화
+    initializeYearlyCropGroupFilter();
+    
     // 분석표 타이틀 업데이트
     updateYearlyAnalysisTitle();
+    
+    // 작목별 소득 테이블 초기화
+    updateYearlyCropIncomeTable();
+    
+    // TOP 5 리스트 초기화
+    updateYearlyTop5List();
+    
+    // 전국 평년 TOP 5 리스트 초기화
+    updateYearlyNationalTop5List();
+    
+    // 정렬 기능 초기화 (테이블 로딩 후)
+    setTimeout(() => {
+        initializeYearlyTableSorting();
+    }, 300);
 }
 
 function initializeYearlyEventListeners() {
-    // 작목군 필터 이벤트
-    document.addEventListener('click', function(e) {
-        if (e.target.matches('#yearlyCropGroupFilter .filter-item')) {
-            document.querySelectorAll('#yearlyCropGroupFilter .filter-item').forEach(i => i.classList.remove('active'));
-            e.target.classList.add('active');
-            yearlyFilters.cropGroup = e.target.dataset.cropGroup;
-            yearlyFilters.crop = ''; // 작목군 변경 시 작목상세 초기화
-            updateYearlyCrops();
-            updateYearlyAnalysisTitle();
-        }
-    });
-    
-    // 작목상세 필터 이벤트
-    document.addEventListener('click', function(e) {
-        if (e.target.matches('#yearlyCropFilter .filter-item')) {
-            document.querySelectorAll('#yearlyCropFilter .filter-item').forEach(i => i.classList.remove('active'));
-            e.target.classList.add('active');
-            yearlyFilters.crop = e.target.dataset.crop;
-            updateYearlyAnalysisTitle();
-        }
-    });
+    // 작목군, 작목상세 필터는 이제 드롭다운으로 처리되어 별도 이벤트 리스너 불필요
 }
 
 // 비교 모드에 따른 작목군 필터 업데이트
@@ -3478,13 +3483,27 @@ function updateYearlyCropGroups() {
         }
     }
     
-    const yearlyCropGroupFilter = document.getElementById('yearlyCropGroupFilter');
-    if (yearlyCropGroupFilter) {
-        yearlyCropGroupFilter.innerHTML = '';
+    const yearlyCropGroupSelect = document.getElementById('yearlyCropGroupSelect');
+    if (yearlyCropGroupSelect) {
+        yearlyCropGroupSelect.innerHTML = '';
         commonCropGroups.forEach((group, index) => {
-            const isActive = index === 0 && !yearlyFilters.cropGroup;
-            yearlyCropGroupFilter.innerHTML += `<div class="filter-item ${isActive ? 'active' : ''}" data-crop-group="${group}">${group}</div>`;
-            if (isActive) yearlyFilters.cropGroup = group;
+            const isSelected = yearlyFilters.cropGroup === group || (!yearlyFilters.cropGroup && index === 0) ? 'selected' : '';
+            yearlyCropGroupSelect.innerHTML += `<option value="${group}" ${isSelected}>${group}</option>`;
+            // 첫 번째 항목을 기본값으로 설정
+            if (!yearlyFilters.cropGroup && index === 0) {
+                yearlyFilters.cropGroup = group;
+            }
+        });
+        
+        // 기존 이벤트 리스너 제거 후 새로 추가
+        const newSelect = yearlyCropGroupSelect.cloneNode(true);
+        yearlyCropGroupSelect.parentNode.replaceChild(newSelect, yearlyCropGroupSelect);
+        
+        newSelect.addEventListener('change', function() {
+            yearlyFilters.cropGroup = this.value;
+            yearlyFilters.crop = ''; // 작목군 변경 시 작목상세 초기화
+            updateYearlyCrops();
+            updateYearlyAnalysisTitle();
         });
     }
     
@@ -3521,13 +3540,25 @@ function updateYearlyCrops() {
         }
     }
     
-    const yearlyCropFilter = document.getElementById('yearlyCropFilter');
-    if (yearlyCropFilter) {
-        yearlyCropFilter.innerHTML = '';
+    const yearlyCropSelect = document.getElementById('yearlyCropSelect');
+    if (yearlyCropSelect) {
+        yearlyCropSelect.innerHTML = '';
         commonCrops.forEach((crop, index) => {
-            const isActive = index === 0 && !yearlyFilters.crop;
-            yearlyCropFilter.innerHTML += `<div class="filter-item ${isActive ? 'active' : ''}" data-crop="${crop}">${crop}</div>`;
-            if (isActive) yearlyFilters.crop = crop;
+            const isSelected = yearlyFilters.crop === crop || (!yearlyFilters.crop && index === 0) ? 'selected' : '';
+            yearlyCropSelect.innerHTML += `<option value="${crop}" ${isSelected}>${crop}</option>`;
+            // 첫 번째 항목을 기본값으로 설정
+            if (!yearlyFilters.crop && index === 0) {
+                yearlyFilters.crop = crop;
+            }
+        });
+        
+        // 기존 이벤트 리스너 제거 후 새로 추가
+        const newSelect = yearlyCropSelect.cloneNode(true);
+        yearlyCropSelect.parentNode.replaceChild(newSelect, yearlyCropSelect);
+        
+        newSelect.addEventListener('change', function() {
+            yearlyFilters.crop = this.value;
+            updateYearlyAnalysisTitle();
         });
     }
 }
@@ -3599,6 +3630,662 @@ function updateYearlyAnalysisTitle() {
     
     fullTitle += ' 분석';
     titleElement.textContent = fullTitle;
+    
+    // 분석표 데이터 업데이트
+    updateYearlyAnalysisData();
+    
+    // 작목별 소득 테이블 업데이트
+    updateYearlyCropIncomeTable();
+}
+
+// 평년탭 분석표 데이터 업데이트
+function updateYearlyAnalysisData() {
+    const { regions, datasets } = getComparisonModeInfo(yearlyFilters.comparisonMode);
+    
+    if (!yearlyFilters.cropGroup || !yearlyFilters.crop) {
+        // 필터가 선택되지 않은 경우
+        const tableBody = document.getElementById('yearlyAnalysisTableBody');
+        if (tableBody) {
+            tableBody.innerHTML = '<tr><td colspan="5" class="loading">작목군과 작목을 선택해주세요.</td></tr>';
+        }
+        updateYearlySummaryBox(0, 0, 0, 0, '', '');
+        return;
+    }
+    
+    try {
+        const analysisData = calculateYearlyAnalysis(regions, datasets);
+        updateYearlyAnalysisTable(analysisData);
+    } catch (error) {
+        console.error('평년탭 분석 데이터 계산 오류:', error);
+        const tableBody = document.getElementById('yearlyAnalysisTableBody');
+        if (tableBody) {
+            tableBody.innerHTML = '<tr><td colspan="5" class="loading">데이터를 불러올 수 없습니다.</td></tr>';
+        }
+        updateYearlySummaryBox(0, 0, 0, 0, '', '');
+    }
+}
+
+// 평년탭 분석 데이터 계산 - 비교모드에 따른 데이터 소스 매핑
+function calculateYearlyAnalysis(regions, datasets) {
+    const latestYear = getLatestYear();
+    const comparisonMode = yearlyFilters.comparisonMode;
+    
+    let baseData = [];
+    let compareData = [];
+    let baseLabel = '';
+    let compareLabel = '';
+    
+    // 비교 모드에 따른 데이터 소스 및 레이블 결정
+    if (comparisonMode === 'gangwon-yearly-vs-current') {
+        // 강원 평년 vs 강원 2023년
+        baseData = csvData2.filter(item => 
+            item.region === '강원' &&
+            item.cropGroup === yearlyFilters.cropGroup &&
+            item.crop === yearlyFilters.crop
+        );
+        compareData = csvData.filter(item => 
+            item.region === '강원' &&
+            item.year === latestYear &&
+            item.cropGroup === yearlyFilters.cropGroup &&
+            item.crop === yearlyFilters.crop
+        );
+        baseLabel = '강원평년';
+        compareLabel = `강원${latestYear}년`;
+        
+    } else if (comparisonMode === 'national-vs-gangwon-yearly') {
+        // 전국 평년 vs 강원 평년
+        baseData = csvData2.filter(item => 
+            item.region === '전국' &&
+            item.cropGroup === yearlyFilters.cropGroup &&
+            item.crop === yearlyFilters.crop
+        );
+        compareData = csvData2.filter(item => 
+            item.region === '강원' &&
+            item.cropGroup === yearlyFilters.cropGroup &&
+            item.crop === yearlyFilters.crop
+        );
+        baseLabel = '전국평년';
+        compareLabel = '강원평년';
+        
+    } else if (comparisonMode === 'national-yearly-vs-gangwon-current') {
+        // 전국 평년 vs 강원 2023년
+        baseData = csvData2.filter(item => 
+            item.region === '전국' &&
+            item.cropGroup === yearlyFilters.cropGroup &&
+            item.crop === yearlyFilters.crop
+        );
+        compareData = csvData.filter(item => 
+            item.region === '강원' &&
+            item.year === latestYear &&
+            item.cropGroup === yearlyFilters.cropGroup &&
+            item.crop === yearlyFilters.crop
+        );
+        baseLabel = '전국평년';
+        compareLabel = `강원${latestYear}년`;
+        
+    } else if (comparisonMode === 'national-yearly-vs-current') {
+        // 전국 평년 vs 전국 2023년
+        baseData = csvData2.filter(item => 
+            item.region === '전국' &&
+            item.cropGroup === yearlyFilters.cropGroup &&
+            item.crop === yearlyFilters.crop
+        );
+        compareData = csvData.filter(item => 
+            item.region === '전국' &&
+            item.year === latestYear &&
+            item.cropGroup === yearlyFilters.cropGroup &&
+            item.crop === yearlyFilters.crop
+        );
+        baseLabel = '전국평년';
+        compareLabel = `전국${latestYear}년`;
+    }
+    
+    return {
+        baseData: baseData,
+        compareData: compareData,
+        baseLabel: baseLabel,
+        compareLabel: compareLabel
+    };
+}
+
+// 평년탭 분석표 테이블 업데이트 - 동적 헤더 및 새로운 데이터 구조
+function updateYearlyAnalysisTable(analysisData) {
+    const tableHead = document.getElementById('yearlyAnalysisTableHead');
+    const tableBody = document.getElementById('yearlyAnalysisTableBody');
+    if (!tableHead || !tableBody) return;
+    
+    // 테이블 헤더 동적 생성
+    tableHead.innerHTML = `
+        <tr>
+            <th>구분</th>
+            <th>${analysisData.baseLabel}</th>
+            <th>${analysisData.compareLabel}</th>
+            <th>차이</th>
+            <th>대비(%)</th>
+        </tr>
+    `;
+    
+    if (!analysisData.baseData || !analysisData.compareData) {
+        tableBody.innerHTML = '<tr><td colspan="5" class="loading">선택한 조건의 데이터가 없습니다.</td></tr>';
+        return;
+    }
+    
+    // 기준 데이터와 비교 데이터를 맵으로 변환
+    const baseItemMap = {};
+    const compareItemMap = {};
+    
+    analysisData.baseData.forEach(item => {
+        const value = typeof item.value === 'string' ? 
+            parseFloat(item.value.toString().replace(/,/g, '')) : 
+            parseFloat(item.value);
+        baseItemMap[item.category] = isNaN(value) ? 0 : value;
+    });
+    
+    analysisData.compareData.forEach(item => {
+        const value = typeof item.value === 'string' ? 
+            parseFloat(item.value.toString().replace(/,/g, '')) : 
+            parseFloat(item.value);
+        compareItemMap[item.category] = isNaN(value) ? 0 : value;
+    });
+    
+    let html = '';
+    let totalBase = 0;
+    let totalCompare = 0;
+    
+    // 총수입 박스
+    const baseTotalRevenue = baseItemMap['총수입'] || 0;
+    const compareTotalRevenue = compareItemMap['총수입'] || 0;
+    const revenueDiff = compareTotalRevenue - baseTotalRevenue;
+    const revenueChangeRate = baseTotalRevenue > 0 ? ((revenueDiff / baseTotalRevenue) * 100) : 0;
+    
+    totalBase = baseItemMap['소득'] || 0;
+    totalCompare = compareItemMap['소득'] || 0;
+    
+    const revenueDiffColor = compareTotalRevenue > baseTotalRevenue ? 'color: #dc2626;' : 'color: #1e40af;';
+    const revenueRatioColor = revenueChangeRate > 0 ? 'color: #dc2626;' : revenueChangeRate < 0 ? 'color: #1e40af;' : 'color: #64748b;';
+    
+    const baseTotalRevenueDisplay = (baseTotalRevenue === 0) ? '-' : baseTotalRevenue.toLocaleString();
+    const compareTotalRevenueDisplay = (compareTotalRevenue === 0) ? '-' : compareTotalRevenue.toLocaleString();
+    const revenueDiffDisplay = (baseTotalRevenue === 0 && compareTotalRevenue === 0) ? '-' : Math.abs(revenueDiff).toLocaleString();
+    const revenueRatioDisplay = (baseTotalRevenue === 0 && compareTotalRevenue === 0) ? '-' : 
+        revenueChangeRate === 0 ? '0.0%' :
+        revenueChangeRate > 0 ? `▲ +${revenueChangeRate.toFixed(1)}%` : 
+        revenueChangeRate < 0 ? `▼ ${revenueChangeRate.toFixed(1)}%` : `0.0%`;
+    
+    html += `
+        <tr>
+            <td style="background-color: #f8fafc; font-weight: bold;">총수입</td>
+            <td style="background-color: #f8fafc; font-weight: bold;">${baseTotalRevenueDisplay}</td>
+            <td style="background-color: #f8fafc; font-weight: bold;">${compareTotalRevenueDisplay}</td>
+            <td style="background-color: #f8fafc; font-weight: bold; ${revenueDiffColor}">${revenueDiffDisplay}</td>
+            <td style="background-color: #f8fafc; font-weight: bold; ${revenueRatioColor}">${revenueRatioDisplay}</td>
+        </tr>
+    `;
+    
+    // 수입 항목들
+    const revenueItems = ['주산물가액', '주산물수량', '부산물가액', '수취가격'];
+    revenueItems.forEach(itemName => {
+        const baseValue = baseItemMap[itemName] || 0;
+        const compareValue = compareItemMap[itemName] || 0;
+        const difference = compareValue - baseValue;
+        const changeRate = baseValue > 0 ? ((difference / baseValue) * 100) : 0;
+        
+        const baseDisplay = (baseValue === 0) ? '-' : baseValue.toLocaleString();
+        const compareDisplay = (compareValue === 0) ? '-' : compareValue.toLocaleString();
+        const differenceDisplay = (baseValue === 0 && compareValue === 0) ? '-' : Math.abs(difference).toLocaleString();
+        const ratioDisplay = (baseValue === 0 && compareValue === 0) ? '-' : 
+            changeRate === 0 ? '0.0%' :
+            changeRate > 0 ? `▲ +${changeRate.toFixed(1)}%` : 
+            changeRate < 0 ? `▼ ${changeRate.toFixed(1)}%` : `0.0%`;
+            
+        const diffColor = compareValue > baseValue ? 'color: #dc2626;' : 'color: #1e40af;';
+        const ratioColor = changeRate > 0 ? 'color: #dc2626;' : changeRate < 0 ? 'color: #1e40af;' : 'color: #64748b;';
+        
+        html += `
+            <tr>
+                <td>${itemName}</td>
+                <td>${baseDisplay}</td>
+                <td>${compareDisplay}</td>
+                <td style="${diffColor}">${differenceDisplay}</td>
+                <td style="${ratioColor}">${ratioDisplay}</td>
+            </tr>
+        `;
+    });
+    
+    // 중간재비 계산
+    let baseTotalMaterial = 0;
+    let compareTotalMaterial = 0;
+    
+    const materialCostItems = yearlyFilters.cropGroup === '과수' ? 
+        ['과수원조성비', '보통(무기질)비료비', '부산물(유기질)비료비', '농약비', '수도광열비', '기타재료비', '소농구비', '대농구상각비', '영농시설상각비', '수리·유지비', '기타비용'] :
+        ['종자·종묘비', '보통(무기질)비료비', '부산물(유기질)비료비', '농약비', '수도광열비', '기타재료비', '소농구비', '대농구상각비', '영농시설상각비', '수리·유지비', '기타비용'];
+    
+    materialCostItems.forEach(itemName => {
+        const baseValue = baseItemMap[itemName] || 0;
+        const compareValue = compareItemMap[itemName] || 0;
+        baseTotalMaterial += baseValue;
+        compareTotalMaterial += compareValue;
+    });
+    
+    const materialDiff = compareTotalMaterial - baseTotalMaterial;
+    const materialChangeRate = baseTotalMaterial > 0 ? ((materialDiff / baseTotalMaterial) * 100) : 0;
+    
+    const materialDiffColor = compareTotalMaterial > baseTotalMaterial ? 'color: #dc2626;' : 'color: #1e40af;';
+    const materialRatioColor = materialChangeRate > 0 ? 'color: #dc2626;' : materialChangeRate < 0 ? 'color: #1e40af;' : 'color: #64748b;';
+    
+    const baseTotalMaterialDisplay = (baseTotalMaterial === 0) ? '-' : baseTotalMaterial.toLocaleString();
+    const compareTotalMaterialDisplay = (compareTotalMaterial === 0) ? '-' : compareTotalMaterial.toLocaleString();
+    const materialDiffDisplay = (baseTotalMaterial === 0 && compareTotalMaterial === 0) ? '-' : Math.abs(materialDiff).toLocaleString();
+    const materialRatioDisplay = (baseTotalMaterial === 0 && compareTotalMaterial === 0) ? '-' :
+        materialChangeRate === 0 ? '0.0%' : 
+        materialChangeRate > 0 ? `▲ +${materialChangeRate.toFixed(1)}%` : 
+        materialChangeRate < 0 ? `▼ ${materialChangeRate.toFixed(1)}%` : `0.0%`;
+    
+    html += `
+        <tr>
+            <td style="background-color: #f8fafc; font-weight: bold;">중간재비</td>
+            <td style="background-color: #f8fafc; font-weight: bold;">${baseTotalMaterialDisplay}</td>
+            <td style="background-color: #f8fafc; font-weight: bold;">${compareTotalMaterialDisplay}</td>
+            <td style="background-color: #f8fafc; font-weight: bold; ${materialDiffColor}">${materialDiffDisplay}</td>
+            <td style="background-color: #f8fafc; font-weight: bold; ${materialRatioColor}">${materialRatioDisplay}</td>
+        </tr>
+    `;
+    
+    // 중간재비 세부 항목들
+    materialCostItems.forEach(itemName => {
+        const baseValue = baseItemMap[itemName] || 0;
+        const compareValue = compareItemMap[itemName] || 0;
+        const difference = compareValue - baseValue;
+        const changeRate = baseValue > 0 ? ((difference / baseValue) * 100) : 0;
+        
+        const baseDisplay = (baseValue === 0) ? '-' : baseValue.toLocaleString();
+        const compareDisplay = (compareValue === 0) ? '-' : compareValue.toLocaleString();
+        const differenceDisplay = (baseValue === 0 && compareValue === 0) ? '-' : Math.abs(difference).toLocaleString();
+        const ratioDisplay = (baseValue === 0 && compareValue === 0) ? '-' : 
+            changeRate === 0 ? '0.0%' :
+            changeRate > 0 ? `▲ +${changeRate.toFixed(1)}%` : 
+            changeRate < 0 ? `▼ ${changeRate.toFixed(1)}%` : `0.0%`;
+            
+        const diffColor = compareValue > baseValue ? 'color: #dc2626;' : 'color: #1e40af;';
+        const ratioColor = changeRate > 0 ? 'color: #dc2626;' : changeRate < 0 ? 'color: #1e40af;' : 'color: #64748b;';
+        
+        html += `
+            <tr>
+                <td style="padding-left: 20px;">${itemName}</td>
+                <td>${baseDisplay}</td>
+                <td>${compareDisplay}</td>
+                <td style="${diffColor}">${differenceDisplay}</td>
+                <td style="${ratioColor}">${ratioDisplay}</td>
+            </tr>
+        `;
+    });
+    
+    // 경영비 총합 표시
+    const baseManagementCost = baseItemMap['경영비'] || 0;
+    const compareManagementCost = compareItemMap['경영비'] || 0;
+    const managementDiff = compareManagementCost - baseManagementCost;
+    const managementChangeRate = baseManagementCost > 0 ? ((managementDiff / baseManagementCost) * 100) : 0;
+    
+    const managementDiffColor = compareManagementCost > baseManagementCost ? 'color: #dc2626;' : 'color: #1e40af;';
+    const managementRatioColor = managementChangeRate > 0 ? 'color: #dc2626;' : managementChangeRate < 0 ? 'color: #1e40af;' : 'color: #64748b;';
+    
+    const baseManagementCostDisplay = baseManagementCost.toLocaleString();
+    const compareManagementCostDisplay = compareManagementCost.toLocaleString();
+    const managementDiffDisplay = Math.abs(managementDiff).toLocaleString();
+    const managementRatioDisplay = managementChangeRate === 0 ? '0.0%' : 
+        managementChangeRate > 0 ? `▲ +${managementChangeRate.toFixed(1)}%` : 
+        managementChangeRate < 0 ? `▼ ${managementChangeRate.toFixed(1)}%` : `0.0%`;
+    
+    html += `
+        <tr>
+            <td style="background-color: #f8fafc; font-weight: bold;">경영비</td>
+            <td style="background-color: #f8fafc; font-weight: bold;">${baseManagementCostDisplay}</td>
+            <td style="background-color: #f8fafc; font-weight: bold;">${compareManagementCostDisplay}</td>
+            <td style="background-color: #f8fafc; font-weight: bold; ${managementDiffColor}">${managementDiffDisplay}</td>
+            <td style="background-color: #f8fafc; font-weight: bold; ${managementRatioColor}">${managementRatioDisplay}</td>
+        </tr>
+    `;
+    
+    // 경영비 세부 항목들
+    const costItems = ['농기계·시설임차료', '토지임차료', '위탁영농비', '고용노동비'];
+    costItems.forEach(itemName => {
+        const baseValue = baseItemMap[itemName] || 0;
+        const compareValue = compareItemMap[itemName] || 0;
+        const difference = compareValue - baseValue;
+        const changeRate = baseValue > 0 ? ((difference / baseValue) * 100) : 0;
+        
+        const baseDisplay = (baseValue === 0) ? '-' : baseValue.toLocaleString();
+        const compareDisplay = (compareValue === 0) ? '-' : compareValue.toLocaleString();
+        const differenceDisplay = (baseValue === 0 && compareValue === 0) ? '-' : Math.abs(difference).toLocaleString();
+        const ratioDisplay = (baseValue === 0 && compareValue === 0) ? '-' : 
+            changeRate === 0 ? '0.0%' :
+            changeRate > 0 ? `▲ +${changeRate.toFixed(1)}%` : 
+            changeRate < 0 ? `▼ ${changeRate.toFixed(1)}%` : `0.0%`;
+            
+        const diffColor = compareValue > baseValue ? 'color: #dc2626;' : 'color: #1e40af;';
+        const ratioColor = changeRate > 0 ? 'color: #dc2626;' : changeRate < 0 ? 'color: #1e40af;' : 'color: #64748b;';
+        
+        html += `
+            <tr>
+                <td>${itemName}</td>
+                <td>${baseDisplay}</td>
+                <td>${compareDisplay}</td>
+                <td style="${diffColor}">${differenceDisplay}</td>
+                <td style="${ratioColor}">${ratioDisplay}</td>
+            </tr>
+        `;
+    });
+    
+    // 생산비 총합 표시
+    const baseProductionCost = baseItemMap['생산비'] || 0;
+    const compareProductionCost = compareItemMap['생산비'] || 0;
+    const productionDiff = compareProductionCost - baseProductionCost;
+    const productionChangeRate = baseProductionCost > 0 ? ((productionDiff / baseProductionCost) * 100) : 0;
+    
+    const productionDiffColor = compareProductionCost > baseProductionCost ? 'color: #dc2626;' : 'color: #1e40af;';
+    const productionRatioColor = productionChangeRate > 0 ? 'color: #dc2626;' : productionChangeRate < 0 ? 'color: #1e40af;' : 'color: #64748b;';
+    
+    const baseProductionCostDisplay = baseProductionCost.toLocaleString();
+    const compareProductionCostDisplay = compareProductionCost.toLocaleString();
+    const productionDiffDisplay = Math.abs(productionDiff).toLocaleString();
+    const productionRatioDisplay = productionChangeRate === 0 ? '0.0%' : 
+        productionChangeRate > 0 ? `▲ +${productionChangeRate.toFixed(1)}%` : 
+        productionChangeRate < 0 ? `▼ ${productionChangeRate.toFixed(1)}%` : `0.0%`;
+    
+    html += `
+        <tr>
+            <td style="background-color: #f8fafc; font-weight: bold;">생산비</td>
+            <td style="background-color: #f8fafc; font-weight: bold;">${baseProductionCostDisplay}</td>
+            <td style="background-color: #f8fafc; font-weight: bold;">${compareProductionCostDisplay}</td>
+            <td style="background-color: #f8fafc; font-weight: bold; ${productionDiffColor}">${productionDiffDisplay}</td>
+            <td style="background-color: #f8fafc; font-weight: bold; ${productionRatioColor}">${productionRatioDisplay}</td>
+        </tr>
+    `;
+    
+    // 생산비 세부 항목들
+    const productionItems = ['자가노동비', '유동자본용역비', '고정자본용역비', '토지자본용역비'];
+    productionItems.forEach(itemName => {
+        const baseValue = baseItemMap[itemName] || 0;
+        const compareValue = compareItemMap[itemName] || 0;
+        const difference = compareValue - baseValue;
+        const changeRate = baseValue > 0 ? ((difference / baseValue) * 100) : 0;
+        
+        const baseDisplay = (baseValue === 0 && !baseItemMap.hasOwnProperty(itemName)) ? '-' : baseValue.toLocaleString();
+        const compareDisplay = (compareValue === 0 && !compareItemMap.hasOwnProperty(itemName)) ? '-' : compareValue.toLocaleString();
+        const differenceDisplay = (Math.abs(difference) === 0 && baseValue === 0 && compareValue === 0) ? '-' : Math.abs(difference).toLocaleString();
+        const ratioDisplay = changeRate === 0 ? '0.0%' : 
+            changeRate > 0 ? `▲ +${changeRate.toFixed(1)}%` : 
+            changeRate < 0 ? `▼ ${changeRate.toFixed(1)}%` : `0.0%`;
+            
+        const diffColor = compareValue > baseValue ? 'color: #dc2626;' : 'color: #1e40af;';
+        const ratioColor = changeRate > 0 ? 'color: #dc2626;' : changeRate < 0 ? 'color: #1e40af;' : 'color: #64748b;';
+        
+        html += `
+            <tr>
+                <td>${itemName}</td>
+                <td>${baseDisplay}</td>
+                <td>${compareDisplay}</td>
+                <td style="${diffColor}">${differenceDisplay}</td>
+                <td style="${ratioColor}">${ratioDisplay}</td>
+            </tr>
+        `;
+    });
+    
+    // 최종 항목들 - 지정된 순서대로
+    const finalItems = ['소득', '소득률', '부가가치', '부가가치율', '노동생산성', '자본생산성', '토지생산성', 'kg당 생산비', 'kg당 경영비'];
+    finalItems.forEach(itemName => {
+        const baseValue = baseItemMap[itemName] || 0;
+        const compareValue = compareItemMap[itemName] || 0;
+        const difference = compareValue - baseValue;
+        const changeRate = baseValue > 0 ? ((difference / baseValue) * 100) : 0;
+        
+        const baseDisplay = (baseValue === 0 && !baseItemMap.hasOwnProperty(itemName)) ? '-' : baseValue.toLocaleString();
+        const compareDisplay = (compareValue === 0 && !compareItemMap.hasOwnProperty(itemName)) ? '-' : compareValue.toLocaleString();
+        const differenceDisplay = (Math.abs(difference) === 0 && baseValue === 0 && compareValue === 0) ? '-' : Math.abs(difference).toLocaleString();
+        const ratioDisplay = changeRate === 0 ? '0.0%' : 
+            changeRate > 0 ? `▲ +${changeRate.toFixed(1)}%` : 
+            changeRate < 0 ? `▼ ${changeRate.toFixed(1)}%` : `0.0%`;
+            
+        const diffColor = compareValue > baseValue ? 'color: #dc2626;' : 'color: #1e40af;';
+        const ratioColor = changeRate > 0 ? 'color: #dc2626;' : changeRate < 0 ? 'color: #1e40af;' : 'color: #64748b;';
+        
+        html += `
+            <tr>
+                <td style="background-color: #f8fafc; font-weight: bold;">${itemName}</td>
+                <td style="background-color: #f8fafc; font-weight: bold;">${baseDisplay}</td>
+                <td style="background-color: #f8fafc; font-weight: bold;">${compareDisplay}</td>
+                <td style="background-color: #f8fafc; font-weight: bold; ${diffColor}">${differenceDisplay}</td>
+                <td style="background-color: #f8fafc; font-weight: bold; ${ratioColor}">${ratioDisplay}</td>
+            </tr>
+        `;
+    });
+    
+    tableBody.innerHTML = html;
+    
+    // 요약 박스 업데이트
+    const difference = totalCompare - totalBase;
+    const ratio = totalBase > 0 ? ((difference / totalBase) * 100) : 0;
+    updateYearlySummaryBox(totalBase, totalCompare, difference, ratio, analysisData.baseLabel, analysisData.compareLabel);
+}
+
+// 평년탭 작목별 소득 테이블 업데이트
+function updateYearlyCropIncomeTable() {
+    const tableBody = document.getElementById('yearlyCropIncomeTableBody');
+    const titleElement = document.getElementById('yearlyCropIncomeTitle');
+    const baseHeaderElement = document.getElementById('yearlyIncomeBaseHeader');
+    const compareHeaderElement = document.getElementById('yearlyIncomeCompareHeader');
+    const cropGroupFilter = document.getElementById('yearlyCropGroupFilter');
+    
+    if (!tableBody) return;
+    
+    if (!yearlyFilters.cropGroup) {
+        tableBody.innerHTML = '<tr><td colspan="5" class="loading">작목군을 선택해주세요.</td></tr>';
+        return;
+    }
+    
+    const latestYear = getLatestYear();
+    const comparisonMode = yearlyFilters.comparisonMode;
+    const selectedCropGroup = cropGroupFilter ? cropGroupFilter.value : 'all';
+    
+    // 비교 모드에 따른 데이터 소스와 레이블 결정
+    let baseData = [];
+    let compareData = [];
+    let baseLabel = '';
+    let compareLabel = '';
+    
+    if (comparisonMode === 'gangwon-yearly-vs-current') {
+        const baseFilter = selectedCropGroup === 'all' ? 
+            {region: '강원', category: '소득'} : 
+            {region: '강원', cropGroup: selectedCropGroup, category: '소득'};
+        const compareFilter = selectedCropGroup === 'all' ? 
+            {region: '강원', year: latestYear, category: '소득'} : 
+            {region: '강원', year: latestYear, cropGroup: selectedCropGroup, category: '소득'};
+        
+        baseData = csvData2.filter(item => 
+            Object.keys(baseFilter).every(key => item[key] === baseFilter[key])
+        );
+        compareData = csvData.filter(item => 
+            Object.keys(compareFilter).every(key => item[key] === compareFilter[key])
+        );
+        baseLabel = '강원 평년';
+        compareLabel = `강원 ${latestYear}년`;
+        
+    } else if (comparisonMode === 'national-vs-gangwon-yearly') {
+        const baseFilter = selectedCropGroup === 'all' ? 
+            {region: '전국', category: '소득'} : 
+            {region: '전국', cropGroup: selectedCropGroup, category: '소득'};
+        const compareFilter = selectedCropGroup === 'all' ? 
+            {region: '강원', category: '소득'} : 
+            {region: '강원', cropGroup: selectedCropGroup, category: '소득'};
+        
+        baseData = csvData2.filter(item => 
+            Object.keys(baseFilter).every(key => item[key] === baseFilter[key])
+        );
+        compareData = csvData2.filter(item => 
+            Object.keys(compareFilter).every(key => item[key] === compareFilter[key])
+        );
+        baseLabel = '전국 평년';
+        compareLabel = '강원 평년';
+        
+    } else if (comparisonMode === 'national-yearly-vs-gangwon-current') {
+        const baseFilter = selectedCropGroup === 'all' ? 
+            {region: '전국', category: '소득'} : 
+            {region: '전국', cropGroup: selectedCropGroup, category: '소득'};
+        const compareFilter = selectedCropGroup === 'all' ? 
+            {region: '강원', year: latestYear, category: '소득'} : 
+            {region: '강원', year: latestYear, cropGroup: selectedCropGroup, category: '소득'};
+        
+        baseData = csvData2.filter(item => 
+            Object.keys(baseFilter).every(key => item[key] === baseFilter[key])
+        );
+        compareData = csvData.filter(item => 
+            Object.keys(compareFilter).every(key => item[key] === compareFilter[key])
+        );
+        baseLabel = '전국 평년';
+        compareLabel = `강원 ${latestYear}년`;
+        
+    } else if (comparisonMode === 'national-yearly-vs-current') {
+        const baseFilter = selectedCropGroup === 'all' ? 
+            {region: '전국', category: '소득'} : 
+            {region: '전국', cropGroup: selectedCropGroup, category: '소득'};
+        const compareFilter = selectedCropGroup === 'all' ? 
+            {region: '전국', year: latestYear, category: '소득'} : 
+            {region: '전국', year: latestYear, cropGroup: selectedCropGroup, category: '소득'};
+        
+        baseData = csvData2.filter(item => 
+            Object.keys(baseFilter).every(key => item[key] === baseFilter[key])
+        );
+        compareData = csvData.filter(item => 
+            Object.keys(compareFilter).every(key => item[key] === compareFilter[key])
+        );
+        baseLabel = '전국 평년';
+        compareLabel = `전국 ${latestYear}년`;
+    }
+    
+    if (titleElement) {
+        titleElement.textContent = `${baseLabel} vs ${compareLabel} 작목별 소득`;
+    }
+    
+    if (baseHeaderElement) {
+        // sort-arrow를 보존하면서 텍스트 변경
+        const sortArrow = baseHeaderElement.querySelector('.sort-arrow');
+        baseHeaderElement.textContent = baseLabel;
+        if (sortArrow) {
+            baseHeaderElement.appendChild(sortArrow);
+        } else {
+            // sort-arrow가 없으면 새로 생성
+            const newSortArrow = document.createElement('span');
+            newSortArrow.className = 'sort-arrow';
+            baseHeaderElement.appendChild(newSortArrow);
+        }
+    }
+    
+    if (compareHeaderElement) {
+        // sort-arrow를 보존하면서 텍스트 변경
+        const sortArrow = compareHeaderElement.querySelector('.sort-arrow');
+        compareHeaderElement.textContent = compareLabel;
+        if (sortArrow) {
+            compareHeaderElement.appendChild(sortArrow);
+        } else {
+            // sort-arrow가 없으면 새로 생성
+            const newSortArrow = document.createElement('span');
+            newSortArrow.className = 'sort-arrow';
+            compareHeaderElement.appendChild(newSortArrow);
+        }
+    }
+    
+    // 데이터 매핑
+    const baseItemMap = {};
+    const compareItemMap = {};
+    
+    baseData.forEach(item => {
+        baseItemMap[item.crop] = item.value || 0;
+    });
+    
+    compareData.forEach(item => {
+        compareItemMap[item.crop] = item.value || 0;
+    });
+    
+    // 기준값과 비교값이 모두 있는 작목만 필터링하고 데이터 구조화
+    const tableData = [];
+    const allCrops = [...new Set([...Object.keys(baseItemMap), ...Object.keys(compareItemMap)])]
+        .filter(crop => baseItemMap[crop] > 0 && compareItemMap[crop] > 0);
+    
+    allCrops.forEach(crop => {
+        const baseValue = baseItemMap[crop];
+        const compareValue = compareItemMap[crop];
+        const difference = compareValue - baseValue;
+        const ratio = baseValue > 0 ? ((compareValue / baseValue) * 100) : 0;
+        
+        tableData.push({
+            crop: crop,
+            baseValue: baseValue,
+            compareValue: compareValue,
+            difference: difference,
+            ratio: ratio
+        });
+    });
+    
+    if (tableData.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="5" class="loading">해당 조건의 소득 데이터가 없습니다.</td></tr>';
+        return;
+    }
+    
+    // 원본 데이터 저장 (정렬용)
+    yearlyOriginalTableData = [...tableData];
+    
+    // 정렬 이벤트 리스너 초기화
+    setTimeout(() => {
+        initializeYearlyTableSorting();
+    }, 100);
+    
+    // 기존 정렬 상태가 있으면 적용, 없으면 기본 정렬 (작목명 오름차순)
+    if (yearlyCurrentSort.column) {
+        sortYearlyTableByColumn(yearlyCurrentSort.column);
+    } else {
+        tableData.sort((a, b) => a.crop.localeCompare(b.crop));
+        renderYearlyTableWithData(tableData);
+    }
+}
+
+// 평년탭 요약 박스 업데이트
+function updateYearlySummaryBox(baseValue, compareValue, difference, ratio, baseLabel, compareLabel) {
+    const baseIncomeElement = document.getElementById('yearlyBaseIncome');
+    const compareIncomeElement = document.getElementById('yearlyCompareIncome');
+    const differenceElement = document.getElementById('yearlyDifference');
+    const ratioElement = document.getElementById('yearlyRatio');
+    const baseLabelElement = document.getElementById('yearlyBaseLabel');
+    const compareLabelElement = document.getElementById('yearlyCompareLabel');
+    
+    if (baseIncomeElement) {
+        baseIncomeElement.textContent = `₩${baseValue.toLocaleString()}`;
+    }
+    
+    if (compareIncomeElement) {
+        compareIncomeElement.textContent = `₩${compareValue.toLocaleString()}`;
+    }
+    
+    if (differenceElement) {
+        const prefix = difference >= 0 ? '+' : '';
+        differenceElement.textContent = `${prefix}₩${Math.abs(difference).toLocaleString()}`;
+        // 비교값이 기준값보다 크면 빨간색, 작으면 파란색
+        differenceElement.style.color = compareValue > baseValue ? '#dc2626' : '#1e40af';
+    }
+    
+    if (ratioElement) {
+        const prefix = ratio >= 0 ? '+' : '';
+        ratioElement.textContent = `${prefix}${ratio.toFixed(1)}%`;
+        // 대비값이 양수(비교값이 더 큰 경우)면 빨간색, 음수면 파란색
+        ratioElement.style.color = ratio > 0 ? '#dc2626' : ratio < 0 ? '#1e40af' : '#64748b';
+    }
+    
+    if (baseLabelElement && baseLabel) {
+        baseLabelElement.textContent = baseLabel;
+    }
+    
+    if (compareLabelElement && compareLabel) {
+        compareLabelElement.textContent = compareLabel;
+    }
 }
 
 function updateSummaryRegionFilter(region) {
@@ -3708,6 +4395,361 @@ function updateTop5List(containerId, data, category, unit) {
     `).join('');
     
     container.innerHTML = html;
+}
+
+// 평년탭 정렬 상태 관리
+let yearlyCurrentSort = { column: null, direction: 'desc' };
+let yearlyOriginalTableData = [];
+
+// 평년탭 테이블 정렬 함수
+function sortYearlyTableByColumn(column) {
+    console.log('sortYearlyTableByColumn 호출:', column);
+    console.log('yearlyOriginalTableData 길이:', yearlyOriginalTableData.length);
+    
+    if (!yearlyOriginalTableData.length) {
+        console.log('원본 데이터가 없습니다');
+        return;
+    }
+    
+    // 같은 컬럼을 클릭하면 방향 토글, 다른 컬럼이면 내림차순으로 시작
+    if (yearlyCurrentSort.column === column) {
+        yearlyCurrentSort.direction = yearlyCurrentSort.direction === 'desc' ? 'asc' : 'desc';
+    } else {
+        yearlyCurrentSort.column = column;
+        yearlyCurrentSort.direction = 'desc';
+    }
+    
+    console.log('정렬 방향:', yearlyCurrentSort.direction);
+    
+    // 헤더 스타일 업데이트
+    updateYearlySortHeaders();
+    
+    // 데이터 정렬
+    const sortedData = [...yearlyOriginalTableData].sort((a, b) => {
+        let aVal, bVal;
+        
+        switch(column) {
+            case 'crop':
+                aVal = a.crop;
+                bVal = b.crop;
+                return yearlyCurrentSort.direction === 'asc' ? 
+                    aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+            case 'baseValue':
+                aVal = a.baseValue;
+                bVal = b.baseValue;
+                return yearlyCurrentSort.direction === 'asc' ? aVal - bVal : bVal - aVal;
+            case 'compareValue':
+                aVal = a.compareValue;
+                bVal = b.compareValue;
+                return yearlyCurrentSort.direction === 'asc' ? aVal - bVal : bVal - aVal;
+            case 'difference':
+                aVal = a.difference;
+                bVal = b.difference;
+                return yearlyCurrentSort.direction === 'asc' ? aVal - bVal : bVal - aVal;
+            case 'ratio':
+                aVal = a.baseValue > 0 ? ((a.difference / a.baseValue) * 100) : 0;
+                bVal = b.baseValue > 0 ? ((b.difference / b.baseValue) * 100) : 0;
+                return yearlyCurrentSort.direction === 'asc' ? aVal - bVal : bVal - aVal;
+            default:
+                return 0;
+        }
+    });
+    
+    // 테이블 다시 렌더링
+    renderYearlyTableWithData(sortedData);
+}
+
+// 평년탭 정렬 헤더 업데이트
+function updateYearlySortHeaders() {
+    const tableContainer = document.querySelector('#yearly .income-table .table-container');
+    if (!tableContainer) return;
+    
+    const headers = tableContainer.querySelectorAll('th.sortable');
+    headers.forEach(header => {
+        const column = header.getAttribute('data-sort');
+        const arrow = header.querySelector('.sort-arrow');
+        
+        if (!arrow) {
+            console.log('sort-arrow 요소를 찾을 수 없습니다:', header);
+            return;
+        }
+        
+        if (column === yearlyCurrentSort.column) {
+            arrow.textContent = yearlyCurrentSort.direction === 'asc' ? ' ▲' : ' ▼';
+            header.classList.add('active');
+        } else {
+            arrow.textContent = '';
+            header.classList.remove('active');
+        }
+    });
+}
+
+// 평년탭 테이블 렌더링
+function renderYearlyTableWithData(tableData) {
+    const tableBody = document.getElementById('yearlyCropIncomeTableBody');
+    if (!tableBody) return;
+    
+    let html = '';
+    
+    tableData.forEach(item => {
+        const changeRate = item.baseValue > 0 ? ((item.difference / item.baseValue) * 100) : 0;
+        
+        const baseDisplay = `₩${item.baseValue.toLocaleString()}`;
+        const compareDisplay = `₩${item.compareValue.toLocaleString()}`;
+        const differenceDisplay = `₩${Math.abs(item.difference).toLocaleString()}`;
+        const ratioDisplay = changeRate > 0 ? `▲ +${changeRate.toFixed(1)}%` : 
+            changeRate < 0 ? `▼ ${changeRate.toFixed(1)}%` : `${item.ratio.toFixed(1)}%`;
+        
+        const diffColor = item.compareValue > item.baseValue ? 'color: #dc2626;' : 'color: #1e40af;';
+        const ratioColor = changeRate > 0 ? 'color: #dc2626;' : changeRate < 0 ? 'color: #1e40af;' : 'color: #64748b;';
+        
+        html += `
+            <tr data-crop="${item.crop}" data-base-value="${item.baseValue}" data-compare-value="${item.compareValue}" data-difference="${item.difference}" data-ratio="${changeRate}">
+                <td>${item.crop}</td>
+                <td>${baseDisplay}</td>
+                <td>${compareDisplay}</td>
+                <td style="${diffColor}">${differenceDisplay}</td>
+                <td style="${ratioColor}">${ratioDisplay}</td>
+            </tr>
+        `;
+    });
+    
+    tableBody.innerHTML = html;
+}
+
+// 평년탭 정렬 이벤트 리스너 초기화
+function initializeYearlyTableSorting() {
+    console.log('initializeYearlyTableSorting 시작');
+    
+    // 평년탭 테이블의 정렬 가능한 헤더들 찾기
+    const tableContainer = document.querySelector('#yearly .income-table .table-container');
+    if (!tableContainer) {
+        console.log('평년탭 테이블 컨테이너를 찾을 수 없습니다');
+        return;
+    }
+    
+    const sortableHeaders = tableContainer.querySelectorAll('th.sortable');
+    console.log('찾은 정렬 가능한 헤더 수:', sortableHeaders.length);
+    
+    if (sortableHeaders.length === 0) {
+        console.log('정렬 가능한 헤더를 찾을 수 없습니다');
+        return;
+    }
+    
+    sortableHeaders.forEach((header, index) => {
+        console.log(`헤더 ${index}:`, header.getAttribute('data-sort'));
+        
+        // 기존 이벤트 리스너 제거
+        if (header.yearlySortHandler) {
+            header.removeEventListener('click', header.yearlySortHandler);
+        }
+        
+        // 새 이벤트 리스너 추가
+        header.yearlySortHandler = function() {
+            const sortColumn = this.getAttribute('data-sort');
+            console.log('정렬 버튼 클릭:', sortColumn);
+            sortYearlyTableByColumn(sortColumn);
+        };
+        header.addEventListener('click', header.yearlySortHandler);
+    });
+    
+    console.log('정렬 이벤트 리스너 초기화 완료');
+}
+
+// 평년탭 강원 평년 TOP 5 업데이트
+function updateYearlyTop5List() {
+    const container = document.getElementById('yearlyTop5Container');
+    const titleElement = document.getElementById('yearlyTop5Title');
+    const categoryFilter = document.getElementById('yearlyTop5CategoryFilter');
+    
+    if (!container || !categoryFilter) return;
+    
+    const selectedCategory = categoryFilter.value;
+    
+    // 제목 업데이트
+    if (titleElement) {
+        titleElement.textContent = `강원 평년 ${selectedCategory} TOP 5`;
+    }
+    
+    // 강원 평년 데이터 필터링 (csvData2에서)
+    const gangwonYearlyData = csvData2.filter(item => 
+        item.region === '강원' && 
+        item.category === selectedCategory &&
+        item.crop && 
+        item.crop !== '전체' &&
+        item.value > 0
+    );
+    
+    if (gangwonYearlyData.length === 0) {
+        container.innerHTML = '<div class="loading-item">데이터가 없습니다</div>';
+        return;
+    }
+    
+    // kg당 생산비는 낮은 값이 좋으므로 오름차순, 나머지는 내림차순 정렬
+    const isKgCost = selectedCategory === 'kg당 생산비';
+    const sortedData = gangwonYearlyData
+        .sort((a, b) => isKgCost ? a.value - b.value : b.value - a.value)
+        .slice(0, 5);
+    
+    // 단위 결정
+    let unit = '';
+    if (['총수입', '경영비', '소득'].includes(selectedCategory)) {
+        unit = '';  // 이미 ₩ 포함해서 표시
+    } else if (['소득률'].includes(selectedCategory)) {
+        unit = '%';
+    } else if (['노동생산성', '자본생산성', '토지생산성'].includes(selectedCategory)) {
+        unit = '';
+    } else if (['kg당 생산비'].includes(selectedCategory)) {
+        unit = '';  // 이미 ₩ 포함해서 표시
+    }
+    
+    const html = sortedData.map((item, index) => {
+        let displayValue = '';
+        if (['총수입', '경영비', '소득', 'kg당 생산비'].includes(selectedCategory)) {
+            displayValue = `₩${item.value.toLocaleString()}${unit}`;
+        } else if (selectedCategory === '소득률') {
+            displayValue = `${item.value.toFixed(1)}${unit}`;
+        } else {
+            displayValue = `${item.value.toLocaleString()}${unit}`;
+        }
+        
+        return `
+            <div class="top5-item">
+                <div class="rank-number">${index + 1}</div>
+                <div class="crop-info">
+                    <div class="crop-name">${item.crop}</div>
+                    <div class="crop-group">${item.cropGroup}</div>
+                </div>
+                <div class="crop-value">${displayValue}</div>
+            </div>
+        `;
+    }).join('');
+    
+    container.innerHTML = html;
+}
+
+// 평년탭 전국 평년 TOP 5 업데이트
+function updateYearlyNationalTop5List() {
+    const container = document.getElementById('yearlyNationalTop5Container');
+    const titleElement = document.getElementById('yearlyNationalTop5Title');
+    const categoryFilter = document.getElementById('yearlyNationalTop5CategoryFilter');
+    
+    if (!container || !categoryFilter) return;
+    
+    const selectedCategory = categoryFilter.value;
+    
+    // 제목 업데이트
+    if (titleElement) {
+        titleElement.textContent = `전국 평년 ${selectedCategory} TOP 5`;
+    }
+    
+    // 전국 평년 데이터 필터링 (csvData2에서)
+    const nationalYearlyData = csvData2.filter(item => 
+        item.region === '전국' && 
+        item.category === selectedCategory &&
+        item.crop && 
+        item.crop !== '전체' &&
+        item.value > 0
+    );
+    
+    if (nationalYearlyData.length === 0) {
+        container.innerHTML = '<div class="loading-item">데이터가 없습니다</div>';
+        return;
+    }
+    
+    // kg당 생산비는 낮은 값이 좋으므로 오름차순, 나머지는 내림차순 정렬
+    const isKgCost = selectedCategory === 'kg당 생산비';
+    const sortedData = nationalYearlyData
+        .sort((a, b) => isKgCost ? a.value - b.value : b.value - a.value)
+        .slice(0, 5);
+    
+    // 단위 결정
+    let unit = '';
+    if (['총수입', '경영비', '소득'].includes(selectedCategory)) {
+        unit = '';  // 이미 ₩ 포함해서 표시
+    } else if (['소득률'].includes(selectedCategory)) {
+        unit = '%';
+    } else if (['노동생산성', '자본생산성', '토지생산성'].includes(selectedCategory)) {
+        unit = '';
+    } else if (['kg당 생산비'].includes(selectedCategory)) {
+        unit = '';  // 이미 ₩ 포함해서 표시
+    }
+    
+    const html = sortedData.map((item, index) => {
+        let displayValue = '';
+        if (['총수입', '경영비', '소득', 'kg당 생산비'].includes(selectedCategory)) {
+            displayValue = `₩${item.value.toLocaleString()}${unit}`;
+        } else if (selectedCategory === '소득률') {
+            displayValue = `${item.value.toFixed(1)}${unit}`;
+        } else {
+            displayValue = `${item.value.toLocaleString()}${unit}`;
+        }
+        
+        return `
+            <div class="top5-item">
+                <div class="rank-number">${index + 1}</div>
+                <div class="crop-info">
+                    <div class="crop-name">${item.crop}</div>
+                    <div class="crop-group">${item.cropGroup}</div>
+                </div>
+                <div class="crop-value">${displayValue}</div>
+            </div>
+        `;
+    }).join('');
+    
+    container.innerHTML = html;
+}
+
+// 평년탭 작목군 드롭다운 초기화
+function initializeYearlyCropGroupFilter() {
+    const cropGroupFilter = document.getElementById('yearlyCropGroupFilter');
+    if (!cropGroupFilter) return;
+    
+    const comparisonMode = yearlyFilters.comparisonMode;
+    
+    // 비교 모드에 따른 데이터 소스 결정
+    let dataSource = [];
+    if (comparisonMode === 'gangwon-yearly-vs-current') {
+        dataSource = [...csvData2, ...csvData].filter(item => 
+            item.region === '강원' && item.category === '소득'
+        );
+    } else if (comparisonMode === 'national-vs-gangwon-yearly') {
+        dataSource = csvData2.filter(item => item.category === '소득');
+    } else if (comparisonMode === 'national-yearly-vs-gangwon-current') {
+        dataSource = [...csvData2, ...csvData].filter(item => 
+            item.category === '소득'
+        );
+    } else if (comparisonMode === 'national-yearly-vs-current') {
+        dataSource = [...csvData2, ...csvData].filter(item => 
+            item.region === '전국' && item.category === '소득'
+        );
+    }
+    
+    // 작목군 수집
+    const cropGroups = new Set();
+    dataSource.forEach(item => {
+        if (item.cropGroup && item.crop && item.crop !== '전체') {
+            cropGroups.add(item.cropGroup);
+        }
+    });
+    
+    // 드롭다운 옵션 업데이트
+    const currentValue = cropGroupFilter.value;
+    cropGroupFilter.innerHTML = '<option value="all">전체 작목군</option>';
+    
+    Array.from(cropGroups).sort().forEach(cropGroup => {
+        const option = document.createElement('option');
+        option.value = cropGroup;
+        option.textContent = cropGroup;
+        cropGroupFilter.appendChild(option);
+    });
+    
+    // 이전 선택값 복원 (가능한 경우)
+    if (Array.from(cropGroups).includes(currentValue)) {
+        cropGroupFilter.value = currentValue;
+    } else {
+        cropGroupFilter.value = 'all';
+    }
 }
 
 function updateMainComparisonChart() {
@@ -3904,7 +4946,7 @@ function updateSummaryDataTable() {
     if (!tbody) return;
     
     if (tableData.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="10" class="loading-cell">데이터가 없습니다</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="9" class="loading-cell">데이터가 없습니다</td></tr>';
         return;
     }
     
@@ -3933,7 +4975,7 @@ function updateCropGroupFilter() {
     if (!cropGroupFilter) return;
     
     // 현재 선택된 값 저장
-    const currentValue = cropGroupFilter.value;
+    const compareValue = cropGroupFilter.value;
     
     // 작목군 수집
     const cropGroups = new Set();
@@ -3954,8 +4996,8 @@ function updateCropGroupFilter() {
     });
     
     // 이전 선택값 복원 (가능한 경우)
-    if (Array.from(cropGroups).includes(currentValue)) {
-        cropGroupFilter.value = currentValue;
+    if (Array.from(cropGroups).includes(compareValue)) {
+        cropGroupFilter.value = compareValue;
     } else {
         cropGroupFilter.value = 'all';
     }
@@ -4088,7 +5130,6 @@ function updateTableDisplay(data) {
     
     tbody.innerHTML = data.map((item) => `
         <tr>
-            <td>${item.cropGroup}</td>
             <td>${item.crop}</td>
             <td>${item.income.toLocaleString()}</td>
             <td><span class="rank-badge" data-rank="${item.incomeRank}">${getRankDisplay(item.incomeRank)}</span></td>
@@ -4109,10 +5150,9 @@ function filterSummaryTable() {
     
     const rows = tbody.querySelectorAll('tr');
     rows.forEach(row => {
-        const cropName = row.cells[1]?.textContent.toLowerCase() || '';
-        const cropGroup = row.cells[0]?.textContent.toLowerCase() || '';
+        const cropName = row.cells[0]?.textContent.toLowerCase() || '';
         
-        if (cropName.includes(searchTerm) || cropGroup.includes(searchTerm)) {
+        if (cropName.includes(searchTerm)) {
             row.style.display = '';
         } else {
             row.style.display = 'none';
@@ -4132,18 +5172,14 @@ function sortSummaryTable() {
         
         switch(sortValue) {
             case 'income-desc':
-                aVal = parseFloat(a.cells[2]?.textContent.replace(/,/g, '') || '0');
-                bVal = parseFloat(b.cells[2]?.textContent.replace(/,/g, '') || '0');
+                aVal = parseFloat(a.cells[1]?.textContent.replace(/,/g, '') || '0');
+                bVal = parseFloat(b.cells[1]?.textContent.replace(/,/g, '') || '0');
                 return bVal - aVal;
             case 'income-asc':
-                aVal = parseFloat(a.cells[2]?.textContent.replace(/,/g, '') || '0');
-                bVal = parseFloat(b.cells[2]?.textContent.replace(/,/g, '') || '0');
+                aVal = parseFloat(a.cells[1]?.textContent.replace(/,/g, '') || '0');
+                bVal = parseFloat(b.cells[1]?.textContent.replace(/,/g, '') || '0');
                 return aVal - bVal;
             case 'name-asc':
-                aVal = a.cells[1]?.textContent || '';
-                bVal = b.cells[1]?.textContent || '';
-                return aVal.localeCompare(bVal);
-            case 'group-asc':
                 aVal = a.cells[0]?.textContent || '';
                 bVal = b.cells[0]?.textContent || '';
                 return aVal.localeCompare(bVal);
@@ -4444,7 +5480,9 @@ window.setCurrentTab = function(tabName) {
             // 이미 로딩되었으면 필터만 초기화
             setTimeout(() => {
                 initializeYearlyFilters();
-            }, 100);
+                // 정렬 기능도 초기화
+                initializeYearlyTableSorting();
+            }, 200);
         }
     }
 };

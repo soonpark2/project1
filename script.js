@@ -292,10 +292,22 @@ function attachCompareFilterEvents() {
     // 비교 작목 필터
     document.addEventListener('click', function(e) {
         if (e.target.matches('#compareCropFilter .filter-item')) {
+            console.log('작목 필터 클릭됨:', e.target.dataset.crop, '현재탭:', currentTab);
             document.querySelectorAll('#compareCropFilter .filter-item').forEach(i => i.classList.remove('active'));
             e.target.classList.add('active');
             compareFilters.crop = e.target.dataset.crop;
-            if (currentTab === 'compare') updateCompareDisplay();
+            console.log('작목 필터 변경:', compareFilters.crop, '전체 필터:', compareFilters);
+            
+            // currentTab 확인 로직을 더 안전하게
+            const isCompareTab = (currentTab === 'compare' || window.currentTab === 'compare');
+            console.log('탭 확인:', currentTab, window.currentTab, '비교탭인가?', isCompareTab);
+            
+            if (isCompareTab) {
+                console.log('비교탭에서 차트 업데이트 시작');
+                updateCompareDisplay();
+            } else {
+                console.log('비교탭이 아니어서 업데이트 안함');
+            }
         }
     });
 
@@ -330,7 +342,11 @@ function updateCompareCropGroups() {
 }
 
 function updateCrops() {
-    let filtered = csvData.filter(item => item.region === currentFilters.region);
+    let filtered = csvData.filter(item => 
+        item.region === currentFilters.region &&
+        item.year === currentFilters.year
+    );
+    
     if (currentFilters.cropGroup) {
         filtered = filtered.filter(item => item.cropGroup === currentFilters.cropGroup);
     }
@@ -357,6 +373,7 @@ function attachFilterEvents() {
             document.querySelectorAll('#regionFilter .filter-item').forEach(i => i.classList.remove('active'));
             this.classList.add('active');
             currentFilters.region = this.dataset.region;
+            currentFilters.crop = ''; // 지역 변경 시 작목 선택 초기화
             updateCrops();
             updateDisplay();
         });
@@ -390,6 +407,8 @@ function attachFilterEvents() {
             document.querySelectorAll('#yearFilter .year-btn').forEach(i => i.classList.remove('active'));
             e.target.classList.add('active');
             currentFilters.year = e.target.dataset.year;
+            currentFilters.crop = ''; // 연도 변경 시 작목 선택 초기화
+            updateCrops();
             updateDisplay();
         }
     });
@@ -1110,7 +1129,20 @@ function updateProductivityChart() {
 }
 
 function updateIncomeRateChart() {
-    const years = ['2019', '2020', '2021', '2022', '2023'];
+    // 현재 필터에 따라 사용 가능한 년도 계산
+    const availableYears = new Set();
+    csvData.forEach(row => {
+        if ((row.category === '소득' || row.category === '소득률') &&
+            row.region === currentFilters.region &&
+            (!currentFilters.cropGroup || row.cropGroup === currentFilters.cropGroup) &&
+            (!currentFilters.crop || row.crop === currentFilters.crop) &&
+            row.value > 0) {
+            availableYears.add(row.year);
+        }
+    });
+    
+    // 년도를 정렬
+    const years = Array.from(availableYears).sort();
     const incomeValues = years.map(y => {
         const match = csvData.find(row =>
             row.category === '소득' &&
@@ -1248,7 +1280,20 @@ function updateIncomeRateChart() {
 }
 
 function updateYieldPriceChart() {
-    const years = ['2019', '2020', '2021', '2022', '2023'];
+    // 현재 필터에 따라 사용 가능한 년도 계산
+    const availableYears = new Set();
+    csvData.forEach(row => {
+        if ((row.category === '주산물수량' || row.category === '주산물단가') &&
+            row.region === currentFilters.region &&
+            (!currentFilters.cropGroup || row.cropGroup === currentFilters.cropGroup) &&
+            (!currentFilters.crop || row.crop === currentFilters.crop) &&
+            row.value > 0) {
+            availableYears.add(row.year);
+        }
+    });
+    
+    // 년도를 정렬
+    const years = Array.from(availableYears).sort();
     const yieldValues = years.map(y => {
         const match = csvData.find(row =>
             row.category === '주산물수량' &&
@@ -1377,7 +1422,6 @@ function updateYieldPriceChart() {
 }
 
 function updateCostEfficiencyChart() {
-    const years = ['2019', '2020', '2021', '2022', '2023'];
     const costType = document.getElementById('costEfficiencySelector')?.value || 'production';
     let categoryName = '';
     let costCategoryName = '';
@@ -1395,6 +1439,21 @@ function updateCostEfficiencyChart() {
             chartColor = '#1e40af';
             break;
     }
+    
+    // 현재 필터에 따라 사용 가능한 년도 계산
+    const availableYears = new Set();
+    csvData.forEach(row => {
+        if ((row.category === '주산물수량' || row.category === costCategoryName) &&
+            row.region === currentFilters.region &&
+            (!currentFilters.cropGroup || row.cropGroup === currentFilters.cropGroup) &&
+            (!currentFilters.crop || row.crop === currentFilters.crop) &&
+            row.value > 0) {
+            availableYears.add(row.year);
+        }
+    });
+    
+    // 년도를 정렬
+    const years = Array.from(availableYears).sort();
     
     const values = years.map(y => {
         const yieldMatch = csvData.find(row =>
@@ -1490,7 +1549,20 @@ function updateCostEfficiencyChart() {
 }
 
 function updateAnnualLaborChart() {
-    const years = ['2019', '2020', '2021', '2022', '2023'];
+    // 현재 필터에 따라 사용 가능한 년도 계산
+    const availableYears = new Set();
+    csvData.forEach(row => {
+        if ((row.category === '자가노동시간' || row.category === '고용노동시간') &&
+            row.region === currentFilters.region &&
+            (!currentFilters.cropGroup || row.cropGroup === currentFilters.cropGroup) &&
+            (!currentFilters.crop || row.crop === currentFilters.crop) &&
+            row.value > 0) {
+            availableYears.add(row.year);
+        }
+    });
+    
+    // 년도를 정렬
+    const years = Array.from(availableYears).sort();
 
     const selfLaborData = years.map(y => {
         const match = csvData.find(row =>
@@ -1715,6 +1787,8 @@ function toggleSidebar() {
         // 축소
         sidebar.classList.remove('expanded');
         sidebar.classList.add('collapsed');
+        // 배경 스크롤 활성화
+        document.body.style.overflow = '';
         if (toggleBtn) {
             toggleBtn.textContent = '필터 ▼';
             toggleBtn.setAttribute('aria-expanded', 'false');
@@ -1723,6 +1797,8 @@ function toggleSidebar() {
         // 확장
         sidebar.classList.remove('collapsed');
         sidebar.classList.add('expanded');
+        // 배경 스크롤 차단
+        document.body.style.overflow = 'hidden';
         if (toggleBtn) {
             toggleBtn.textContent = '필터 ▲';
             toggleBtn.setAttribute('aria-expanded', 'true');
@@ -1949,7 +2025,7 @@ function updateCompareTable() {
         
         const nationalDisplay = nationalValue === 0 ? '-' : nationalValue.toLocaleString();
         const gangwonDisplay = gangwonValue === 0 ? '-' : gangwonValue.toLocaleString();
-        const differenceDisplay = (Math.abs(difference) === 0 && baseValue === 0 && compareValue === 0) ? '-' : Math.abs(difference).toLocaleString();
+        const differenceDisplay = (Math.abs(difference) === 0 && nationalValue === 0 && gangwonValue === 0) ? '-' : Math.abs(difference).toLocaleString();
         const changeRate = ratio === 0 ? 0 : ratio - 100;
         const ratioDisplay = ratio === 0 ? '-' : 
             changeRate > 0 ? `▲ +${changeRate.toFixed(1)}%` : 
@@ -2028,7 +2104,7 @@ function updateCompareTable() {
         
         const nationalDisplay = nationalValue === 0 ? '-' : nationalValue.toLocaleString();
         const gangwonDisplay = gangwonValue === 0 ? '-' : gangwonValue.toLocaleString();
-        const differenceDisplay = (Math.abs(difference) === 0 && baseValue === 0 && compareValue === 0) ? '-' : Math.abs(difference).toLocaleString();
+        const differenceDisplay = (Math.abs(difference) === 0 && nationalValue === 0 && gangwonValue === 0) ? '-' : Math.abs(difference).toLocaleString();
         const changeRate = ratio === 0 ? 0 : ratio - 100;
         const ratioDisplay = ratio === 0 ? '-' : 
             changeRate > 0 ? `▲ +${changeRate.toFixed(1)}%` : 
@@ -2078,7 +2154,7 @@ function updateCompareTable() {
         
         const nationalDisplay = nationalValue === 0 ? '-' : nationalValue.toLocaleString();
         const gangwonDisplay = gangwonValue === 0 ? '-' : gangwonValue.toLocaleString();
-        const differenceDisplay = (Math.abs(difference) === 0 && baseValue === 0 && compareValue === 0) ? '-' : Math.abs(difference).toLocaleString();
+        const differenceDisplay = (Math.abs(difference) === 0 && nationalValue === 0 && gangwonValue === 0) ? '-' : Math.abs(difference).toLocaleString();
         const changeRate = ratio === 0 ? 0 : ratio - 100;
         const ratioDisplay = ratio === 0 ? '-' : 
             changeRate > 0 ? `▲ +${changeRate.toFixed(1)}%` : 
@@ -2128,7 +2204,7 @@ function updateCompareTable() {
         
         const nationalDisplay = nationalValue === 0 ? '-' : nationalValue.toLocaleString();
         const gangwonDisplay = gangwonValue === 0 ? '-' : gangwonValue.toLocaleString();
-        const differenceDisplay = (Math.abs(difference) === 0 && baseValue === 0 && compareValue === 0) ? '-' : Math.abs(difference).toLocaleString();
+        const differenceDisplay = (Math.abs(difference) === 0 && nationalValue === 0 && gangwonValue === 0) ? '-' : Math.abs(difference).toLocaleString();
         const changeRate = ratio === 0 ? 0 : ratio - 100;
         const ratioDisplay = ratio === 0 ? '-' : 
             changeRate > 0 ? `▲ +${changeRate.toFixed(1)}%` : 
@@ -2218,7 +2294,7 @@ function updateCompareTable() {
             gangwonDisplay = gangwonValue === 0 ? '-' : gangwonValue.toLocaleString();
         }
         
-        const differenceDisplay = (Math.abs(difference) === 0 && baseValue === 0 && compareValue === 0) ? '-' : Math.abs(difference).toLocaleString();
+        const differenceDisplay = (Math.abs(difference) === 0 && nationalValue === 0 && gangwonValue === 0) ? '-' : Math.abs(difference).toLocaleString();
         const ratioDisplay = ratio === 0 ? '-' : 
             changeRate > 0 ? `▲ +${changeRate.toFixed(1)}%` : 
             changeRate < 0 ? `▼ ${changeRate.toFixed(1)}%` : `0.0%`;
@@ -2257,6 +2333,8 @@ function updateCompareChartTitle(titleId, categoryKorean) {
 }
 
 function updateCompareCharts() {
+    console.log('비교차트 업데이트 시작 - 현재 작목:', compareFilters.crop);
+    
     // 현재 선택된 드롭다운 값으로 차트 업데이트 (년도는 각 함수에서 동적으로 결정)
     const dataSelect = document.getElementById('compareDataSelect');
     const productivitySelect = document.getElementById('compareProductivitySelect');
@@ -2268,6 +2346,8 @@ function updateCompareCharts() {
     updateCompareCostChart(costSelect?.value || 'intermediateCost');
     updateCompareLaborChart(laborSelect?.value || 'totalLaborTime');
     updateCompareCropIncomeTable();
+    
+    console.log('비교차트 업데이트 완료');
 }
 
 // 비교 차트 datalabels 공통 함수들
@@ -4012,7 +4092,7 @@ function updateYearlyAnalysisTable(analysisData) {
         
         const baseDisplay = (baseValue === 0 && !baseItemMap.hasOwnProperty(itemName)) ? '-' : baseValue.toLocaleString();
         const compareDisplay = (compareValue === 0 && !compareItemMap.hasOwnProperty(itemName)) ? '-' : compareValue.toLocaleString();
-        const differenceDisplay = (Math.abs(difference) === 0 && baseValue === 0 && compareValue === 0) ? '-' : Math.abs(difference).toLocaleString();
+        const differenceDisplay = (Math.abs(difference) === 0 && nationalValue === 0 && gangwonValue === 0) ? '-' : Math.abs(difference).toLocaleString();
         const ratioDisplay = changeRate === 0 ? '0.0%' : 
             changeRate > 0 ? `▲ +${changeRate.toFixed(1)}%` : 
             changeRate < 0 ? `▼ ${changeRate.toFixed(1)}%` : `0.0%`;
@@ -4041,7 +4121,7 @@ function updateYearlyAnalysisTable(analysisData) {
         
         const baseDisplay = (baseValue === 0 && !baseItemMap.hasOwnProperty(itemName)) ? '-' : baseValue.toLocaleString();
         const compareDisplay = (compareValue === 0 && !compareItemMap.hasOwnProperty(itemName)) ? '-' : compareValue.toLocaleString();
-        const differenceDisplay = (Math.abs(difference) === 0 && baseValue === 0 && compareValue === 0) ? '-' : Math.abs(difference).toLocaleString();
+        const differenceDisplay = (Math.abs(difference) === 0 && nationalValue === 0 && gangwonValue === 0) ? '-' : Math.abs(difference).toLocaleString();
         const ratioDisplay = changeRate === 0 ? '0.0%' : 
             changeRate > 0 ? `▲ +${changeRate.toFixed(1)}%` : 
             changeRate < 0 ? `▼ ${changeRate.toFixed(1)}%` : `0.0%`;
@@ -5408,16 +5488,20 @@ function toggleCompareSidebar() {
         // 축소
         sidebar.classList.remove('expanded');
         sidebar.classList.add('collapsed');
+        // 배경 스크롤 활성화
+        document.body.style.overflow = '';
         if (toggleBtn) {
-            toggleBtn.textContent = '필터';
+            toggleBtn.textContent = '필터 ▼';
             toggleBtn.setAttribute('aria-expanded', 'false');
         }
     } else {
         // 확장
         sidebar.classList.remove('collapsed');
         sidebar.classList.add('expanded');
+        // 배경 스크롤 차단
+        document.body.style.overflow = 'hidden';
         if (toggleBtn) {
-            toggleBtn.textContent = '필터';
+            toggleBtn.textContent = '필터 ▲';
             toggleBtn.setAttribute('aria-expanded', 'true');
         }
     }
@@ -5456,6 +5540,9 @@ window.currentTab = currentTab;
 window.setCurrentTab = function(tabName) {
     currentTab = tabName;
     window.currentTab = currentTab;
+    
+    // 탭 변경 시 body 스크롤 복원 (사이드바가 확장되어 있을 수 있으므로)
+    document.body.style.overflow = '';
     
     // 비교 탭이 활성화되면 비교 데이터 업데이트
     if (tabName === 'compare' && csvData.length > 0) {

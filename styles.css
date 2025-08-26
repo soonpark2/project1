@@ -12,6 +12,11 @@
     --premium-gold: #f59e0b;
     --premium-gold-light: #fbbf24;
     
+    /* Excel Download Button Colors */
+    --excel-green: #10b981;
+    --excel-green-hover: #059669;
+    --excel-green-light: #34d399;
+    
     /* Premium Neutral Colors */
     --bg-primary: #ffffff;
     --bg-secondary: #f8fafc;
@@ -2645,6 +2650,69 @@ button:focus,
         box-shadow: none;
         border: 1px solid #ccc;
     }
+}
+
+/* ========== 엑셀 다운로드 버튼 스타일 ========== */
+
+.excel-download-btn {
+    background: none !important;
+    border: none !important;
+    cursor: pointer !important;
+    font-size: 18px !important;
+    margin-left: 8px !important;
+    padding: 4px !important;
+    border-radius: 50% !important;
+    transition: all 0.2s ease !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 28px !important;
+    height: 28px !important;
+    vertical-align: middle !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.excel-download-btn:hover {
+    background: var(--bg-secondary);
+    transform: scale(1.1);
+}
+
+.excel-download-btn:active {
+    transform: scale(0.95);
+}
+
+.excel-download-btn::before {
+    content: "📥" !important;
+    font-size: 16px !important;
+    display: inline-block !important;
+}
+
+/* 테이블 헤더 내 버튼들 */
+.table-header .excel-download-btn,
+.chart-header-with-filter .excel-download-btn {
+    margin-left: 8px;
+}
+
+/* 차트 타이틀과 버튼이 함께 있는 경우 */
+.chart-title + .excel-download-btn {
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+/* 타이틀 안에 버튼이 있는 경우 */
+.table-title .excel-download-btn,
+.chart-title .excel-download-btn {
+    margin-left: 8px !important;
+    vertical-align: middle !important;
+    position: relative !important;
+    z-index: 1000 !important;
+    display: inline-flex !important;
+}
+
+/* 차트 카드의 절대 위치 스타일 제거 */
+.chart-card {
+    position: static;
 }
 
 /* ========== 모션 감소 선호 사용자를 위한 설정 ========== */

@@ -9,6 +9,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
     <!-- CSS 파일 -->
     <link rel="stylesheet" href="styles.css">
@@ -109,7 +110,7 @@
             <!-- 3열 1-3행: 상세 데이터 표 (rowspan=3) -->
             <div class="grid-item data-table-area">
                 <div class="table-header">
-                    <h2 class="table-title">상세 조회</h2>
+                    <h2 class="table-title">상세 조회<button onclick="exportSummaryTableToExcel()" class="excel-download-btn" title="엑셀 다운로드"></button></h2>
                     <div class="table-filters">
                         <select id="cropGroupFilter" class="table-filter-select">
                             <option value="all">전체 작목군</option>
@@ -207,7 +208,7 @@
 
             <!-- 차트 카드들 -->
             <div class="chart-card income-analysis-section">
-                <div class="chart-title" id="summaryTitle">2023년 전국 소득분석표</div>
+                <div class="chart-title" id="summaryTitle">2023년 전국 소득분석표<button onclick="exportStatusAnalysisToExcel()" class="excel-download-btn" title="엑셀 다운로드"></button></div>
                 <div class="income-analysis-layout">
                     <div class="main-summary-box">
                         <div class="summary-item">
@@ -332,7 +333,7 @@
 
             <!-- 비교 분석표 -->
             <div class="chart-card income-analysis-section">
-                <div class="chart-title" id="compareSummaryTitle">2023년 전국, 강원 소득비교표</div>
+                <div class="chart-title" id="compareSummaryTitle">2023년 전국, 강원 소득비교표<button onclick="exportCompareAnalysisToExcel()" class="excel-download-btn" title="엑셀 다운로드"></button></div>
                 <div class="income-analysis-layout">
                     <div class="main-summary-box">
                         <div class="summary-item">
@@ -435,7 +436,7 @@
 
             <div class="chart-card income-table">
                 <div class="chart-title" id="compareCropIncomeTitle">
-                    전국, 강원 전체 작목별 소득
+                    전국, 강원 전체 작목별 소득<button onclick="exportCompareIncomeTableToExcel()" class="excel-download-btn" title="엑셀 다운로드"></button>
                 </div>
                 <div class="table-wrapper">
                     <table>
@@ -498,7 +499,7 @@
             <div class="chart-card income-table">
                 <div class="chart-header-with-filter">
                     <div class="chart-title" id="yearlyCropIncomeTitle">
-                        평년 vs 현재 작목별 소득
+                        평년 vs 현재 작목별 소득<button onclick="exportYearlyIncomeTableToExcel()" class="excel-download-btn" title="엑셀 다운로드"></button>
                     </div>
                     <div class="filter-group">
                         <label for="yearlyCropGroupFilter">작목군:</label>
@@ -571,7 +572,7 @@
             </div>
             <!-- 분석표 영역 -->
             <div class="chart-card yearly-analysis-section">
-                <div class="chart-title" id="yearlyAnalysisTitle">전국 전체 평년 대비 분석</div>
+                <div class="chart-title" id="yearlyAnalysisTitle">전국 전체 평년 대비 분석<button onclick="exportYearlyAnalysisToExcel()" class="excel-download-btn" title="엑셀 다운로드"></button></div>
                 <div class="yearly-analysis-layout">
                     <div class="main-summary-box">
                         <div class="summary-item">

@@ -464,7 +464,7 @@ function updateSummaryTitle() {
     
     const summaryTitle = document.getElementById('summaryTitle');
     if (summaryTitle) {
-        summaryTitle.textContent = titleParts.join(' ');
+        summaryTitle.innerHTML = titleParts.join(' ') + '<button onclick="exportStatusAnalysisToExcel()" class="excel-download-btn" title="엑셀 다운로드"></button>';
     }
 
     // 차트 제목 업데이트
@@ -521,7 +521,7 @@ function updateCompareSummaryTitle() {
     
     const compareSummaryTitle = document.getElementById('compareSummaryTitle');
     if (compareSummaryTitle) {
-        compareSummaryTitle.textContent = titleParts.join(' ');
+        compareSummaryTitle.innerHTML = titleParts.join(' ') + '<button onclick="exportCompareAnalysisToExcel()" class="excel-download-btn" title="엑셀 다운로드"></button>';
     }
 
     // 비교 차트 제목 업데이트
@@ -540,7 +540,11 @@ function updateCompareSummaryTitle() {
     Object.entries(compareTitles).forEach(([id, title]) => {
         const element = document.getElementById(id);
         if (element) {
-            element.innerHTML = title;
+            if (id === 'compareCropIncomeTitle') {
+                element.innerHTML = title + '<button onclick="exportCompareIncomeTableToExcel()" class="excel-download-btn" title="엑셀 다운로드"></button>';
+            } else {
+                element.innerHTML = title;
+            }
         }
     });
 }
@@ -3709,7 +3713,7 @@ function updateYearlyAnalysisTitle() {
     }
     
     fullTitle += ' 분석';
-    titleElement.textContent = fullTitle;
+    titleElement.innerHTML = fullTitle + '<button onclick="exportYearlyAnalysisToExcel()" class="excel-download-btn" title="엑셀 다운로드"></button>';
     
     // 분석표 데이터 업데이트
     updateYearlyAnalysisData();
@@ -4243,7 +4247,7 @@ function updateYearlyCropIncomeTable() {
     }
     
     if (titleElement) {
-        titleElement.textContent = `${baseLabel} vs ${compareLabel} 작목별 소득`;
+        titleElement.innerHTML = `${baseLabel} vs ${compareLabel} 작목별 소득<button onclick="exportYearlyIncomeTableToExcel()" class="excel-download-btn" title="엑셀 다운로드"></button>`;
     }
     
     if (baseHeaderElement) {
@@ -5573,6 +5577,182 @@ window.setCurrentTab = function(tabName) {
         }
     }
 };
+
+// ========== 엑셀 내보내기 함수들 ==========
+
+// 공통 엑셀 내보내기 함수
+function exportToExcel(data, filename, sheetName = 'Sheet1') {
+    try {
+        // 워크북 생성
+        const wb = XLSX.utils.book_new();
+        
+        // 워크시트 생성
+        const ws = XLSX.utils.aoa_to_sheet(data);
+        
+        // 워크시트를 워크북에 추가
+        XLSX.utils.book_append_sheet(wb, ws, sheetName);
+        
+        // 파일 다운로드
+        XLSX.writeFile(wb, filename);
+    } catch (error) {
+        console.error('엑셀 내보내기 오류:', error);
+        alert('엑셀 파일 내보내기 중 오류가 발생했습니다.');
+    }
+}
+
+// 테이블에서 데이터 추출 함수
+function getTableData(tableElement) {
+    const data = [];
+    const rows = tableElement.querySelectorAll('tr');
+    
+    rows.forEach(row => {
+        const rowData = [];
+        const cells = row.querySelectorAll('th, td');
+        cells.forEach(cell => {
+            // 정렬 화살표 제거하고 텍스트만 추출
+            let cellText = cell.textContent.replace(/[▲▼]/g, '').trim();
+            
+            // 순위 아이콘을 숫자로 변환 (🥇 → 1, 🥈 → 2, 🥉 → 3)
+            cellText = cellText.replace(/🥇/g, '1')
+                              .replace(/🥈/g, '2')
+                              .replace(/🥉/g, '3');
+            
+            // 로딩 메시지 제외
+            if (cellText === '데이터를 불러오는 중...' || cellText === '데이터를 불러오는 중' || cellText.includes('로딩')) {
+                return;
+            }
+            rowData.push(cellText);
+        });
+        if (rowData.length > 0 && rowData.some(cell => cell !== '')) {
+            data.push(rowData);
+        }
+    });
+    
+    return data;
+}
+
+// 요약탭 상세 조회 테이블 내보내기
+function exportSummaryTableToExcel() {
+    const table = document.querySelector('.summary-data-table');
+    if (!table) {
+        alert('테이블을 찾을 수 없습니다.');
+        return;
+    }
+    
+    const data = getTableData(table);
+    const currentDate = new Date().toISOString().slice(0, 10);
+    const filename = `요약탭_상세조회_${currentDate}.xlsx`;
+    
+    exportToExcel(data, filename, '상세조회');
+}
+
+// 작목별 조회탭 소득분석표 내보내기
+function exportStatusAnalysisToExcel() {
+    const table = document.querySelector('.income-analysis-layout table');
+    if (!table) {
+        alert('테이블을 찾을 수 없습니다.');
+        return;
+    }
+    
+    const data = getTableData(table);
+    const title = document.getElementById('summaryTitle').textContent;
+    const currentDate = new Date().toISOString().slice(0, 10);
+    const filename = `작목별조회_소득분석_${currentDate}.xlsx`;
+    
+    // 타이틀 추가
+    data.unshift([title]);
+    data.unshift(['']); // 빈 행 추가
+    
+    exportToExcel(data, filename, '소득분석');
+}
+
+// 전국 vs 강원탭 비교 분석표 내보내기
+function exportCompareAnalysisToExcel() {
+    const table = document.querySelector('#compare .income-analysis-layout table');
+    if (!table) {
+        alert('테이블을 찾을 수 없습니다.');
+        return;
+    }
+    
+    const data = getTableData(table);
+    const title = document.getElementById('compareSummaryTitle').textContent;
+    const currentDate = new Date().toISOString().slice(0, 10);
+    const filename = `전국vs강원_비교분석_${currentDate}.xlsx`;
+    
+    // 타이틀 추가
+    data.unshift([title]);
+    data.unshift(['']); // 빈 행 추가
+    
+    exportToExcel(data, filename, '비교분석');
+}
+
+// 전국 vs 강원탭 작목별 소득표 내보내기
+function exportCompareIncomeTableToExcel() {
+    const table = document.querySelector('.income-table table');
+    if (!table) {
+        alert('테이블을 찾을 수 없습니다.');
+        return;
+    }
+    
+    const data = getTableData(table);
+    const title = document.getElementById('compareCropIncomeTitle').textContent;
+    const currentDate = new Date().toISOString().slice(0, 10);
+    const filename = `전국vs강원_작목별소득_${currentDate}.xlsx`;
+    
+    // 타이틀 추가
+    data.unshift([title]);
+    data.unshift(['']); // 빈 행 추가
+    
+    exportToExcel(data, filename, '작목별소득');
+}
+
+// 평년탭 작목별 소득표 내보내기
+function exportYearlyIncomeTableToExcel() {
+    const table = document.querySelector('#yearly .income-table table');
+    if (!table) {
+        alert('테이블을 찾을 수 없습니다.');
+        return;
+    }
+    
+    const data = getTableData(table);
+    const title = document.getElementById('yearlyCropIncomeTitle').textContent;
+    const currentDate = new Date().toISOString().slice(0, 10);
+    const filename = `평년_작목별소득_${currentDate}.xlsx`;
+    
+    // 타이틀 추가
+    data.unshift([title]);
+    data.unshift(['']); // 빈 행 추가
+    
+    exportToExcel(data, filename, '작목별소득');
+}
+
+// 평년탭 분석표 내보내기
+function exportYearlyAnalysisToExcel() {
+    const table = document.querySelector('.yearly-analysis-layout table');
+    if (!table) {
+        alert('테이블을 찾을 수 없습니다.');
+        return;
+    }
+    
+    const data = getTableData(table);
+    const title = document.getElementById('yearlyAnalysisTitle').textContent;
+    const currentDate = new Date().toISOString().slice(0, 10);
+    const filename = `평년_분석표_${currentDate}.xlsx`;
+    
+    // 타이틀 추가
+    data.unshift([title]);
+    data.unshift(['']); // 빈 행 추가
+    
+    exportToExcel(data, filename, '분석표');
+}
+
+// 전역 함수로 노출
+window.exportSummaryTableToExcel = exportSummaryTableToExcel;
+window.exportStatusAnalysisToExcel = exportStatusAnalysisToExcel;
+window.exportCompareAnalysisToExcel = exportCompareAnalysisToExcel;
+window.exportCompareIncomeTableToExcel = exportCompareIncomeTableToExcel;
+window.exportYearlyIncomeTableToExcel = exportYearlyIncomeTableToExcel;
+window.exportYearlyAnalysisToExcel = exportYearlyAnalysisToExcel;
 
 // ========== 앱 시작 ==========
 

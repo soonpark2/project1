@@ -5583,11 +5583,21 @@ window.setCurrentTab = function(tabName) {
 // 공통 엑셀 내보내기 함수
 function exportToExcel(data, filename, sheetName = 'Sheet1') {
     try {
+        // 출처 정보를 데이터 맨 앞에 추가
+        const sourceInfo = [
+            ['출처: 농촌진흥청 「농산물소득조사」를 재가공한 자료로, 참고용으로 활용하시기 바랍니다.'],
+            ['자세한 사항은 농사로(https://www.nongsaro.go.kr) 및 통계청에서 확인하실 수 있습니다.'],
+            [''] // 빈 줄로 구분
+        ];
+        
+        // 출처 정보와 기존 데이터를 결합
+        const finalData = [...sourceInfo, ...data];
+        
         // 워크북 생성
         const wb = XLSX.utils.book_new();
         
         // 워크시트 생성
-        const ws = XLSX.utils.aoa_to_sheet(data);
+        const ws = XLSX.utils.aoa_to_sheet(finalData);
         
         // 워크시트를 워크북에 추가
         XLSX.utils.book_append_sheet(wb, ws, sheetName);

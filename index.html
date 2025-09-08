@@ -47,17 +47,17 @@
                 
                 <div class="feature-card" onclick="showTab('status')">
                     <h3>작목별 조회</h3>
-                    <p>지역별, 작목별 소득 현황을 상세하게 분석하고 경영비 구성을 파악할 수 있습니다.</p>
+                    <p>작목별 소득 현황을 상세하게 분석하고 경영비 구성을 파악할 수 있습니다.</p>
                 </div>
                 
                 <div class="feature-card" onclick="showTab('compare')">
                     <h3>전국 vs 강원</h3>
-                    <p>전국과 강원도의 소득 격차를 비교 분석하여 지역별 특성을 파악합니다.</p>
+                    <p>전국과 강원의 소득 격차를 비교 분석하여 특성을 파악합니다.</p>
                 </div>
                 
                 <div class="feature-card" onclick="showTab('yearly')">
                     <h3>평년</h3>
-                    <p>장기간 데이터를 통한 트렌드 분석으로 농업 소득의 변화 패턴을 확인합니다.</p>
+                    <p>평년과 최신 소득자료를 전국·강원 단위로 비교 분석합니다.</p>
                 </div>
             </div>
         </div>
@@ -676,5 +676,28 @@
 
     <!-- JavaScript 파일 -->
     <script src="script.js"></script>
+    
+    <!-- Footer -->
+    <footer class="data-source-footer">
+        <div class="footer-content">
+            <div class="footer-left">
+                <p class="source-title">출처 정보</p>
+                <p class="source-text">출처: 농촌진흥청 「농산물소득조사」를 재가공한 자료로, 참고용으로 활용하시기 바랍니다.<br>
+                자세한 사항은 농사로(https://www.nongsaro.go.kr) 및 통계청에서 확인하실 수 있습니다.</p>
+            </div>
+            
+            <div class="footer-right">
+                <p class="notice-title">이용 안내</p>
+                <ul class="notice-list">
+                    <li>수록된 자료는 단위 미만은 반올림 처리되었기 때문에, 합계와 비목(세부 항목)의 합이 일치하지 않을 수 있습니다.</li>
+                    <li>2023년부터는 시설작물의 작형(촉성, 반촉성, 억제)이 통합되었으며, 수경·토경 형태별로 분리하여 조사하고 있습니다.</li>
+                    <li>평년데이터는 2019~2023년 비목별 최대·최소값을 제외한 평균값입니다.</li>
+                    <li>토지생산성 (원/10a) = 소득 / 면적(10a), 자본생산성 (원/원) = 소득 / 경영비, 노동생산성 (원/노동시간) = 소득/투입노동시간</li>
+                    <li>kg당 경영비 (원/kg) = 경영비 / 주산물수량, kg당 생산비 (원/kg) = 생산비 / 주산물수량</li>
+                    <li>자료 단위: 원/10a, kg/10a, 수취가격: 원/kg, %, 노지 풋옥수수 주산물 수량: 개/10a</li>
+                </ul>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>

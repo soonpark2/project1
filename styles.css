@@ -200,13 +200,14 @@ body {
 /* ========== 웰컴 페이지 디자인 ========== */
 
 .welcome-container {
-    padding: calc(var(--header-height) + 3rem) 2rem 3rem;
+    padding: calc(var(--header-height) + 1.5rem) 2rem 8rem;
     min-height: 100vh;
     background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+    padding-top: calc(var(--header-height) + 7rem);
     gap: 3rem;
 }
 
@@ -587,7 +588,7 @@ body {
 .income-analysis-layout {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 0.5rem;
     height: 100%;
     overflow: hidden;
 }
@@ -1104,6 +1105,23 @@ tr:hover {
         font-size: 12px;
     }
     
+    /* 비교탭 income-table 정렬 설정 */
+    #compare .income-table td {
+        text-align: right;
+    }
+    
+    /* 비교탭 income-table 첫 번째 컬럼(작목)은 좌측 정렬 */
+    #compare .income-table td:first-child {
+        text-align: left;
+    }
+    
+    /* 비교탭 테이블 컨테이너 스크롤 설정 */
+    #compare .income-table .table-container {
+        flex: 1;
+        overflow-y: auto;
+        min-height: 0;
+    }
+    
     /* 평년탭 summary-data-table 내용 폰트 크기 */
     #yearly .summary-data-table td {
         font-size: 12px;
@@ -1126,8 +1144,9 @@ tr:hover {
         min-height: 0;
     }
     
-    /* 평년탭 헤더와 필터 영역 */
-    #yearly .income-table .chart-header-with-filter {
+    /* 평년탭과 비교탭 헤더와 필터 영역 */
+    #yearly .income-table .chart-header-with-filter,
+    #compare .income-table .chart-header-with-filter {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -1135,26 +1154,56 @@ tr:hover {
         margin-bottom: 1rem;
     }
     
-    #yearly .income-table .chart-header-with-filter .chart-title {
+    #yearly .income-table .chart-header-with-filter .chart-title,
+    #compare .income-table .chart-header-with-filter .chart-title {
         margin: 0;
         flex: 1;
     }
     
-    #yearly .income-table .chart-header-with-filter .filter-group {
+    #yearly .income-table .chart-header-with-filter .filter-group,
+    #compare .income-table .chart-header-with-filter .filter-group {
         display: flex;
         align-items: center;
         gap: 0.5rem;
         margin-left: 1rem;
     }
     
-    #yearly .income-table .chart-header-with-filter .filter-group label {
+    #yearly .income-table .chart-header-with-filter .filter-group label,
+    #compare .income-table .chart-header-with-filter .filter-group label {
         font-size: var(--font-size-sm);
         font-weight: var(--font-weight-medium);
         color: var(--text-secondary);
         white-space: nowrap;
     }
     
-    #yearly .income-table .chart-header-with-filter .filter-group select {
+    #yearly .income-table .chart-header-with-filter .filter-group select,
+    #compare .income-table .chart-header-with-filter .filter-group select {
+        padding: 0.25rem 0.5rem;
+        border: 1px solid var(--border-medium);
+        border-radius: var(--border-radius-sm);
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        font-size: var(--font-size-sm);
+        min-width: 120px;
+    }
+    
+    /* 평년탭 분석표 필터 영역 */
+    #yearly .yearly-analysis-section .yearly-analysis-filter {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        justify-content: flex-start;
+    }
+    
+    #yearly .yearly-analysis-section .yearly-analysis-filter label {
+        font-size: var(--font-size-sm);
+        font-weight: var(--font-weight-medium);
+        color: var(--text-secondary);
+        white-space: nowrap;
+    }
+    
+    #yearly .yearly-analysis-section .yearly-analysis-filter select {
         padding: 0.25rem 0.5rem;
         border: 1px solid var(--border-medium);
         border-radius: var(--border-radius-sm);
@@ -1218,6 +1267,13 @@ tr:hover {
     
     #yearly .yearly-top5-card .top5-container {
         margin-top: 0.5rem;
+    }
+    
+    /* 평년탭 TOP5 카드 헤더 스타일 */
+    #yearly .yearly-top5-card .card-title,
+    #yearly .yearly-national-top5-card .card-title {
+        text-align: left;
+        font-size: var(--font-size-base);
     }
     
     /* 평년탭 전국 평년 TOP 5 카드 */
@@ -1659,6 +1715,13 @@ tr:hover {
     text-align: center;
 }
 
+.unit-text {
+    color: #000;
+    font-size: 0.8em;
+    font-weight: normal;
+    margin-left: 0.1em;
+}
+
 .card-content {
     flex: 1;
     padding: 0.15rem 0.25rem;
@@ -1857,12 +1920,35 @@ tr:hover {
     background: var(--bg-secondary);
     color: var(--primary-blue-dark);
     font-weight: var(--font-weight-semibold);
-    padding: 1rem;
+    padding: 0.75rem 1rem;
     text-align: center;
     border-bottom: 2px solid var(--border-medium);
     position: sticky;
     top: 0;
     z-index: 10;
+    vertical-align: top;
+}
+
+/* 2줄 헤더 구조 스타일 */
+.summary-data-table th .header-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    line-height: 1.2;
+}
+
+.summary-data-table th .header-main {
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-sm);
+    color: var(--primary-blue-dark);
+}
+
+.summary-data-table th .header-unit {
+    font-size: 0.7rem;
+    font-weight: var(--font-weight-normal);
+    color: var(--text-muted);
+    opacity: 0.8;
 }
 
 .summary-data-table th.sortable {
@@ -1877,9 +1963,10 @@ tr:hover {
 }
 
 .sort-arrow {
-    margin-left: 0.5rem;
+    margin-left: 0.25rem;
     font-size: 0.8rem;
     opacity: 0.4;
+    align-self: center;
 }
 
 .sort-arrow::after {
@@ -2732,16 +2819,18 @@ button:focus,
     bottom: 0;
     left: 0;
     right: 0;
-    background: rgba(248, 250, 252, 0.95);
+    background: var(--text-primary);
+    color: white;
+    padding: 1rem 1rem 0.75rem;
     border-top: 1px solid var(--border-light);
-    padding: 0.75rem 0;
-    font-size: var(--font-size-xs);
-    color: var(--text-secondary);
-    line-height: 1.4;
-    backdrop-filter: blur(10px);
+    transition: margin-left 0.3s ease, transform 0.3s ease;
     z-index: 1000;
     transform: translateY(calc(100% - 20px));
-    transition: transform 0.3s ease;
+}
+
+/* 홈탭에서만 항상 표시 */
+body.home-tab-active .data-source-footer {
+    transform: translateY(0) !important;
 }
 
 .data-source-footer:hover {
@@ -2763,73 +2852,93 @@ button:focus,
     cursor: pointer;
 }
 
+
 .footer-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 1rem;
-    display: flex;
-    gap: 2rem;
-    align-items: flex-start;
 }
 
-.footer-left {
-    flex: 0 0 300px;
-    text-align: center;
-}
-
-.footer-right {
-    flex: 1;
-    text-align: center;
-}
-
-.source-title {
-    font-weight: var(--font-weight-semibold);
-    color: var(--text-primary);
+.footer-section h4,
+.footer-left .source-title,
+.footer-right .notice-title {
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 600;
     margin-bottom: 0.5rem;
-    font-size: var(--font-size-sm);
+    border-bottom: 2px solid var(--primary-blue);
+    padding-bottom: 0.2rem;
+    display: inline-block;
 }
 
-.source-text {
-    font-size: var(--font-size-xs);
-    color: var(--text-secondary);
-    line-height: 1.4;
+.footer-section p,
+.footer-left .source-text {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    line-height: 1.5;
     margin: 0;
 }
 
-.notice-title {
-    font-weight: var(--font-weight-semibold);
-    color: var(--text-primary);
-    margin-bottom: 0.5rem;
-    font-size: var(--font-size-sm);
+.footer-left .source-text a {
+    color: #fbbf24;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-left .source-text a:hover {
+    color: #f59e0b;
+}
+
+.contact-info {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    margin: 0.5rem 0 0 0;
+    font-weight: 500;
 }
 
 .notice-list {
     list-style: none;
-    padding: 0;
     margin: 0;
-    text-align: left;
-    display: inline-block;
+    padding: 0;
 }
 
 .notice-list li {
-    margin-bottom: 0.5rem;
-    padding-left: 1rem;
     position: relative;
+    padding-left: 1rem;
+    margin-bottom: 0.35rem;
+    color: #d1d5db;
+    font-size: 0.75rem;
+    line-height: 1.4;
 }
 
 .notice-list li::before {
     content: "•";
-    color: var(--primary-blue);
     position: absolute;
     left: 0;
     top: 0;
+    color: var(--primary-blue);
 }
 
-/* 모바일 반응형 */
-@media (max-width: 768px) {
+.footer-bottom {
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #4b5563;
+    text-align: center;
+}
+
+.footer-bottom p {
+    color: #9ca3af;
+    font-size: 0.75rem;
+    margin: 0;
+}
+
+@media (max-width: 1024px) {
     .data-source-footer {
-        padding: 0.5rem 0;
-        font-size: 10px;
+        margin-left: 0;
+        padding: 0.75rem;
         transform: translateY(calc(100% - 15px));
     }
     
@@ -2840,34 +2949,53 @@ button:focus,
     }
     
     .footer-content {
-        flex-direction: column;
+        grid-template-columns: 1fr;
         gap: 1rem;
-        padding: 0 0.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .footer-left .source-title,
+    .footer-right .notice-title {
+        font-size: 0.8rem;
+        margin-bottom: 0.4rem;
     }
     
-    .footer-left {
-        flex: none;
-        width: 100%;
-    }
-    
-    .footer-right {
-        flex: none;
-        width: 100%;
-    }
-    
-    .source-title,
-    .notice-title {
-        font-size: var(--font-size-xs);
-        margin-bottom: 0.3rem;
-    }
-    
-    .source-text {
-        font-size: 10px;
+    .footer-left .source-text {
+        font-size: 0.7rem;
     }
     
     .notice-list li {
         margin-bottom: 0.3rem;
         padding-left: 0.75rem;
-        font-size: 9px;
+        font-size: 0.65rem;
     }
+}
+
+/* ========== 차트 단위 표시 ========== */
+.chart-container {
+    position: relative;
+}
+
+.chart-unit {
+    position: absolute;
+    top: 0px;
+    right: 15px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    background: transparent;
+    padding: 3px 8px;
+    z-index: 10;
+}
+
+/* ========== 테이블 단위 표시 ========== */
+.table-unit {
+    display: block;
+    text-align: right;
+    font-size: 11px;
+    font-weight: 600;
+    color: #000000;
+    padding: 0px 15px 0px 0px;
+    margin: 0px;
 }

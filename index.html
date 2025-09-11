@@ -86,7 +86,7 @@
             <!-- 1열 1행: 소득 TOP 5 -->
             <div class="grid-item top5-card">
                 <div class="card-header">
-                    <h3 class="card-title">소득 TOP 5</h3>
+                    <h3 class="card-title">소득 TOP5<span class="unit-text">(원/10a)</span></h3>
                 </div>
                 <div class="card-content">
                     <div class="top5-list" id="incomeTop5List">
@@ -98,7 +98,7 @@
             <!-- 2열 1행: 노동생산성 TOP 5 -->
             <div class="grid-item top5-card">
                 <div class="card-header">
-                    <h3 class="card-title">노동생산성 TOP 5</h3>
+                    <h3 class="card-title">노동생산성 TOP5<span class="unit-text">(원/시간)</span></h3>
                 </div>
                 <div class="card-content">
                     <div class="top5-list" id="laborTop5List">
@@ -121,15 +121,55 @@
                     <table class="summary-data-table">
                         <thead>
                             <tr>
-                                <th class="sortable" data-sort="crop">작목 <span class="sort-arrow"></span></th>
-                                <th class="sortable" data-sort="income">소득 <span class="sort-arrow"></span></th>
-                                <th class="sortable" data-sort="incomeRank">소득순위 <span class="sort-arrow"></span></th>
-                                <th class="sortable" data-sort="laborProductivity">노동생산성 <span class="sort-arrow"></span></th>
-                                <th class="sortable" data-sort="laborRank">노동순위 <span class="sort-arrow"></span></th>
-                                <th class="sortable" data-sort="capitalProductivity">자본생산성 <span class="sort-arrow"></span></th>
-                                <th class="sortable" data-sort="capitalRank">자본순위 <span class="sort-arrow"></span></th>
-                                <th class="sortable" data-sort="landProductivity">kg당 생산비 <span class="sort-arrow"></span></th>
-                                <th class="sortable" data-sort="landRank">kg당순위 <span class="sort-arrow"></span></th>
+                                <th class="sortable" data-sort="crop">
+                                    <div class="header-content">
+                                        <div class="header-main">작목<span class="sort-arrow"></span></div>
+                                    </div>
+                                </th>
+                                <th class="sortable" data-sort="income">
+                                    <div class="header-content">
+                                        <div class="header-main">소득<span class="sort-arrow"></span></div>
+                                        <div class="header-unit">(원/10a)</div>
+                                    </div>
+                                </th>
+                                <th class="sortable" data-sort="incomeRank">
+                                    <div class="header-content">
+                                        <div class="header-main">소득순위<span class="sort-arrow"></span></div>
+                                    </div>
+                                </th>
+                                <th class="sortable" data-sort="laborProductivity">
+                                    <div class="header-content">
+                                        <div class="header-main">노동생산성<span class="sort-arrow"></span></div>
+                                        <div class="header-unit">(원/시간)</div>
+                                    </div>
+                                </th>
+                                <th class="sortable" data-sort="laborRank">
+                                    <div class="header-content">
+                                        <div class="header-main">노동순위<span class="sort-arrow"></span></div>
+                                    </div>
+                                </th>
+                                <th class="sortable" data-sort="capitalProductivity">
+                                    <div class="header-content">
+                                        <div class="header-main">자본생산성<span class="sort-arrow"></span></div>
+                                        <div class="header-unit">(%)</div>
+                                    </div>
+                                </th>
+                                <th class="sortable" data-sort="capitalRank">
+                                    <div class="header-content">
+                                        <div class="header-main">자본순위<span class="sort-arrow"></span></div>
+                                    </div>
+                                </th>
+                                <th class="sortable" data-sort="landProductivity">
+                                    <div class="header-content">
+                                        <div class="header-main">kg당 생산비<span class="sort-arrow"></span></div>
+                                        <div class="header-unit">(원/kg)</div>
+                                    </div>
+                                </th>
+                                <th class="sortable" data-sort="landRank">
+                                    <div class="header-content">
+                                        <div class="header-main">kg당순위<span class="sort-arrow"></span></div>
+                                    </div>
+                                </th>
                             </tr>
                         </thead>
                         <tbody id="summaryTableBody">
@@ -144,7 +184,7 @@
             <!-- 1열 2행: 자본생산성 TOP 5 -->
             <div class="grid-item top5-card">
                 <div class="card-header">
-                    <h3 class="card-title">자본생산성 TOP 5</h3>
+                    <h3 class="card-title">자본생산성 TOP5<span class="unit-text">(%)</span></h3>
                 </div>
                 <div class="card-content">
                     <div class="top5-list" id="capitalTop5List">
@@ -156,7 +196,7 @@
             <!-- 2열 2행: kg당 생산비 TOP 5 -->
             <div class="grid-item top5-card">
                 <div class="card-header">
-                    <h3 class="card-title">kg당 생산비 TOP5(저비용)</h3>
+                    <h3 class="card-title">kg당 생산비 TOP5<span class="unit-text">(원/kg)</span></h3>
                 </div>
                 <div class="card-content">
                     <div class="top5-list" id="landTop5List">
@@ -220,6 +260,7 @@
                             <span id="totalRate">0%</span>
                         </div>
                     </div>
+                    <span class="table-unit" id="detailTableUnit">원/10a</span>
                     <div class="table-wrapper">
                         <table>
                             <thead>
@@ -242,6 +283,7 @@
                 </div>
                 <div class="chart-container">
                     <canvas id="combinedIncomeChart"></canvas>
+                    <span class="chart-unit">원/10a</span>
                 </div>
             </div>
 
@@ -251,6 +293,7 @@
                 </div>
                 <div class="chart-container">
                     <canvas id="incomeRateChart"></canvas>
+                    <span class="chart-unit">원/10a, %</span>
                 </div>
             </div>
 
@@ -265,6 +308,7 @@
                 </div>
                 <div class="chart-container">
                     <canvas id="productivityChart"></canvas>
+                    <span class="chart-unit" id="productivityUnit">원/시간</span>
                 </div>
             </div>
             <div class="chart-card cost-efficiency-chart">
@@ -277,6 +321,7 @@
                 </div>
                 <div class="chart-container">
                     <canvas id="costEfficiencyChart"></canvas>
+                    <span class="chart-unit" id="costEfficiencyUnit">원/kg</span>
                 </div>
             </div>
 
@@ -286,6 +331,7 @@
                 </div>
                 <div class="chart-container">
                     <canvas id="yieldPriceChart"></canvas>
+                    <span class="chart-unit" id="yieldPriceUnit">kg/10a, 원/kg</span>
                 </div>
             </div>
 
@@ -295,6 +341,7 @@
                 </div>
                 <div class="chart-container">
                     <canvas id="annualLaborChart"></canvas>
+                    <span class="chart-unit">시간/10a</span>
                 </div>
             </div>
 
@@ -353,6 +400,7 @@
                             <span id="compareRatio">0%</span>
                         </div>
                     </div>
+                    <span class="table-unit" id="compareTableUnit">원/10a, %</span>
                     <div class="table-wrapper">
                         <table>
                             <thead>
@@ -386,6 +434,7 @@
                 </div>
                 <div class="chart-container">
                     <canvas id="compareDataChart"></canvas>
+                    <span class="chart-unit" id="compareDataUnit">원/10a</span>
                 </div>
             </div>
 
@@ -400,6 +449,7 @@
                 </div>
                 <div class="chart-container">
                     <canvas id="compareProductivityChart"></canvas>
+                    <span class="chart-unit" id="compareProductivityUnit">원/시간</span>
                 </div>
             </div>
 
@@ -416,6 +466,7 @@
                 </div>
                 <div class="chart-container">
                     <canvas id="compareCostChart"></canvas>
+                    <span class="chart-unit" id="compareCostUnit">원/10a</span>
                 </div>
             </div>
 
@@ -431,22 +482,51 @@
                 </div>
                 <div class="chart-container">
                     <canvas id="compareLaborChart"></canvas>
+                    <span class="chart-unit">시간/10a</span>
                 </div>
             </div>
 
             <div class="chart-card income-table">
-                <div class="chart-title" id="compareCropIncomeTitle">
-                    전국, 강원 전체 작목별 소득<button onclick="exportCompareIncomeTableToExcel()" class="excel-download-btn" title="엑셀 다운로드"></button>
+                <div class="chart-header-with-filter">
+                    <div class="chart-title" id="compareCropIncomeTitle">
+                        전국, 강원 전체 작목별 소득<button onclick="exportCompareIncomeTableToExcel()" class="excel-download-btn" title="엑셀 다운로드"></button>
+                    </div>
+                    <div class="filter-group">
+                        <label for="compareIncomeCropGroupFilter">작목군:</label>
+                        <select id="compareIncomeCropGroupFilter" onchange="updateCompareCropIncomeTable()">
+                            <option value="all">전체 작목군</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="table-wrapper">
-                    <table>
+                <div class="table-container">
+                    <table class="summary-data-table">
                         <thead>
                             <tr>
-                                <th>작목</th>
-                                <th>전국</th>
-                                <th>강원</th>
-                                <th>차이</th>
-                                <th>대비(%)</th>
+                                <th class="sortable" data-sort="crop">작목 <span class="sort-arrow"></span></th>
+                                <th class="sortable" data-sort="nationalValue" id="compareIncomeNationalHeader">
+                                    <div class="header-content">
+                                        <div class="header-main">전국<span class="sort-arrow"></span></div>
+                                        <div class="header-unit">(원/10a)</div>
+                                    </div>
+                                </th>
+                                <th class="sortable" data-sort="gangwonValue" id="compareIncomeGangwonHeader">
+                                    <div class="header-content">
+                                        <div class="header-main">강원<span class="sort-arrow"></span></div>
+                                        <div class="header-unit">(원/10a)</div>
+                                    </div>
+                                </th>
+                                <th class="sortable" data-sort="difference">
+                                    <div class="header-content">
+                                        <div class="header-main">차이<span class="sort-arrow"></span></div>
+                                        <div class="header-unit">(원/10a)</div>
+                                    </div>
+                                </th>
+                                <th class="sortable" data-sort="ratio">
+                                    <div class="header-content">
+                                        <div class="header-main">대비<span class="sort-arrow"></span></div>
+                                        <div class="header-unit">(%)</div>
+                                    </div>
+                                </th>
                             </tr>
                         </thead>
                         <tbody id="compareCropIncomeTableBody">
@@ -466,22 +546,6 @@
                 <label class="yearly-filter-label">비교 모드:</label>
                 <div class="yearly-filter-buttons" id="comparisonModeFilter">
                     <!-- 동적으로 생성 -->
-                </div>
-            </div>
-            <div class="yearly-filter-group">
-                <label class="yearly-filter-label">작목군:</label>
-                <div class="yearly-filter-select-container">
-                    <select id="yearlyCropGroupSelect" class="yearly-filter-select">
-                        <!-- 동적으로 생성 -->
-                    </select>
-                </div>
-            </div>
-            <div class="yearly-filter-group">
-                <label class="yearly-filter-label">작목상세:</label>
-                <div class="yearly-filter-select-container">
-                    <select id="yearlyCropSelect" class="yearly-filter-select">
-                        <!-- 동적으로 생성 -->
-                    </select>
                 </div>
             </div>
         </div>
@@ -513,8 +577,18 @@
                         <thead>
                             <tr>
                                 <th class="sortable" data-sort="crop">작목 <span class="sort-arrow"></span></th>
-                                <th class="sortable" data-sort="baseValue" id="yearlyIncomeBaseHeader">평년 <span class="sort-arrow"></span></th>
-                                <th class="sortable" data-sort="compareValue" id="yearlyIncomeCompareHeader">현재 <span class="sort-arrow"></span></th>
+                                <th class="sortable" data-sort="baseValue" id="yearlyIncomeBaseHeader">
+                                    <div class="header-content">
+                                        <div class="header-main">평년<span class="sort-arrow"></span></div>
+                                        <div class="header-unit">(원/10a)</div>
+                                    </div>
+                                </th>
+                                <th class="sortable" data-sort="compareValue" id="yearlyIncomeCompareHeader">
+                                    <div class="header-content">
+                                        <div class="header-main">현재<span class="sort-arrow"></span></div>
+                                        <div class="header-unit">(원/10a)</div>
+                                    </div>
+                                </th>
                                 <th class="sortable" data-sort="difference">차이 <span class="sort-arrow"></span></th>
                                 <th class="sortable" data-sort="ratio">대비(%) <span class="sort-arrow"></span></th>
                             </tr>
@@ -541,11 +615,13 @@
                         <option value="kg당 생산비">kg당 생산비</option>
                     </select>
                 </div>
-                <div class="chart-title" id="yearlyTop5Title">
-                    강원 평년 총수입 TOP 5
+                <div class="card-header">
+                    <h3 class="card-title" id="yearlyTop5Title">강원 평년 총수입 TOP5<span class="unit-text" id="yearlyTop5UnitText">(원/10a)</span></h3>
                 </div>
-                <div class="top5-container" id="yearlyTop5Container">
-                    <div class="loading-item">데이터를 불러오는 중...</div>
+                <div class="chart-container">
+                    <div class="top5-container" id="yearlyTop5Container">
+                        <div class="loading-item">데이터를 불러오는 중...</div>
+                    </div>
                 </div>
             </div>
             <!-- 전국 평년 TOP 5 카드 (1열 2행) -->
@@ -563,15 +639,27 @@
                         <option value="kg당 생산비">kg당 생산비</option>
                     </select>
                 </div>
-                <div class="chart-title" id="yearlyNationalTop5Title">
-                    전국 평년 총수입 TOP 5
+                <div class="card-header">
+                    <h3 class="card-title" id="yearlyNationalTop5Title">전국 평년 총수입 TOP5<span class="unit-text" id="yearlyNationalTop5UnitText">(원/10a)</span></h3>
                 </div>
-                <div class="top5-container" id="yearlyNationalTop5Container">
-                    <div class="loading-item">데이터를 불러오는 중...</div>
+                <div class="chart-container">
+                    <div class="top5-container" id="yearlyNationalTop5Container">
+                        <div class="loading-item">데이터를 불러오는 중...</div>
+                    </div>
                 </div>
             </div>
             <!-- 분석표 영역 -->
             <div class="chart-card yearly-analysis-section">
+                <div class="filter-group yearly-analysis-filter">
+                    <label for="yearlyCropGroupSelect">작목군:</label>
+                    <select id="yearlyCropGroupSelect" class="yearly-filter-select">
+                        <!-- 동적으로 생성 -->
+                    </select>
+                    <label for="yearlyCropSelect">작목상세:</label>
+                    <select id="yearlyCropSelect" class="yearly-filter-select">
+                        <!-- 동적으로 생성 -->
+                    </select>
+                </div>
                 <div class="chart-title" id="yearlyAnalysisTitle">전국 전체 평년 대비 분석<button onclick="exportYearlyAnalysisToExcel()" class="excel-download-btn" title="엑셀 다운로드"></button></div>
                 <div class="yearly-analysis-layout">
                     <div class="main-summary-box">
@@ -592,6 +680,7 @@
                             <span id="yearlyRatio">0%</span>
                         </div>
                     </div>
+                    <span class="table-unit" id="yearlyAnalysisTableUnit">원/10a, %</span>
                     <div class="table-wrapper">
                         <table>
                             <thead id="yearlyAnalysisTableHead">
@@ -627,6 +716,13 @@
 
             const targetTab = document.getElementById(tabName);
             if (targetTab) targetTab.classList.add('active');
+
+            // 홈탭일 때 footer 항상 표시
+            if (tabName === 'home') {
+                document.body.classList.add('home-tab-active');
+            } else {
+                document.body.classList.remove('home-tab-active');
+            }
 
             // 탭 버튼 스타일 변경
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -683,20 +779,21 @@
             <div class="footer-left">
                 <p class="source-title">출처 정보</p>
                 <p class="source-text">출처: 농촌진흥청 「농산물소득조사」를 재가공한 자료로, 참고용으로 활용하시기 바랍니다.<br>
-                자세한 사항은 농사로(https://www.nongsaro.go.kr) 및 통계청에서 확인하실 수 있습니다.</p>
+                자세한 사항은 <a href="https://www.nongsaro.go.kr" target="_blank" rel="noopener noreferrer">농사로</a> 및 <a href="https://kosis.kr/index/index.do" target="_blank" rel="noopener noreferrer">통계청</a>에서 확인하실 수 있습니다.</p>
             </div>
             
             <div class="footer-right">
                 <p class="notice-title">이용 안내</p>
                 <ul class="notice-list">
-                    <li>수록된 자료는 단위 미만은 반올림 처리되었기 때문에, 합계와 비목(세부 항목)의 합이 일치하지 않을 수 있습니다.</li>
+                    <li>수록된 자료는 10a기준(약 300평)이며 단위 미만은 반올림 처리되었기 때문에, 합계와 비목(세부 항목)의 합이 일치하지 않을 수 있습니다.</li>
                     <li>2023년부터는 시설작물의 작형(촉성, 반촉성, 억제)이 통합되었으며, 수경·토경 형태별로 분리하여 조사하고 있습니다.</li>
                     <li>평년데이터는 2019~2023년 비목별 최대·최소값을 제외한 평균값입니다.</li>
-                    <li>토지생산성 (원/10a) = 소득 / 면적(10a), 자본생산성 (원/원) = 소득 / 경영비, 노동생산성 (원/노동시간) = 소득/투입노동시간</li>
-                    <li>kg당 경영비 (원/kg) = 경영비 / 주산물수량, kg당 생산비 (원/kg) = 생산비 / 주산물수량</li>
-                    <li>자료 단위: 원/10a, kg/10a, 수취가격: 원/kg, %, 노지 풋옥수수 주산물 수량: 개/10a</li>
                 </ul>
             </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 강원 농산물 소득조사 대시보드. 농촌진흥청, 농산물소득조사 자료 활용.</p>
+            <p class="contact-info">기타 문의: 033-248-6041, 6042</p>
         </div>
     </footer>
 </body>

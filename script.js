@@ -3822,7 +3822,7 @@ function initializeApp() {
 // ========== 요약 탭 관리 ==========
 let summaryFilters = {
     region: '강원',
-    year: '2023'
+    year: getLatestYear()
 };
 
 function initializeSummaryFilters() {

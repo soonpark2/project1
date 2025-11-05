@@ -3822,11 +3822,14 @@ function initializeApp() {
 // ========== 요약 탭 관리 ==========
 let summaryFilters = {
     region: '강원',
-    year: getLatestYear()
+    year: '2023' // 초기값, 데이터 로드 후 업데이트됨
 };
 
 function initializeSummaryFilters() {
     if (csvData.length === 0) return;
+
+    // 최신 연도로 업데이트
+    summaryFilters.year = getLatestYear();
 
     // 지역 필터 초기화 - HTML에서 이미 정의되어 있으므로 활성화 상태만 업데이트
     document.querySelectorAll('#summaryRegionFilter .summary-filter-btn').forEach(button => {
